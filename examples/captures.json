@@ -1,0 +1,41 @@
+{
+  "method": "Direct PNG from the live Three.js canvas with alpha 0 background. No UI or generated illustration.",
+  "viewport": [
+    1400,
+    1200
+  ],
+  "deviceScaleFactor": 1.5,
+  "images": [
+    {
+      "file": "pretrained-flight.png",
+      "policy": "pretrained",
+      "height": 5,
+      "spring": 2.4,
+      "wind": 0,
+      "tilt": 0,
+      "time": 0.4,
+      "camera": "orbit"
+    },
+    {
+      "file": "head-first-entry.png",
+      "policy": "pretrained",
+      "height": 8,
+      "spring": 2.4,
+      "wind": 0,
+      "tilt": 0,
+      "time": 1.5000000000000009,
+      "camera": "entry closeup",
+      "trail": false
+    },
+    {
+      "file": "splash-proxy.png",
+      "policy": "untrained",
+      "height": 8,
+      "spring": 2.4,
+      "wind": 0,
+      "tilt": 0,
+      "time": 1.840000000000001,
+      "camera": "orbit"
+    }
+  ]
+}
