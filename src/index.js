@@ -203,11 +203,15 @@ export function mountExperiment(element, options = {}) {
     });
   listen(input("policy"), "change", schedule);
   listen(button("play"), "click", () => {
-    if (dive && elapsed >= Number(input("timeline").max)) elapsed = 0;
+    if (dive && elapsed >= Number(input("timeline").max)) {
+      elapsed = 0;
+      scene.frameCamera("orbit");
+    }
     setPlaying(!playing);
   });
   listen(button("replay"), "click", () => {
     elapsed = 0;
+    scene.frameCamera("orbit");
     setPlaying(true);
   });
   listen(input("timeline"), "input", () => {
@@ -220,6 +224,7 @@ export function mountExperiment(element, options = {}) {
     input("policy").value = "pretrained";
     input("speed").value = "1";
     updateLabels();
+    scene.frameCamera("orbit");
     schedule();
   });
   listen(button("trial"), "click", () => {

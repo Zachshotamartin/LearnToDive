@@ -199,3 +199,36 @@ test("keyboard camera controls and extreme heights retain clear canvas edges", a
     expect(nonclear).toBe(0);
   }
 });
+
+test("Reset and Replay restore the overview after inspecting entry", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await ready(page);
+  const canvas = page.locator("canvas");
+  const frame = async () => {
+    await setRange(page, "timeline", 0.4);
+    await expect(page.locator(".ld-time")).toHaveText("0.40 s");
+    return canvas.evaluate((element) => element.toDataURL());
+  };
+  const overview = await frame();
+  for (const action of ["Reset", "Replay", "Play dive"]) {
+    await page
+      .getByRole("button", { name: "Inspect entry", exact: true })
+      .click();
+    await expect(page.locator(".ld-time")).not.toHaveText("0.40 s");
+    expect(await canvas.evaluate((element) => element.toDataURL())).not.toBe(
+      overview,
+    );
+    if (action === "Play dive")
+      await setRange(
+        page,
+        "timeline",
+        Number(await page.locator('[name="timeline"]').getAttribute("max")),
+      );
+    await page.getByRole("button", { name: action, exact: true }).click();
+    if (action === "Reset") await ready(page);
+    else await page.getByRole("button", { name: "Pause", exact: true }).click();
+    expect(await frame()).toBe(overview);
+  }
+});

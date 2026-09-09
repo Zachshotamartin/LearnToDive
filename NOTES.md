@@ -90,3 +90,7 @@ training/evaluation-check.json
 ```
 
 `node_modules`, `dist`, `test-results`, Python caches and any local virtualenv are ignored. No Actions/workflow files exist. Final camera review replaced world-box fitting with fitting projected actual geometry/path bounds. Overview is centered at roughly79% image height; Inspect entry provides a close, paused physical entry frame. The second showcase uses that action and hides the path line via the normal Flight path control.
+
+## Reset/replay camera follow-up
+
+A close entry inspection no longer survives a fresh start. Reset, Replay, and Play after the completed timeline restore the overview; Play from an inspected near-entry frame continues that inspection. No physics, coefficients, evaluation or capture changes. Existing6 browser checks passed with the fix; the added focused regression passed after correcting a test-helper argument and compares exact rendered overview PNGs after all3 restart paths. Build passed. Stage `src/index.js`, `tests/browser/experiment.spec.js`, and this note for the follow-up PR.
