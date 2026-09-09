@@ -1,0 +1,174 @@
+{
+  "seed": 990517,
+  "episodes": 2000,
+  "trainingSeed": 731,
+  "trainingEpisodes": 829440,
+  "trainingSeconds": 40.81,
+  "evaluations": {
+    "pretrained": {
+      "validRate": 1.0,
+      "meanScore": 90.4437876627469,
+      "meanAngle": 7.01416094200672,
+      "meanFlips": 1.502284037634735,
+      "meanTwists": 0.7916584567669954,
+      "meanSplash": 0.21397187902072545,
+      "heightBins": [
+        {
+          "height": [
+            2,
+            4
+          ],
+          "n": 397,
+          "validRate": 1.0,
+          "meanScore": 88.83244601884032
+        },
+        {
+          "height": [
+            4,
+            6
+          ],
+          "n": 421,
+          "validRate": 1.0,
+          "meanScore": 89.95073671866216
+        },
+        {
+          "height": [
+            6,
+            8
+          ],
+          "n": 416,
+          "validRate": 1.0,
+          "meanScore": 90.63318014166119
+        },
+        {
+          "height": [
+            8,
+            10
+          ],
+          "n": 380,
+          "validRate": 1.0,
+          "meanScore": 91.21136382752468
+        },
+        {
+          "height": [
+            10,
+            12
+          ],
+          "n": 386,
+          "validRate": 1.0,
+          "meanScore": 91.67904897426679
+        }
+      ]
+    },
+    "untrained": {
+      "validRate": 0.1055,
+      "meanScore": 8.585896955377342,
+      "meanAngle": 99.74489322987687,
+      "meanFlips": 1.1679755976686692,
+      "meanTwists": 0.22584232798210963,
+      "meanSplash": 0.5849767956122132,
+      "heightBins": [
+        {
+          "height": [
+            2,
+            4
+          ],
+          "n": 397,
+          "validRate": 0.0,
+          "meanScore": 0.0
+        },
+        {
+          "height": [
+            4,
+            6
+          ],
+          "n": 421,
+          "validRate": 0.0,
+          "meanScore": 0.0
+        },
+        {
+          "height": [
+            6,
+            8
+          ],
+          "n": 416,
+          "validRate": 0.0,
+          "meanScore": 0.0
+        },
+        {
+          "height": [
+            8,
+            10
+          ],
+          "n": 380,
+          "validRate": 0.05263157894736842,
+          "meanScore": 3.998134192248266
+        },
+        {
+          "height": [
+            10,
+            12
+          ],
+          "n": 386,
+          "validRate": 0.4948186528497409,
+          "meanScore": 40.55052569352421
+        }
+      ]
+    },
+    "baseline": {
+      "validRate": 1.0,
+      "meanScore": 76.97474983407179,
+      "meanAngle": 1.3002597359677588,
+      "meanFlips": 0.5036402347426319,
+      "meanTwists": 0.0,
+      "meanSplash": 0.20261525842831565,
+      "heightBins": [
+        {
+          "height": [
+            2,
+            4
+          ],
+          "n": 397,
+          "validRate": 1.0,
+          "meanScore": 77.25226725242301
+        },
+        {
+          "height": [
+            4,
+            6
+          ],
+          "n": 421,
+          "validRate": 1.0,
+          "meanScore": 77.08808223812369
+        },
+        {
+          "height": [
+            6,
+            8
+          ],
+          "n": 416,
+          "validRate": 1.0,
+          "meanScore": 76.96485889738022
+        },
+        {
+          "height": [
+            8,
+            10
+          ],
+          "n": 380,
+          "validRate": 1.0,
+          "meanScore": 76.82127773982138
+        },
+        {
+          "height": [
+            10,
+            12
+          ],
+          "n": 386,
+          "validRate": 1.0,
+          "meanScore": 76.72746140994634
+        }
+      ]
+    }
+  }
+}

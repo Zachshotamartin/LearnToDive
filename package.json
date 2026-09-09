@@ -1,0 +1,28 @@
+{
+  "name": "@zachshotamartin/learn-to-dive",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "exports": {
+    ".": "./src/index.js",
+    "./style.css": "./src/style.css"
+  },
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 5184",
+    "build": "vite build",
+    "test": "node --test tests/*.test.js",
+    "test:browser": "playwright test",
+    "capture": "node scripts/capture.mjs"
+  },
+  "dependencies": {
+    "three": "^0.180.0"
+  },
+  "devDependencies": {
+    "vite": "^8.2.1",
+    "@playwright/test": "^1.62.1"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "license": "MIT"
+}
