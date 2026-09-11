@@ -20,8 +20,20 @@ The controller compares 96x96, 256x256 and 256x256x128 across three seeds, then 
 
 SIGTERM the PID in `SUITE.json` to pause at a saved update boundary. Repeat the identical command to resume. Checkpoints retain optimizer, RNG, physical worlds, routine history and recovery bank. `latest.pt`, immutable million-step checkpoints and separately evaluated `best.pt` are retained. Changing a learning file invalidates exact resume; the suite controller and audit scripts are outside that contract. Budgets are limits, not claims that a model is good.
 
+## Layout
+
+- `geometry.py`: sensor layout, quaternion helpers and body-geometry measurements (pure functions of a sensor row).
+- `stance.py`: the flat-footed standing start and the balanced armstand start.
+- `engine.py`: the batched MuJoCo arena with takeoff, flight and entry measurements.
+- `water.py`: the stateless water force model.
+- `rules.py`, `judge.py`: legal declarations from `difficulty.json` and the approximate geometric judge.
+- `environment.py`: routines, declarations, recovery snapshots and the 223-value observation.
+- `policy.py`, `losses.py`: the hybrid declaration/motor actor with PopArt value scaling and the PPO surrogate.
+- `train.py`, `evaluation.py`, `checkpointing.py`: the resumable trainer, held-out evaluation and atomic writes.
+- `run_suite.py`, `audit_physics.py`, `check_browser_parity.py`, `extract_difficulty.py`: tooling outside the exact-resume contract.
+
 ## Verification and release boundary
 
-Run `python -m unittest discover -s training_v3 -p 'test_*.py'`, `python training_v3/audit_physics.py`, and `python training_v3/check_browser_parity.py`.
+Run `python -m unittest discover -s training_v3 -p 'test_*.py'`, `python training_v3/audit_physics.py`, and `python training_v3/check_browser_parity.py`. The tests are split by subject: `test_judge.py`, `test_environment.py`, `test_measurements.py`, `test_stance.py` and `test_training.py`; `probes.py` holds the shared single-athlete helpers.
 
 The standalone browser inference module is `src/core/autonomousPolicy.js` (format `self-declared-diver-v11`); it is not plugged into the existing published v9 runtime, and `training_v3/diver.xml` is this trainer's model, not the browser's `public/physics/diver.xml`. No training script replaces website assets. After training, frozen unseen routines, perturbed entries, category coverage, physics/browser parity, and actual browser playback must qualify a checkpoint before switching the app to v11. All development exports are marked unqualified.
