@@ -135,3 +135,9 @@ See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for runtime licenses and th
 Release assets require `training/export_assets.py --status release --qualification <frozen-evidence-directory>`, in addition to the explicit policy and initial paths. The exporter verifies the same preregistered native/WASM quality and provenance checks before changing the public manifest. Development snapshots keep their visible development status.
 
 The V8 whole-entry controller is still under development. The first matched-head 2.048M continuation failed all 384 clean-entry tests and worsened mean full-window angle from 35.73° to 41.82°. Its evidence remains preserved. The completed `normalized-whole-entry-once-v3` phase reduced the fixed-case worst-angle mean to 19.59°, while all 384 cases still failed the complete clean-entry standard. See [training/CHECKPOINTS.md](training/CHECKPOINTS.md) for immutable checkpoints, exact versus restarted continuation, evaluated-best selection and extending a completed target.
+
+## Runtime regression checks
+
+`npm test` checks the committed native reference trajectories and current policy schema. `npm run test:runtime` runs focused browser loading/playback/export checks for trained and initial models. These are correctness checks, not proof of model quality; older browser qualification scenarios are separate.
+
+Regenerate native references only after investigating a contract change, using a Python environment with the pinned training dependencies: `python training/generate_fixtures.py`. References carry source/model hashes so drift is reported explicitly. Existing numerical parity tolerances remain unchanged.

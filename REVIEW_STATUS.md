@@ -5,8 +5,9 @@ This branch preserves the current source and development browser assets. It is n
 ## Checks run before push
 
 - `npm run build`: passed.
-- `npm test`: 47 passed / 2 failed: native/WASM trajectories and first-contact timing.
-- The preceding native training verification passed 9 diving tests and 17 focused hide-and-seek tests, plus a bounded-torque/momentum audit and pure browser-policy inference parity. These checks do not override the JavaScript failures above.
+- `npm run test:runtime`: passed for trained and initial models in an actual browser, without page errors.
+- `npm test`: 49 passed / 0 failed. Stale native geometry references were regenerated independently and fingerprinted; tolerances unchanged.
+- The preceding native training verification passed 9 diving tests and 17 focused hide-and-seek tests, plus a bounded-torque/momentum audit and pure browser-policy inference parity. Native training verification remains separate from browser/model quality.
 
 ## Training boundary
 

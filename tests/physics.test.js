@@ -83,6 +83,12 @@ test("native3.13 and WASM3.13 match full trajectories, physical pushes and obser
   const fixtures = JSON.parse(
     fs.readFileSync(new URL("./fixtures/mujoco-parity.json", import.meta.url)),
   );
+  assert.equal(fixtures.contract.xmlSHA256, currentContract.xmlSHA256, 'Native fixture geometry is stale; regenerate with the pinned native generator');
+  assert.equal(fixtures.contract.observationSize, currentContract.observationSize);
+  assert.equal(fixtures.contract.controlSemantics, CONTROL_SEMANTICS);
+  assert.equal(fixtures.contract.judgeVersion, JUDGE_VERSION);
+  for (const [name, hash] of Object.entries(fixtures.sources))
+    assert.equal(createHash('sha256').update(fs.readFileSync(new URL('../training/' + name, import.meta.url))).digest('hex'), hash, `Native fixture source changed: ${name}`);
   for (const c of fixtures.cases)
     withEngine((e) => {
       e.reset(c.parameters);

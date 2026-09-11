@@ -12,7 +12,8 @@
     "build": "node scripts/build-mujoco-csp.mjs --check && vite build",
     "test": "node --test tests/*.test.js",
     "test:browser": "playwright test",
-    "capture": "node scripts/capture.mjs"
+    "capture": "node scripts/capture.mjs",
+    "test:runtime": "node scripts/test-runtime-browser.mjs"
   },
   "dependencies": {
     "@mujoco/mujoco": "3.13.0",
