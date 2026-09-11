@@ -15,6 +15,7 @@ from water import body_water, immersion
 ROOT=Path(__file__).resolve().parents[1]
 DT=.02
 SUBSTEPS=10
+ENTRY_WINDOW=1.2   # seconds after first contact in which the whole body must submerge
 SKILLS=[
  {'id':'101C','code':101,'name':'Forward dive · tuck','turns':.5,'twists':0,'back':0,'shape':0,'height':3},
  {'id':'103C','code':103,'name':'Forward 1½ somersaults · tuck','turns':1.5,'twists':0,'back':0,'shape':0,'height':5},
@@ -183,7 +184,7 @@ class Arena:
    c={} if contexts is None else contexts[j];s=c.get('skill',s);h=c.get('height',h)
    self.skill[i]=s;self.height[i]=h
    self.disturbance[i]=c.get("disturbance",0);self.disturbance_time[i]=c.get("disturbanceTime",self.rng.uniform(.65,1.05))
-   initial,sens,target=initial_state(self.model,self.resetdata,h,s,lean=c.get('lean',self.rng.uniform(0,.05) if self.training else .02),preload=c.get('preload',self.rng.uniform(-.20,-.16) if self.training else -.18),
+   initial,sens,target=initial_state(self.model,self.resetdata,h,s,lean=c.get('lean',self.rng.uniform(.02,.08) if self.training else .04),preload=c.get('preload',self.rng.uniform(-.20,-.16) if self.training else -.18),
     hip=c.get('hip',self.rng.uniform(.08,.2) if self.training else .12),knee=c.get('knee',self.rng.uniform(.15,.3) if self.training else .2),toe_over=c.get('toeOver',self.rng.uniform(0,.06) if self.training else .03),platform=bool(c.get('platform',False)))
    self.state[i]=initial;self.sensors[i]=sens;self.targets[i]=target
    self.theta[i]=0;self.twist[i]=0;self.prev_pitch[i]=np.arctan2(quat_up(initial[5:9][None])[0,0],quat_up(initial[5:9][None])[0,2])
@@ -327,9 +328,9 @@ class Arena:
   if len(wet):
    tracking=~np.isfinite(self.full_entry_time[wet])
    for k in range(SUBSTEPS):
-    active=tracking&(st[wet,k,0]<=self.entry_time[wet]+.8+1e-9);self.track_entry_batch(wet[active],st[wet[active],k],wet_after[active,k])
+    active=tracking&(st[wet,k,0]<=self.entry_time[wet]+ENTRY_WINDOW+1e-9);self.track_entry_batch(wet[active],st[wet[active],k],wet_after[active,k])
     for j,i in enumerate(wet):
-     if tracking[j] and ((np.isfinite(self.full_entry_time[i]) and st[i,k,0]>=self.full_entry_time[i]-1e-9) or st[i,k,0]>=self.entry_time[i]+.8-1e-9):
+     if tracking[j] and ((np.isfinite(self.full_entry_time[i]) and st[i,k,0]>=self.full_entry_time[i]-1e-9) or st[i,k,0]>=self.entry_time[i]+ENTRY_WINDOW-1e-9):
       tracking[j]=False
       st[i,k:]=st[i,k].copy();se[i,k:]=wet_after[j,k].copy();wet_after[j,k:]=wet_after[j,k].copy()
   self.state[:]=st[:,-1];self.sensors[:]=se[:,-1]
@@ -366,11 +367,10 @@ class Arena:
    grounded=np.sum(se[:,k,150:210:4],axis=1)>0
    foot_contacts=np.where(self.armstand[:,None],se[:,k,[170,182]]>0,se[:,k,[194,206]]>0)
    self.last_foot_contact=np.where(foot_contacts&active[:,None],st[:,k,0,None],self.last_foot_contact)
-   self.takeoff_tilt_invalid|=grounded&active&(np.where(self.armstand,np.abs(np.abs(pitches[:,k])-np.pi),np.abs(pitches[:,k]))>np.pi/3)
    recontact=self.released&grounded&active
    # A preparation bounce is a two-footed hop (rule 8.6.5.2): contact regained
    # after an upward departure. Contact flicker while falling is not a hop.
-   self.preparation_bounces+=recontact&(self.takeoff_vertical_speed>.05)
+   self.preparation_bounces+=recontact&(self.takeoff_vertical_speed>.25)
    self.rotated_recontact|=recontact&(np.where(self.armstand,-ups[:,k,2],ups[:,k,2])<.87)
    self.board_invalid|=(self.board_impulse>.1)|(self.board_peak>15)|(self.stand_impulse>.1)|(self.stand_peak>15)|self.rotated_recontact|self.foot_side_contact
    self.board_twist=np.where(grounded&active,np.maximum(self.board_twist,np.abs(twist_path[:,k])),self.board_twist)
@@ -388,7 +388,9 @@ class Arena:
    self.released[newly]=True;self.release_time[newly]=st[newly,k,0]-self.air_clear_time[newly]+.002
    self.release_theta[newly]=self.departure_theta[newly];self.release_twist[newly]=self.departure_twist[newly]
    self.foot_departure_gap[newly]=np.abs(self.last_foot_contact[newly,0]-self.last_foot_contact[newly,1])
-   self.takeoff_tilt_invalid|=newly&(np.where(self.armstand,np.abs(np.abs(self.departure_pitch)-np.pi),np.abs(self.departure_pitch))>np.pi/3)
+   # Leaving the board past horizontal means the athlete rolled off the edge; a
+   # steep but earlier departure is a poor takeoff, scored by the judge, not a failure.
+   self.takeoff_tilt_invalid|=newly&(np.where(self.armstand,np.abs(np.abs(self.departure_pitch)-np.pi),np.abs(self.departure_pitch))>np.pi/2)
    self.board_invalid|=self.takeoff_tilt_invalid|(newly&(self.foot_departure_gap>.04+1e-8))
    self.air_theta=np.where(started_wet,self.air_theta,np.where(self.released,trajectory_theta[:,k]-self.release_theta,0))
    self.phase_theta=np.where(started_wet,self.phase_theta,np.where(self.released,self.air_theta+np.where(self.armstand,wrap(self.departure_pitch-np.pi),self.departure_pitch),0))
@@ -403,7 +405,7 @@ class Arena:
   # move a metre in one 20 ms step, so such a jump ends the dive as a failure.
   jumped=np.linalg.norm(self.state[:,2:5]-old_state[:,2:5],axis=1)>1.
   self.diverged_events+=int(jumped.sum())
-  done=np.isfinite(self.full_entry_time)|(contacted&(self.state[:,0]-self.entry_time>=.8-1e-9))|((~contacted)&(self.state[:,0]>=3.6))|(~np.isfinite(self.state).all(axis=1))|jumped
+  done=np.isfinite(self.full_entry_time)|(contacted&(self.state[:,0]-self.entry_time>=ENTRY_WINDOW-1e-9))|((~contacted)&(self.state[:,0]>=3.6))|(~np.isfinite(self.state).all(axis=1))|jumped
   geometry=entry_geometry(s);straight,limbs,geo_ok,loss=entry_posture(joint,geometry)
   self.entry_omega=np.where(contacted,np.maximum(self.entry_omega,np.linalg.norm(s[:,13:16],axis=1)),self.entry_omega)
   tuck=np.exp(-((hip-1.4)/.8)**2-((knee-2)/.8)**2)*np.exp(-(np.max(tuck_geometry(s)[0],axis=1)/.45)**2)

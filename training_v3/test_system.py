@@ -110,7 +110,12 @@ class MeasurementTests(unittest.TestCase):
   self.assertTrue(done[0]);self.assertGreaterEqual(p.diverged_events,1);self.assertFalse(info[0]['water']);p.close()
  def test_preparation_bounce_requires_an_upward_hop(self):
   self.assertEqual(self.hop(-.2),0)   # dropped onto the platform: contact regained without a hop
+  self.assertEqual(self.hop(.15,gap=.01),0)  # a wobble of the board or a toe lift is not a hop either
   self.assertGreaterEqual(self.hop(1.8,gap=.02),1)  # launched upward, lands again: one hop
+ def test_distance_is_a_deduction_and_only_an_unsafe_dive_is_capped(self):
+  m=RulesTests.metrics(RulesTests());m['x']=.3;s=judge(IDS['101C'],'platform',10,m)
+  self.assertTrue(s['valid']);self.assertAlmostEqual(s['deductions']['distance'],1.2);self.assertGreater(s['execution'],2)
+  m['x']=.1;s=judge(IDS['101C'],'platform',10,m);self.assertTrue(s['valid']);self.assertLessEqual(s['execution'],2)
  def test_position_deduction_matches_rule_range(self):
   m=RulesTests.metrics(RulesTests());m['positionQuality']=.5
   self.assertAlmostEqual(judge(IDS['101C'],'platform',10,m)['deductions']['position'],1.)

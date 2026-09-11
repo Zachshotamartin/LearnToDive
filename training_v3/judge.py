@@ -5,7 +5,8 @@ Rule mapping (World Aquatics Competition Regulations, February 2026, Part Four):
 failed dives follow 8.6.5 (double bounce on a springboard, twist off by 90
 degrees or more, wrong end first); the 4.5 cap for wrong arm placement follows
 8.6.7; whole-body submersion completes the dive (10.6.7); position faults are
-0.5 to 2 points (10.5.5). A somersault count off by a quarter turn or more is
+0.5 to 2 points (10.5.5); an unsafe dive close to the board is capped at 2
+points (10.5.4) and distance from the board is a deduction, never a failure. A somersault count off by a quarter turn or more is
 treated as a dive other than the announced number (10.1.7). Distance from the
 board and the entry are judged 'according to opinion'; the geometric proxies
 below are documented approximations.
@@ -28,7 +29,6 @@ def judge(declaration,apparatus,height,m):
  if d['headfirst'] and m['firstGeometry'] in (12,15):reasons.append('feet entered before head or hands')
  if not d['headfirst'] and m['firstGeometry'] not in (12,15):reasons.append('feet-first dive did not enter feet first')
  if apparatus=='springboard' and m['preparationBounces']>0:reasons.append('double bounce')
- if m['x']<.4:reasons.append('insufficient platform clearance')
  if m['maxLateral']>.85 and d['twists']==0:reasons.append('wrong rotation plane')
  # Failures never get reclassified as an easier successful dive.
  angle=max(m['firstContactAngle'],m['entryAngle'])
@@ -42,9 +42,11 @@ def judge(declaration,apparatus,height,m):
   'legs':min(1,max(0,g['ankleGap']-.13)*5+float(g['crossedLegs'])),
   'hands':min(1,max(0,g['handSeparation']-.08)*5+max(0,g['handHeightGap']-.02)*10) if d['headfirst'] else 0,
   'lateralEntry':min(1,m['surfaceLateralSpeed']/3), # sideways (world y) speed of parts crossing the surface, m/s
+  'distance':min(2,max(0,.6-m['x'])*4), # too close to the board (rule 10.4.6 / 10.5.3, 'according to opinion')
  }
  execution=float(np.clip(10-sum(deductions.values()),0,10))
  if m['positionQuality']<.5:execution=min(execution,2.)
+ if m['x']<.2:execution=min(execution,2.) # unsafely close to the board: maximum award 2 (rule 10.5.4)
  if not m.get('entryArmPositionValid',True):execution=min(execution,4.5)
  if reasons:execution=0.
  dd=difficulty(declaration,apparatus,height)
