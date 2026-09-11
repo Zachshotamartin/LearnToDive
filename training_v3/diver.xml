@@ -1,4 +1,8 @@
-<!-- v7 adds paired physical hip adduction; v6: each foot pitch lumps ankle and midfoot plantarflexion; torque remains 100 Nm. -->
+<!-- v11 native trainer model. v7 added paired hip adduction; v6 lumped ankle and midfoot pitch.
+     v11 raises the leg, arm and adduction torque caps to athletic values (knee 260 Nm, hip 240 Nm,
+     ankle 180 Nm, shoulder 120 Nm) and lowers servo damping so a bounded countermovement jump is
+     physically possible; the old kv=18 servos braked any joint moving faster than the slewing target.
+     Still no root actuator; every force is a bounded joint servo. -->
 <mujoco model="learn_to_dive_articulated">
   <compiler angle="radian" autolimits="true" />
   <option timestep="0.002" gravity="0 0 -9.81" integrator="implicitfast" solver="Newton" iterations="30" tolerance="1e-9">
@@ -138,20 +142,20 @@
     <exclude body1="torso" body2="thigh_R" />
   </contact>
   <actuator>
-    <position name="hip_L" joint="hip_L" kp="180" kv="18" ctrlrange="-0.5 2.3" forcerange="-160 160" />
-    <position name="knee_L" joint="knee_L" kp="180" kv="18" ctrlrange="0 2.7" forcerange="-180 180" />
-    <position name="ankle_L" joint="ankle_L" kp="100" kv="10" ctrlrange="-0.6 1.4" forcerange="-100 100" />
-    <position name="hip_R" joint="hip_R" kp="180" kv="18" ctrlrange="-0.5 2.3" forcerange="-160 160" />
-    <position name="knee_R" joint="knee_R" kp="180" kv="18" ctrlrange="0 2.7" forcerange="-180 180" />
-    <position name="ankle_R" joint="ankle_R" kp="100" kv="10" ctrlrange="-0.6 1.4" forcerange="-100 100" />
-    <position name="shoulder_pitch_L" joint="shoulder_pitch_L" kp="65" kv="6" ctrlrange="-0.6 3.25" forcerange="-65 65" />
-    <position name="shoulder_roll_L" joint="shoulder_roll_L" kp="45" kv="5" ctrlrange="-1.2 1.2" forcerange="-45 45" />
-    <position name="elbow_L" joint="elbow_L" kp="45" kv="4" ctrlrange="0 2.4" forcerange="-35 35" />
-    <position name="shoulder_pitch_R" joint="shoulder_pitch_R" kp="65" kv="6" ctrlrange="-0.6 3.25" forcerange="-65 65" />
-    <position name="shoulder_roll_R" joint="shoulder_roll_R" kp="45" kv="5" ctrlrange="-1.2 1.2" forcerange="-45 45" />
-    <position name="elbow_R" joint="elbow_R" kp="45" kv="4" ctrlrange="0 2.4" forcerange="-35 35" />
-  <position name="hip_adduction_L" joint="hip_adduction_L" kp="100" kv="10" ctrlrange="-0.15 0.18" forcerange="-80 80" />
-<position name="hip_adduction_R" joint="hip_adduction_R" kp="100" kv="10" ctrlrange="-0.15 0.18" forcerange="-80 80" />
+    <position name="hip_L" joint="hip_L" kp="300" kv="8" ctrlrange="-0.5 2.3" forcerange="-240 240" />
+    <position name="knee_L" joint="knee_L" kp="300" kv="8" ctrlrange="0 2.7" forcerange="-260 260" />
+    <position name="ankle_L" joint="ankle_L" kp="200" kv="6" ctrlrange="-0.6 1.4" forcerange="-180 180" />
+    <position name="hip_R" joint="hip_R" kp="300" kv="8" ctrlrange="-0.5 2.3" forcerange="-240 240" />
+    <position name="knee_R" joint="knee_R" kp="300" kv="8" ctrlrange="0 2.7" forcerange="-260 260" />
+    <position name="ankle_R" joint="ankle_R" kp="200" kv="6" ctrlrange="-0.6 1.4" forcerange="-180 180" />
+    <position name="shoulder_pitch_L" joint="shoulder_pitch_L" kp="120" kv="10" ctrlrange="-0.6 3.25" forcerange="-120 120" />
+    <position name="shoulder_roll_L" joint="shoulder_roll_L" kp="70" kv="6" ctrlrange="-1.2 1.2" forcerange="-70 70" />
+    <position name="elbow_L" joint="elbow_L" kp="80" kv="6" ctrlrange="0 2.4" forcerange="-70 70" />
+    <position name="shoulder_pitch_R" joint="shoulder_pitch_R" kp="120" kv="10" ctrlrange="-0.6 3.25" forcerange="-120 120" />
+    <position name="shoulder_roll_R" joint="shoulder_roll_R" kp="70" kv="6" ctrlrange="-1.2 1.2" forcerange="-70 70" />
+    <position name="elbow_R" joint="elbow_R" kp="80" kv="6" ctrlrange="0 2.4" forcerange="-70 70" />
+  <position name="hip_adduction_L" joint="hip_adduction_L" kp="160" kv="12" ctrlrange="-0.15 0.18" forcerange="-140 140" />
+<position name="hip_adduction_R" joint="hip_adduction_R" kp="160" kv="12" ctrlrange="-0.15 0.18" forcerange="-140 140" />
 </actuator>
   <sensor>
     <subtreecom name="com" body="pelvis" />

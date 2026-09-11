@@ -60,15 +60,24 @@ class Arena:
   e.reset([i],[dict(skill=3 if d['back'] else 0,height=self.height[i],preload=0 if self.apparatus[i] else -.05123,disturbance=0)])
   e.platform[i]=bool(self.apparatus[i]);e.armstand[i]=d['armstand'];e.headfirst[i]=d['headfirst'];e.height[i]=self.height[i]
   if d['armstand']:
+   # Balanced handstand start: hands shoulder-width on the platform, arms straight,
+   # trunk pitched so the centre of mass sits over the hands. Holding it and pressing
+   # off are learned; the shoulders only carry a bounded servo torque.
    data=e.resetdata;m=e.model;mujoco.mj_setState(m,data,e.state[i],STATE_SPEC)
-   yaw=np.pi*d['back'];pitch=np.pi
-   data.qpos[4:8]=[np.cos(pitch/2)*np.cos(yaw/2),np.sin(pitch/2)*np.sin(yaw/2),np.sin(pitch/2)*np.cos(yaw/2),np.cos(pitch/2)*np.sin(yaw/2)]
-   target=np.array([0,0,1.2,3.05,3.05,-.3,.3,0,0.])
+   yaw=np.pi*d['back'];target=np.array([0,0,1.2,3.14,3.14,0,0,0,.06]);gids=[6,9]
    from engine import ACTUATOR_MAP
-   data.qpos[e.qadr]=target[ACTUATOR_MAP];data.ctrl[:]=target[ACTUATOR_MAP];data.qpos[0]=0
-   mujoco.mj_forward(m,data)
-   gids=[6,9];bottom=min(data.geom_xpos[g,2]-np.linalg.norm(data.geom_xmat[g].reshape(3,3)[2]*m.geom_size[g]) for g in gids)
-   data.qpos[3]+=.055-bottom-.0001;data.qpos[1]+=-.2-np.mean(data.geom_xpos[gids,0]);mujoco.mj_forward(m,data)
+   def place(pitch):
+    data.qpos[4:8]=[np.cos(pitch/2)*np.cos(yaw/2),np.sin(pitch/2)*np.sin(yaw/2),np.sin(pitch/2)*np.cos(yaw/2),np.cos(pitch/2)*np.sin(yaw/2)]
+    data.qpos[e.qadr]=target[ACTUATOR_MAP];data.ctrl[:]=target[ACTUATOR_MAP];data.qpos[0]=0;data.qpos[1]=0;data.qpos[3]=0;mujoco.mj_forward(m,data)
+    bottom=min(data.geom_xpos[g,2]-np.linalg.norm(data.geom_xmat[g].reshape(3,3)[2]*m.geom_size[g]) for g in gids)
+    data.qpos[3]+=.055-bottom-.0001;data.qpos[1]+=-.2-np.mean(data.geom_xpos[gids,0]);mujoco.mj_forward(m,data)
+    return float(data.subtree_com[2][0]-np.mean(data.geom_xpos[gids,0]))
+   lo,hi=np.pi-.35,np.pi+.35;offset_lo=place(lo)
+   for _ in range(40):
+    mid=(lo+hi)/2;offset=place(mid)
+    if np.sign(offset)==np.sign(offset_lo):lo,offset_lo=mid,offset
+    else:hi=mid
+   if abs(place((lo+hi)/2))>2e-3:raise ValueError('Armstand start could not be balanced over the hands')
    mujoco.mj_getState(m,data,e.state[i],STATE_SPEC);e.sensors[i]=data.sensordata;e.targets[i]=target
    e.prev_pitch[i],e.prev_twist[i],_= [x[0] for x in framed_angles(e.state[i,5:9][None])]
   if self.perturb:e.disturbance[i]=30 if i%2 else -30;e.disturbance_time[i]=.75

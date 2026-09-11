@@ -7,6 +7,7 @@ import torch
 from torch import nn
 from torch.distributions import Normal,Categorical
 from rules import DIVES
+FORMAT='self-declared-diver-v11'
 
 class Policy(nn.Module):
  def __init__(self,obs,widths=(256,256),rho=.6):
@@ -45,5 +46,5 @@ class Policy(nn.Module):
   self.value_mean.copy_(mean);self.value_std.copy_(std)
   return float(ratio)
  def export(self):
-  return dict(format='self-declared-diver-v10',observationSize=self.obs,actionSize=9,choiceSize=len(DIVES),widths=self.widths,rho=self.rho,
+  return dict(format=FORMAT,observationSize=self.obs,actionSize=9,choiceSize=len(DIVES),widths=self.widths,rho=self.rho,
     state={k:v.detach().cpu().tolist() for k,v in self.state_dict().items()})

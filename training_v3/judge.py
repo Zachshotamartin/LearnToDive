@@ -1,10 +1,19 @@
 """Independent geometric judge. Execution is an automated approximation, not a
 claim to replace human judging. No reward coefficients enter this module.
+
+Rule mapping (World Aquatics Competition Regulations, February 2026, Part Four):
+failed dives follow 8.6.5 (double bounce on a springboard, twist off by 90
+degrees or more, wrong end first); the 4.5 cap for wrong arm placement follows
+8.6.7; whole-body submersion completes the dive (10.6.7); position faults are
+0.5 to 2 points (10.5.5). A somersault count off by a quarter turn or more is
+treated as a dive other than the announced number (10.1.7). Distance from the
+board and the entry are judged 'according to opinion'; the geometric proxies
+below are documented approximations.
 """
 import math
 import numpy as np
 from rules import DIVES,difficulty
-VERSION='self-declared-whole-entry-v10'
+VERSION='self-declared-whole-entry-v11'
 
 def judge(declaration,apparatus,height,m):
  d=DIVES[int(declaration)]
@@ -26,13 +35,13 @@ def judge(declaration,apparatus,height,m):
  g=m['entryGeometryWorst']
  deductions={
   'takeoff':min(1.5,1.5*max(0,1-m['ascent']/.3))+min(2,m['preparationBounces']),
-  'position':3*(1-np.clip(m['positionQuality'],0,1)),
+  'position':2*(1-np.clip(m['positionQuality'],0,1)),
   'entryAlignment':min(6,angle/10),
   'entryForm':min(2,2*(1-np.clip(m['form'],0,1))),
   'feet':min(1,max(g['footLineAngles'])/45),
   'legs':min(1,max(0,g['ankleGap']-.13)*5+float(g['crossedLegs'])),
   'hands':min(1,max(0,g['handSeparation']-.08)*5+max(0,g['handHeightGap']-.02)*10) if d['headfirst'] else 0,
-  'lateralEntry':min(1,m['surfaceLateralSpeed']/3),
+  'lateralEntry':min(1,m['surfaceLateralSpeed']/3), # sideways (world y) speed of parts crossing the surface, m/s
  }
  execution=float(np.clip(10-sum(deductions.values()),0,10))
  if m['positionQuality']<.5:execution=min(execution,2.)
@@ -48,9 +57,12 @@ def judge(declaration,apparatus,height,m):
   automatedJudge=True,splashIsProxy=True,judgeVersion=VERSION)
 
 def terminal_reward(score,m):
- # Continuous failed-entry feedback; no -80 cliff shared by unrelated failures.
- # It is always <=0 on a failed dive and cannot buy points through extra spins.
- costs=.06*score['entryAngle']+.8*(1-np.clip(m['form'],0,1))
- costs+=.8*np.log1p(score['rotationError'])+.8*np.log1p(score['twistError'])
- costs+=1.5*float(not m['fullEntryComplete'])+2*float(m['boardInvalid'])
- return float(score['trainingValue']-costs)
+ """Training signal, not the competition score. Every judged component enters as a
+ continuous cost, so a dive whose official execution is already clipped to zero still
+ receives gradient toward each fault; a completed declaration earns a bounded bonus.
+ It is always <=0 on a failed dive and extra spins never buy points.
+ """
+ d=score['deductions']
+ costs=.25*sum(d.values())+.03*score['entryAngle']+.8*np.log1p(score['rotationError'])+.8*np.log1p(score['twistError'])
+ costs+=1.5*float(not m['fullEntryComplete'])+2*float(m['boardInvalid'])+1.5*float(not m['water'])
+ return float(score['trainingValue']+float(score['valid'])-costs)

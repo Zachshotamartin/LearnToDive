@@ -1,14 +1,23 @@
-"""V8 stateless water approximation, mirrored in src/core/water.js.
-SI units; native world Z up. One submerged-envelope center per physical body.
-Directional projected areas use collider dimensions, never bounding-sphere radius.
-Quadratic drag is passive; buoyancy is external work and excluded
-from dragPower. No added mass, free surface history, shielding, lift or CFD.
+"""Stateless water approximation for the v11 native trainer (the browser keeps
+its own v8 mirror in src/core/water.js). SI units; native world Z up. One
+submerged-envelope center per physical body. Directional projected areas use
+collider dimensions, never bounding-sphere radius. Quadratic drag is passive;
+buoyancy is external work and excluded from dragPower.
+
+Flow along a slender part's axis uses a streamlined coefficient: summing the
+bluff coefficient over fifteen overlapping parts decelerated a straight diver at
+about nine g and stopped the centre of mass 1.2 m below the surface, whereas
+real head-first entries from 10 m reach roughly 3 m. Broadside (bluff) flow keeps
+the original coefficient, so a flat entry is still punished by the water.
+No added mass, free surface history, shielding, lift or CFD.
 """
 import numpy as np
-WATER_VERSION='directional-submerged-body-v1'
+WATER_VERSION='directional-submerged-body-v2-streamlined-axial'
 POOL_DEPTH=5.
 DENSITY=1000.
-DRAG_COEFFICIENT=.8
+DRAG_COEFFICIENT=.8            # bluff (broadside) flow
+AXIAL_DRAG_COEFFICIENT=.15     # flow along a capsule/ellipsoid axis or a pointed foot
+SPHERE_DRAG_COEFFICIENT=.35    # head, mostly in the wake of the arms or torso
 ANGULAR_COEFFICIENT=1.
 BUOYANCY_MASS_RATIO=1.015
 
@@ -25,6 +34,13 @@ def shape_parameters(types,sizes):
  cap=np.stack([4*sizes[...,0]*sizes[...,1]+np.pi*sizes[...,0]**2]*2+[np.pi*sizes[...,0]**2],axis=-1)
  area=np.where((types==3)[...,None],cap,area)
  return r,area
+
+def drag_coefficients(types):
+ """Per-geom local-frame coefficients: bluff broadside, streamlined along the axis."""
+ types=np.asarray(types);c=np.full((*types.shape,3),DRAG_COEFFICIENT)
+ c=np.where((types==2)[...,None],SPHERE_DRAG_COEFFICIENT,c)
+ axial=np.stack([types==6,np.zeros(types.shape,bool),(types==3)|(types==4)],axis=-1)
+ return np.where(axial,AXIAL_DRAG_COEFFICIENT,c)
 
 def immersion(types,sizes,position,quaternion,water_z):
  R=rotation(quaternion);row=R[...,2,:];types=np.asarray(types);sizes=np.asarray(sizes)
@@ -46,7 +62,7 @@ def body_water(types,sizes,position,quaternion,com,linear,angular,mass,water_z):
  center=np.array(position,copy=True);center[...,2]-=extent*(1-fraction)
  offset=center-com;velocity=linear+np.cross(angular,offset)
  local_v=np.einsum('...ji,...j->...i',R,velocity);local_w=np.einsum('...ji,...j->...i',R,angular)
- local_f=-.5*DENSITY*DRAG_COEFFICIENT*area*fraction[...,None]*local_v*np.linalg.norm(local_v,axis=-1,keepdims=True)
+ local_f=-.5*DENSITY*drag_coefficients(types)*area*fraction[...,None]*local_v*np.linalg.norm(local_v,axis=-1,keepdims=True)
  k=.5*DENSITY*ANGULAR_COEFFICIENT*r*(np.roll(r,1,axis=-1)**4+np.roll(r,2,axis=-1)**4)
  local_t=-k*fraction[...,None]*local_w*np.linalg.norm(local_w,axis=-1,keepdims=True)
  drag=np.einsum('...ij,...j->...i',R,local_f);angular_drag=np.einsum('...ij,...j->...i',R,local_t)

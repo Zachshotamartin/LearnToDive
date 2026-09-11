@@ -3,7 +3,7 @@
  * matching simulator contract and held-out qualification; never silently cast.
  */
 export function createAutonomousPolicy(model) {
-  if (model?.format !== 'self-declared-diver-v10' || model.actionSize !== 9 || !Number.isInteger(model.observationSize) || !(model.rho >= 0 && model.rho < 1)) throw new Error('Incompatible autonomous diving model');
+  if (model?.format !== 'self-declared-diver-v11' || model.actionSize !== 9 || !Number.isInteger(model.observationSize) || !(model.rho >= 0 && model.rho < 1)) throw new Error('Incompatible autonomous diving model');
   const weights = model.state;
   function linear(x, name) {
     const w = weights[`${name}.weight`], b = weights[`${name}.bias`];

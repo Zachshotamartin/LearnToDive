@@ -18,3 +18,24 @@ class TrainingTests(unittest.TestCase):
    for h in heights:
     for g in groups:self.assertTrue(legal_mask(g,app,h).any(),(app,h,g))
 if __name__=='__main__':unittest.main()
+
+class LossTests(unittest.TestCase):
+ def test_ppo_terms_weight_every_decision_once(self):
+  from losses import ppo_terms
+  n=100;logp=torch.zeros(n);old=torch.zeros(n);adv=torch.ones(n);choosing=torch.zeros(n,dtype=torch.bool);choosing[:2]=True
+  selected=torch.ones(n,dtype=torch.bool);entropy=torch.cat([torch.full((2,),3.),torch.full((98,),-4.)])
+  loss,kl=ppo_terms(logp,old,adv,choosing,selected,entropy,motor_entropy=.006,declaration_entropy=.01)
+  expected=-1+ (.006*(-4.)*98+.01*3.*2)/n*-1  # surrogate mean of -1 minus the two entropy bonuses
+  self.assertAlmostEqual(float(loss),-1-(.006*(-4.)*98+.01*3.*2)/n,places=6);self.assertEqual(float(kl),0.)
+  adv=torch.cat([torch.full((2,),50.),torch.ones(98)])
+  loss,_=ppo_terms(logp,old,adv,choosing,selected,entropy,motor_entropy=0,declaration_entropy=0)
+  self.assertAlmostEqual(float(loss),-(50.*2+98)/n,places=5)  # per-sample, not one half per group
+  loss,kl=ppo_terms(logp,old,adv,choosing,torch.zeros(n,dtype=torch.bool),entropy)
+  self.assertEqual(float(loss),0.);self.assertEqual(float(kl),0.)
+ def test_training_sources_exclude_tooling_and_cover_the_learning_problem(self):
+  from train import hashes
+  from engine import TRAINING_SOURCES
+  names=set(hashes())
+  self.assertEqual(names,set(TRAINING_SOURCES))
+  for tooling in ['run_suite.py','audit_physics.py','check_browser_parity.py','extract_difficulty.py']:self.assertNotIn(tooling,names)
+  for essential in ['engine.py','water.py','judge.py','rules.py','policy.py','losses.py','train.py','environment.py','difficulty.json','diver.xml']:self.assertIn(essential,names)

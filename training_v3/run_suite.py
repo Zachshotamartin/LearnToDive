@@ -51,6 +51,9 @@ def main(a):
   for name in configurations:
    rows=[r['metrics'] for r in state['trials'] if r['architecture']==name]
    scores[name]=tuple(float(np.median([r[k] for r in rows]))*sign for k,sign in [('points',1),('execution',1),('clean',1),('entryAngle',-1)])
+  if all(score[0]<=0 for score in scores.values()):
+   save(phase='pilot-comparison-uninformative',architectureScores=scores,reason='No architecture scored above zero on the fixed development cases; ranking them would only compare noise. Review the environment before spending the continuation budget.')
+   raise RuntimeError('Pilot comparison uninformative: every architecture scored zero points')
   winner=max(scores,key=scores.get);candidates=[r for r in state['trials'] if r['architecture']==winner]
   chosen=sorted(candidates,key=lambda r:(r['metrics']['points'],r['metrics']['execution'],-r['metrics']['entryAngle']))[len(candidates)//2]
   save(phase='pilot-comparison-complete',architectureScores=scores,selected=chosen,selectionEvidence='Median fixed-development score across seeds; alignment is a tie breaker, not qualification. Full held-out qualification remains required.')
@@ -59,6 +62,7 @@ def main(a):
   if not (long/'latest.pt').exists():
    import shutil
    shutil.copy2(out/chosen['name']/'latest.pt',long/'latest.pt')
+   if (out/chosen['name']/'best.pt').exists():shutil.copy2(out/chosen['name']/'best.pt',long/'best.pt')
    metadata=json.loads((out/chosen['name']/'STATUS.json').read_text());metadata['phase']='paused';atomic_json(long/'STATUS.json',metadata)
   run('continued',configurations[winner],a.total_steps,chosen['seed'])
   save(phase='paused' if stop else 'finished-awaiting-review',childPID=None)

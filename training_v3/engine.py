@@ -1,4 +1,6 @@
-"""Original articulated MuJoCo diving environment; native and browser share diver.xml.
+"""Original articulated MuJoCo diving environment for the v11 native trainer.
+training_v3/diver.xml is this trainer's model; the published browser runtime still
+uses public/physics/diver.xml (v8) and is not wired to this trainer.
 Units: kg, m, s, rad. Native coordinates X forward, Y lateral, Z up; water Z=-height.
 The only controller commands are bounded joint position servos. No root wrench is
 used by the controller. Board spring contact transfers takeoff momentum physically.
@@ -26,7 +28,8 @@ SKILLS=[
 ACTION_LOW=np.array([-.45,0,-.55,-.5,-.5,-1.1,-1.1,0,-.15])
 ACTION_HIGH=np.array([2.2,2.6,1.35,3.14,3.14,1.1,1.1,2.3,.18])
 ACTUATOR_MAP=np.array([0,1,2,0,1,2,3,5,7,4,6,7,8,8])
-TARGET_RATE=np.array([8,10,8,10,10,8,8,10,4]) # rad/s servo target slew, actual dynamics uncapped
+TARGET_RATE=np.array([14,14,14,10,10,8,8,10,4]) # rad/s servo target slew; leg targets must outrun a jump extension
+TRAINING_SOURCES=('environment.py','engine.py','water.py','rules.py','judge.py','policy.py','losses.py','train.py','difficulty.json','diver.xml')
 STATE_SPEC=mujoco.mjtState.mjSTATE_FULLPHYSICS
 
 def quat_up(q):
@@ -115,23 +118,34 @@ def execution_estimate(angle,form,splash,bounces,board_twist,numeric,position,en
  value=np.where(numeric&(~invalid_launch),value,0)
  return np.floor(value*2+.5)/2
 
-def initial_state(m,d,height,skill,tilt=.16,preload=-.18,hip=.5,knee=1.,ankle=.5,x=-.13):
- mujoco.mj_resetData(m,d)
- d.mocap_pos[0]=[0,0,-height];d.mocap_quat[0]=[1,0,0,0]
- back=SKILLS[skill]['back']; yaw=np.pi*back
- # Tilt toward water, independent of whether the athlete faces it or faces away.
- d.qpos[4:8]=[np.cos(tilt/2)*np.cos(yaw/2),np.sin(tilt/2)*np.sin(yaw/2),np.sin(tilt/2)*np.cos(yaw/2),np.cos(tilt/2)*np.sin(yaw/2)]
- d.qpos[0]=preload
- targets=np.array([hip,knee,ankle,.3,.3,0,0,0,0])
+def initial_state(m,d,height,skill,lean=.02,preload=-.18,hip=.12,knee=.2,toe_over=.03):
+ """Flat-footed standing start at the edge. The ankle angle is solved so both feet lie
+ flat on the board, the leading edge of the feet (toes when facing the water, heels when
+ facing away) overhangs the tip by toe_over, and the trunk leans toward the water by
+ lean. Nothing here supports the athlete afterwards: balance, the press and the jump
+ are the controller's job. The old start stood on the toe corner with the centre of
+ mass already past the tip, which made every dive a fall.
+ """
+ back=SKILLS[skill]['back'];yaw=np.pi*back
  qadr=m.jnt_qposadr[m.actuator_trnid[:,0]]
- d.qpos[qadr]=targets[ACTUATOR_MAP];d.ctrl[:]=targets[ACTUATOR_MAP]
- mujoco.mj_forward(m,d)
- # Exact foot-box support plane, including orientation; start in resting contact.
- fg=[mujoco.mj_name2id(m,mujoco.mjtObj.mjOBJ_BODY,n) for n in ['foot_L','foot_R']]
- gids=[int(m.body_geomadr[b]) for b in fg]
+ fg=[mujoco.mj_name2id(m,mujoco.mjtObj.mjOBJ_BODY,n) for n in ['foot_L','foot_R']];gids=[int(m.body_geomadr[b]) for b in fg]
+ def place(ankle):
+  mujoco.mj_resetData(m,d);d.mocap_pos[0]=[0,0,-height];d.mocap_quat[0]=[1,0,0,0]
+  d.qpos[4:8]=[np.cos(lean/2)*np.cos(yaw/2),np.sin(lean/2)*np.sin(yaw/2),np.sin(lean/2)*np.cos(yaw/2),np.cos(lean/2)*np.sin(yaw/2)]
+  d.qpos[0]=preload;targets=np.array([hip,knee,ankle,.3,.3,0,0,0,0.])
+  d.qpos[qadr]=targets[ACTUATOR_MAP];d.ctrl[:]=targets[ACTUATOR_MAP];mujoco.mj_forward(m,d)
+  return targets,float(d.geom_xmat[gids[0]].reshape(3,3)[2,0])
+ lo,hi=-.6,1.4;slope_lo=place(lo)[1]
+ for _ in range(40):
+  mid=(lo+hi)/2;slope=place(mid)[1]
+  if np.sign(slope)==np.sign(slope_lo):lo,slope_lo=mid,slope
+  else:hi=mid
+ targets,slope=place((lo+hi)/2)
+ if abs(slope)>1e-3:raise ValueError('No flat-footed stance for this hip/knee/lean combination')
  bottom=min(d.geom_xpos[g,2]-np.dot(np.abs(d.geom_xmat[g].reshape(3,3)[2]),m.geom_size[g]) for g in gids)
  d.qpos[3]+=preload+.055-bottom-.0001
- d.qpos[1]+=x-np.mean(d.geom_xpos[gids,0])
+ front=max(d.geom_xpos[g,0]+np.abs(d.geom_xmat[g].reshape(3,3)[0])@m.geom_size[g] for g in gids)
+ d.qpos[1]+=toe_over-front
  mujoco.mj_forward(m,d)
  state=np.empty(mujoco.mj_stateSize(m,STATE_SPEC));mujoco.mj_getState(m,d,state,STATE_SPEC)
  return state,d.sensordata.copy(),targets
@@ -169,7 +183,8 @@ class Arena:
    c={} if contexts is None else contexts[j];s=c.get('skill',s);h=c.get('height',h)
    self.skill[i]=s;self.height[i]=h
    self.disturbance[i]=c.get("disturbance",0);self.disturbance_time[i]=c.get("disturbanceTime",self.rng.uniform(.65,1.05))
-   initial,sens,target=initial_state(self.model,self.resetdata,h,s,tilt=c.get('tilt',self.rng.uniform(.10,.22) if self.training else .16),preload=c.get('preload',self.rng.uniform(-.20,-.16) if self.training else -.18),x=c.get('x',self.rng.uniform(-.16,-.10) if self.training else -.13))
+   initial,sens,target=initial_state(self.model,self.resetdata,h,s,lean=c.get('lean',self.rng.uniform(0,.05) if self.training else .02),preload=c.get('preload',self.rng.uniform(-.20,-.16) if self.training else -.18),
+    hip=c.get('hip',self.rng.uniform(.08,.2) if self.training else .12),knee=c.get('knee',self.rng.uniform(.15,.3) if self.training else .2),toe_over=c.get('toeOver',self.rng.uniform(0,.06) if self.training else .03))
    self.state[i]=initial;self.sensors[i]=sens;self.targets[i]=target
    self.theta[i]=0;self.twist[i]=0;self.prev_pitch[i]=np.arctan2(quat_up(initial[5:9][None])[0,0],quat_up(initial[5:9][None])[0,2])
    self.applied_impulse[i]=0;self.push_duration[i]=0;self.first_geometry[i]=0;self.shape_angle[i]=0;self.max_progress[i]=0;self.board_twist[i]=0
@@ -260,8 +275,10 @@ class Arena:
   leg_ok=np.all(~feet|(geometry['footLineAngles']<np.radians(20)),axis=1)&(~knee_cross|(geometry['kneeGap']<.19))&(~ankle_cross|(geometry['ankleGap']<.16))&(~toe_cross|((geometry['toeGap']<.15)&~geometry['crossedLegs']))
   self.entry_geometry_valid[ids]&=(~head|hand_ok)&leg_ok
   self.entry_limbs_valid[ids]&=limbs
-  velocity=sensor[:,270:360].reshape(len(ids),15,6)[:,:,3:]
-  lateral=np.max(np.where(active,np.linalg.norm(velocity[:,:,:2],axis=2),0),axis=1)
+  # Sensor pairs are [framelinvel, frameangvel] per geom. Lateral means sideways
+  # relative to the line of flight (world y, rule 10.5.1), in metres per second.
+  velocity=sensor[:,270:360].reshape(len(ids),15,6)[:,:,:3]
+  lateral=np.max(np.where(active,np.abs(velocity[:,:,1]),0),axis=1)
   self.surface_lateral[ids]=np.maximum(self.surface_lateral[ids],lateral)
   self.surface_seen[ids]|=active;self.surface_finished[ids]|=fraction>=1;self.surface_previous[ids]=fraction
   self.entry_samples[ids]+=1
@@ -351,7 +368,9 @@ class Arena:
    self.last_foot_contact=np.where(foot_contacts&active[:,None],st[:,k,0,None],self.last_foot_contact)
    self.takeoff_tilt_invalid|=grounded&active&(np.where(self.armstand,np.abs(np.abs(pitches[:,k])-np.pi),np.abs(pitches[:,k]))>np.pi/3)
    recontact=self.released&grounded&active
-   self.preparation_bounces+=recontact
+   # A preparation bounce is a two-footed hop (rule 8.6.5.2): contact regained
+   # after an upward departure. Contact flicker while falling is not a hop.
+   self.preparation_bounces+=recontact&(self.takeoff_vertical_speed>.05)
    self.rotated_recontact|=recontact&(np.where(self.armstand,-ups[:,k,2],ups[:,k,2])<.87)
    self.board_invalid|=(self.board_impulse>.1)|(self.board_peak>15)|(self.stand_impulse>.1)|(self.stand_peak>15)|self.rotated_recontact|self.foot_side_contact
    self.board_twist=np.where(grounded&active,np.maximum(self.board_twist,np.abs(twist_path[:,k])),self.board_twist)
