@@ -1,0 +1,219 @@
+{
+  "contract": {
+    "schemaVersion": 1,
+    "physics": "MuJoCo 3.13.0",
+    "geometrySemantics": "shared-head-and-full-depth-basin-v8.1",
+    "waterVersion": "directional-submerged-body-v1",
+    "xmlSHA256": "c7ffbb5d229fbbcc08382201fffd44bfafc1aca5067bd68887425c08ab1ac4c3",
+    "controlSemantics": "joint-servo-full-entry-v8",
+    "judgeVersion": "full-submersion-physical-entry-v8",
+    "observationSemantics": "upright-adduction-full-entry-v4",
+    "observationSize": 76,
+    "actionSize": 9,
+    "actionLow": [
+      -0.45,
+      0,
+      -0.55,
+      -0.5,
+      -0.5,
+      -1.1,
+      -1.1,
+      0,
+      -0.15
+    ],
+    "actionHigh": [
+      2.2,
+      2.6,
+      1.35,
+      3.14,
+      3.14,
+      1.1,
+      1.1,
+      2.3,
+      0.18
+    ],
+    "footModel": "combined ankle and midfoot pitch; physical range -0.6 to 1.4 rad, target maximum 1.35 rad, unchanged 100 Nm torque cap"
+  },
+  "policyContract": {
+    "schemaVersion": 1,
+    "physics": "MuJoCo 3.13.0",
+    "geometrySemantics": "shared-head-and-full-depth-basin-v8.1",
+    "waterVersion": "directional-submerged-body-v1",
+    "xmlSHA256": "c7ffbb5d229fbbcc08382201fffd44bfafc1aca5067bd68887425c08ab1ac4c3",
+    "controlSemantics": "joint-servo-full-entry-v8",
+    "judgeVersion": "full-submersion-physical-entry-v8",
+    "observationSemantics": "upright-adduction-full-entry-v4",
+    "observationSize": 76,
+    "actionSize": 9,
+    "actionLow": [
+      -0.45,
+      0,
+      -0.55,
+      -0.5,
+      -0.5,
+      -1.1,
+      -1.1,
+      0,
+      -0.15
+    ],
+    "actionHigh": [
+      2.2,
+      2.6,
+      1.35,
+      3.14,
+      3.14,
+      1.1,
+      1.1,
+      2.3,
+      0.18
+    ],
+    "footModel": "combined ankle and midfoot pitch; physical range -0.6 to 1.4 rad, target maximum 1.35 rad, unchanged 100 Nm torque cap",
+    "trainingSourceSHA256": {
+      "control.js": "9c68959f9a902461a63930de023bf664df5d3eb02087ff83f5ad48c2281abdb8",
+      "sim.py": "0c73b2210aea027c5786bda4e796c1857888d1c1bc076c886b7f66f64bfe8d65",
+      "critic_calibration.py": "2b4c727d78b55ae65ccbf3e491c381da4f71ab97d7c8b1bc0bcaf5afc8bd45a7",
+      "water.py": "a1786c016583b62d12ee917da37fd5102af6c9ae877797ea2454742a9e633943",
+      "water.js": "98fd80ee42812cf33fc6b06ef8ccdbd51b29066520fee45735190b6ab7d96850",
+      "diver.xml": "c7ffbb5d229fbbcc08382201fffd44bfafc1aca5067bd68887425c08ab1ac4c3",
+      "checkpoints.py": "8441036a68d24981924cb741dd5f025800af6131e4805e996b942299530f6ab8",
+      "train.py": "b15004bc9ae14dd72a25f855ac00f397519e56d8316090cb1e81c706f4d90c8a",
+      "rewards.py": "53d64f97af451172e9c2794efb21c7c175e37785fad297fc00771a4cbb4498da",
+      "evaluate.py": "fdc66e0479fc875044c847084ac8878aa54c284da3f85fdd97c68bbfe1fcdf73",
+      "physics.js": "137e40e2d0b3d1321ff3e34ca14b66cdebbddfff038f94a9dc6f3cfb13b39fcc",
+      "contract.py": "1192168c40f7ae35c5462b5f64c9d59d9577f11595dabeb6d13fc2df726bd66a"
+    },
+    "stepsOnContract": 2232320,
+    "actorUpdateInteractions": 2048000,
+    "criticCalibrationInteractions": 184320,
+    "criticCalibrationRetainedSamples": 164272
+  },
+  "initialContract": {
+    "schemaVersion": 1,
+    "physics": "MuJoCo 3.13.0",
+    "geometrySemantics": "shared-head-and-full-depth-basin-v8.1",
+    "waterVersion": "directional-submerged-body-v1",
+    "xmlSHA256": "c7ffbb5d229fbbcc08382201fffd44bfafc1aca5067bd68887425c08ab1ac4c3",
+    "controlSemantics": "joint-servo-full-entry-v8",
+    "judgeVersion": "full-submersion-physical-entry-v8",
+    "observationSemantics": "upright-adduction-full-entry-v4",
+    "observationSize": 76,
+    "actionSize": 9,
+    "actionLow": [
+      -0.45,
+      0,
+      -0.55,
+      -0.5,
+      -0.5,
+      -1.1,
+      -1.1,
+      0,
+      -0.15
+    ],
+    "actionHigh": [
+      2.2,
+      2.6,
+      1.35,
+      3.14,
+      3.14,
+      1.1,
+      1.1,
+      2.3,
+      0.18
+    ],
+    "footModel": "combined ankle and midfoot pitch; physical range -0.6 to 1.4 rad, target maximum 1.35 rad, unchanged 100 Nm torque cap",
+    "stepsOnContract": 0,
+    "actorUpdateInteractions": 0,
+    "criticCalibrationInteractions": 0,
+    "criticCalibrationRetainedSamples": 0,
+    "trainingSourceSHA256": {
+      "control.js": "9c68959f9a902461a63930de023bf664df5d3eb02087ff83f5ad48c2281abdb8",
+      "sim.py": "085d42be85551a472a2b543d39d72f7a8916b827aac5852c5eec70f33ef3e9ac",
+      "critic_calibration.py": "2b4c727d78b55ae65ccbf3e491c381da4f71ab97d7c8b1bc0bcaf5afc8bd45a7",
+      "water.py": "a1786c016583b62d12ee917da37fd5102af6c9ae877797ea2454742a9e633943",
+      "water.js": "98fd80ee42812cf33fc6b06ef8ccdbd51b29066520fee45735190b6ab7d96850",
+      "diver.xml": "c7ffbb5d229fbbcc08382201fffd44bfafc1aca5067bd68887425c08ab1ac4c3",
+      "train.py": "821872b63d3756ab6b3411f8665d63720caee4747a68f16f202b7fabbcda5538",
+      "evaluate.py": "fdc66e0479fc875044c847084ac8878aa54c284da3f85fdd97c68bbfe1fcdf73",
+      "physics.js": "137e40e2d0b3d1321ff3e34ca14b66cdebbddfff038f94a9dc6f3cfb13b39fcc",
+      "contract.py": "1192168c40f7ae35c5462b5f64c9d59d9577f11595dabeb6d13fc2df726bd66a"
+    }
+  },
+  "crossPhysicsBaseline": false,
+  "judge": {
+    "id": "full-submersion-physical-entry-v8",
+    "sourceSHA256": {
+      "training/sim.py": "0c73b2210aea027c5786bda4e796c1857888d1c1bc076c886b7f66f64bfe8d65",
+      "training/water.py": "a1786c016583b62d12ee917da37fd5102af6c9ae877797ea2454742a9e633943",
+      "training/evaluate.py": "fdc66e0479fc875044c847084ac8878aa54c284da3f85fdd97c68bbfe1fcdf73",
+      "src/core/control.js": "9c68959f9a902461a63930de023bf664df5d3eb02087ff83f5ad48c2281abdb8",
+      "src/core/physics.js": "137e40e2d0b3d1321ff3e34ca14b66cdebbddfff038f94a9dc6f3cfb13b39fcc",
+      "src/core/water.js": "98fd80ee42812cf33fc6b06ef8ccdbd51b29066520fee45735190b6ab7d96850"
+    }
+  },
+  "observationSemantics": "upright-adduction-full-entry-v4",
+  "schemaVersion": 1,
+  "id": "learn-to-dive",
+  "status": "development",
+  "physics": {
+    "name": "MuJoCo",
+    "version": "3.13.0"
+  },
+  "trainingSteps": 193536000,
+  "files": [
+    {
+      "key": "xml",
+      "path": "physics/diver.c7ffbb5d229fbbcc.xml",
+      "sha256": "c7ffbb5d229fbbcc08382201fffd44bfafc1aca5067bd68887425c08ab1ac4c3",
+      "bytes": 19037
+    },
+    {
+      "key": "policy",
+      "path": "models/policy.4457679ca82a9641.json",
+      "sha256": "4457679ca82a964176e824ee4eb4d112e17edf4039fb0d2ed9f4af022d5e0172",
+      "bytes": 203584
+    },
+    {
+      "key": "initial",
+      "path": "models/initial.5290e646443957d4.json",
+      "sha256": "5290e646443957d4d751b5a75f04c33055e3023599a0ae9e50c009ba19799a7b",
+      "bytes": 200823
+    }
+  ],
+  "checkpointProvenance": {
+    "sha256": "1738df53bb3b7fdba0cdc134b7b2da475fa623b24f01fbd8798533673748fa2b",
+    "bytes": 1724036,
+    "steps": 193536000,
+    "stepsOnContract": 2232320,
+    "trainingSourceSHA256": {
+      "control.js": "9c68959f9a902461a63930de023bf664df5d3eb02087ff83f5ad48c2281abdb8",
+      "sim.py": "0c73b2210aea027c5786bda4e796c1857888d1c1bc076c886b7f66f64bfe8d65",
+      "critic_calibration.py": "2b4c727d78b55ae65ccbf3e491c381da4f71ab97d7c8b1bc0bcaf5afc8bd45a7",
+      "water.py": "a1786c016583b62d12ee917da37fd5102af6c9ae877797ea2454742a9e633943",
+      "water.js": "98fd80ee42812cf33fc6b06ef8ccdbd51b29066520fee45735190b6ab7d96850",
+      "diver.xml": "c7ffbb5d229fbbcc08382201fffd44bfafc1aca5067bd68887425c08ab1ac4c3",
+      "checkpoints.py": "8441036a68d24981924cb741dd5f025800af6131e4805e996b942299530f6ab8",
+      "train.py": "b15004bc9ae14dd72a25f855ac00f397519e56d8316090cb1e81c706f4d90c8a",
+      "rewards.py": "53d64f97af451172e9c2794efb21c7c175e37785fad297fc00771a4cbb4498da",
+      "evaluate.py": "fdc66e0479fc875044c847084ac8878aa54c284da3f85fdd97c68bbfe1fcdf73",
+      "physics.js": "137e40e2d0b3d1321ff3e34ca14b66cdebbddfff038f94a9dc6f3cfb13b39fcc",
+      "contract.py": "1192168c40f7ae35c5462b5f64c9d59d9577f11595dabeb6d13fc2df726bd66a"
+    },
+    "description": "Immutable native PPO optimizer checkpoint, with source/config/counter provenance; checkpoint bytes are retained in the source delivery, not the browser package.",
+    "actorUpdateInteractions": 2048000,
+    "criticCalibrationInteractions": 184320
+  },
+  "localPreview": {
+    "only": true,
+    "qualified": false,
+    "evaluationSHA256": "014390f37e17701a5692d5d0928660657316de05d9977cb2e24ac10c531d5672",
+    "runtimeAuditSHA256": "b21dfdcf81bbd94ca68eab1d2f066c4a9f57899dc92456d74153bdaf29bb1346",
+    "metrics": {
+      "nativeCases": 384,
+      "cleanCompleted": 0,
+      "meanExecution": 1.83203125,
+      "meanWorstEntryAngle": 19.589545410666982,
+      "wasmCases": 96,
+      "wasmCleanCompleted": 0
+    }
+  }
+}

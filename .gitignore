@@ -6,3 +6,20 @@ __pycache__/
 .DS_Store
 
 .venv/
+
+# Local training and visual diagnostics remain on disk. Delivery selects one
+# portable checkpoint plus its evidence under training/release/ explicitly.
+/output/
+/training/ppo-*/
+/training/diagnostics/
+/training/evaluation-*/
+/training/validation-*/
+/training/initial-*.pt
+/training/initial-squashed.json
+/training/initial-v6.json
+/artwork/fixtures/
+
+# Native training archives remain local; retain all versioned trainer source.
+/training_v2/surface-entry-v9-*/
+/training_v2/entry-v9-bootstrap/
+/training_v2/entry-v9-start/

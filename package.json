@@ -9,20 +9,28 @@
   },
   "scripts": {
     "dev": "vite --host 127.0.0.1 --port 5184",
-    "build": "vite build",
+    "build": "node scripts/build-mujoco-csp.mjs --check && vite build",
     "test": "node --test tests/*.test.js",
     "test:browser": "playwright test",
     "capture": "node scripts/capture.mjs"
   },
   "dependencies": {
+    "@mujoco/mujoco": "3.13.0",
+    "@zachshotamartin/stick-figure": "https://codeload.github.com/Zachshotamartin/StickFigure/tar.gz/7078d772105203785686e90eff4e97b68972ae61",
     "three": "^0.180.0"
   },
   "devDependencies": {
-    "vite": "^8.2.1",
-    "@playwright/test": "^1.62.1"
+    "@playwright/test": "^1.62.1",
+    "vite": "^8.2.1"
   },
   "engines": {
     "node": ">=22"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "files": [
+    "src",
+    "public",
+    "LICENSE",
+    "THIRD_PARTY_NOTICES.md"
+  ]
 }

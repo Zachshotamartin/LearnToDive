@@ -1,5 +1,5 @@
 .learn-to-dive {
-  --ld-bg: #142321;
+  --ld-bg: #142020;
   --ld-panel: #1c3029;
   --ld-text: #e7ece1;
   --ld-muted: #afc1b5;
@@ -389,4 +389,38 @@
 .learn-to-dive .ld-entry-button {
   width: 100%;
   margin-top: 12px;
+}
+.learn-to-dive .ld-main {
+  border: 0;
+  border-radius: 0;
+  overflow: visible;
+}
+.learn-to-dive .ld-round,
+.learn-to-dive .ld-rotation,
+.learn-to-dive .ld-joints {
+  font-size: 14px;
+  color: var(--ld-muted);
+  line-height: 1.6;
+}
+.learn-to-dive .ld-joints {
+  padding: 0 16px 12px;
+  font-variant-numeric: tabular-nums;
+  min-height: 34px;
+}
+.learn-to-dive .ld-rotation {
+  margin: 18px 0 0;
+}
+.learn-to-dive details p {
+  font-size: 16px;
+}
+.learn-to-dive details label {
+  margin-bottom: 12px;
+}
+.learn-to-dive .ld-stage-label {
+  max-width: calc(100% - 32px);
+  text-shadow: 0 1px 4px #102325;
+}
+.learn-to-dive .ld-stage-score {
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 1px 4px #102325;
 }
