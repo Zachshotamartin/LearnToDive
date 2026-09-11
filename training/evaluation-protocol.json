@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "developmentValidationSeed": 990517,
+  "finalHeldOutSeed": 8624107,
+  "perSkillHeldOutCases": 512,
+  "perSkillHeightBinCases": 128,
+  "cleanCompletion": "Valid foot-only board takeoff and stand clearance, no rotated recontact, declared upright-referenced somersault phase and airborne twist, central posture with actual tuck hand proximity, bilateral form, nearby hand-first entry; execution at least 6/10. Zero invalid-launch episodes may count clean. V6 additionally requires both physical foot-line errors <20 degrees, both hand-axis errors <30 degrees, hand-tip separation <0.12 m and vertical mismatch <0.04 m. V7 additionally requires knee/ankle/toe center gaps below 0.19/0.16/0.15 m without crossing. Report actual whole-diver COM ascent from final departure; preparation hops cannot count as ascent. V8 additionally requires completion by0.8s after first contact: every physical athlete collider must be fully immersed inside the basin. Body-angle, bilateral form and physical foot/hand/leg gates apply across that whole interval, not only the hands-contact snapshot. The underwater arc after full submersion is excluded.",
+  "readiness": {
+    "perSkillCleanRateAtLeast": 0.95,
+    "perSkillMeanExecutionAtLeast": 8,
+    "eligibleHeightBinCleanRateAtLeast": 0.9
+  },
+  "heightGrid": [
+    3,
+    4,
+    5,
+    6,
+    7.5,
+    9,
+    10
+  ],
+  "eligibilitySelection": "Choose conservative minimum heights from development validation, then report the separately seeded final tests. Unsupported lower heights are disabled, with their measured failures retained in the report.",
+  "stress": "Report 11 m and \u00b1120 N pushes beyond training support; these cases do not set normal eligibility or enter its averages.",
+  "feedbackAblation": "Paired fresh feedback versus replay of nominal commands under a scheduled0.12s physical torso push. Record actual applied duration/impulse because airborne overlap can truncate the window. Independently recompute native and WASM policy actions throughout flight and complete entry; report both performance distributions and all discrepancies.",
+  "reportFailures": "Every failed episode remains in completion, execution distributions and score means. No showcase or successful-only subset is used for benchmark means.",
+  "launchClearance": "Report per-skill launch-clear rate, nonfoot board and stand force peaks, foot side/underside contact, rotated recontacts and the final stable takeoff reference. Native and WASM measure physical contacts every 2 ms.",
+  "somersaultClassification": "Principal signed takeoff pitch relative to upright (bounded \u00b160\u00b0) plus unwrapped airborne swing. No accumulated preparation turns are credited. Axial twist counts only after final departure. These are explicit simulator approximations of the declared numeric dive.",
+  "supersededFinalHeldOutSeed": {
+    "v5": 7719031,
+    "reason": "Neutral ankle rewarded by v5 judge; preserved as failed baseline, not v6 qualification."
+  },
+  "judge": "full-submersion-physical-entry-v8",
+  "v6Status": "Interrupted at 9,646,080 new decisions for requested physical hip-adduction extension; final seed remained untouched.",
+  "additionalDevelopmentValidationSeeds": [
+    730114
+  ],
+  "fullEntryTelemetry": "Report firstContactAngle separately from maximum full-window entry angle; minform and worst foot/hand/leg measurements over all2ms judged samples; contact/fullEntry times; entrySamples; actual policy actions after contact and within20ms of completion.",
+  "v7Status": "Superseded first-contact-only judge. Exact191M real runtime trajectories overrotated while torso/legs crossed water; all six paired7.5m V8 whole-entry diagnostics fail. V7 scores and first-contact showcase images do not qualify V8.",
+  "v8PrototypeStatus": "The1.024M debug phase regressed fixed384-case worst-entry mean angle41.668\u219249.350degrees, clean rate0\u21920. Preserved as failed evidence. Named whole-window reward replacement and actor-frozen critic calibration require new evaluation; no qualification claim.",
+  "v8GeometryCorrection": "Named v8.1 XML contract matches the existing shared head radius at 0.094 m while retaining 5 kg mass and every torque cap; near/far basin colliders now span the full 5 m depth. Prior debug checkpoints retain their original source/XML. Collision-free synthetic entry feasibility is diagnostic evidence only, never demonstrations or qualification.",
+  "v8CorrectedPhase": "Matched-geometry zero-update baseline: 384 development cases, clean 0/384, mean whole-entry angle 35.7288 degrees. Next named phase replaces first-contact terminal form credits with whole-window-objective-v2, separately counts actor-frozen Monte Carlo critic calibration, and evaluates a bounded 2.048M PPO milestone before selecting further training. Final qualification seed remains unused."
+}

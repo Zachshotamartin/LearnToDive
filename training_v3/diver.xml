@@ -1,0 +1,266 @@
+<!-- v7 adds paired physical hip adduction; v6: each foot pitch lumps ankle and midfoot plantarflexion; torque remains 100 Nm. -->
+<mujoco model="learn_to_dive_articulated">
+  <compiler angle="radian" autolimits="true" />
+  <option timestep="0.002" gravity="0 0 -9.81" integrator="implicitfast" solver="Newton" iterations="30" tolerance="1e-9">
+    <flag warmstart="disable" />
+  </option>
+  <size nconmax="160" njmax="600" />
+  <default>
+    <joint damping="1.8" armature="0.025" limited="true" />
+    <geom friction="0.8 0.02 0.002" solref="0.008 1" solimp="0.95 0.99 0.001" condim="3" />
+    <position ctrllimited="true" forcelimited="true" />
+    <default class="arm">
+      <joint damping="0.7" armature="0.01" />
+      <geom type="capsule" size="0.05" />
+    </default>
+    <default class="leg">
+      <geom type="capsule" size="0.075" />
+    </default>
+  </default>
+  <worldbody>
+    <body name="board" pos="-1.275 0 0">
+      <joint name="board_spring" type="slide" axis="0 0 1" range="-0.25 0.04" stiffness="18000" damping="140" springref="0" />
+      <geom name="board_surface" type="box" size="1.275 0.48 0.055" mass="24" />
+    </body>
+    <body name="pelvis" pos="-0.13 0 0.95">
+      <freejoint name="root" />
+      <geom name="hip_geom" type="ellipsoid" size="0.16 0.18 0.14" mass="8" />
+      <site name="pelvis" pos="0 0 0" />
+      <body name="torso" pos="0 0 0.08">
+        <geom type="capsule" fromto="0 0 0 0 0 0.39" size="0.15" mass="26" name="athlete_geom_2" />
+        <site name="chest" pos="0 0 0.36" />
+        <site name="neck" pos="0 0 0.51" />
+        <body name="head" pos="0 0 0.61">
+          <geom type="sphere" size="0.094" mass="5" name="athlete_geom_3" />
+          <site name="head" pos="0 0 0" />
+        </body>
+        <body name="upper_arm_L" pos="0 0.22 0.34" childclass="arm">
+          <joint name="shoulder_pitch_L" type="hinge" axis="0 -1 0" range="-0.6 3.25" />
+          <joint name="shoulder_roll_L" type="hinge" axis="1 0 0" range="-1.2 1.2" />
+          <geom fromto="0 0 0 0 0 -0.30" mass="2.1" name="athlete_geom_4" />
+          <site name="shoulderL" />
+          <body name="forearm_L" pos="0 0 -0.30">
+            <joint name="elbow_L" axis="0 -1 0" range="0 2.4" />
+            <geom fromto="0 0 0 0 0 -0.28" size="0.042" mass="1.3" name="athlete_geom_5" />
+            <site name="elbowL" />
+            <body name="hand_L" pos="0 0 -0.28">
+              <geom type="ellipsoid" size="0.038 0.055 0.09" pos="0 0 -0.055" mass="0.6" name="athlete_geom_6" />
+              <site name="wristL" />
+              <site name="handL" pos="0 0 -0.13" />
+            </body>
+          </body>
+        </body>
+        <body name="upper_arm_R" pos="0 -0.22 0.34" childclass="arm">
+          <joint name="shoulder_pitch_R" type="hinge" axis="0 -1 0" range="-0.6 3.25" />
+          <joint name="shoulder_roll_R" type="hinge" axis="1 0 0" range="-1.2 1.2" />
+          <geom fromto="0 0 0 0 0 -0.30" mass="2.1" name="athlete_geom_7" />
+          <site name="shoulderR" />
+          <body name="forearm_R" pos="0 0 -0.30">
+            <joint name="elbow_R" axis="0 -1 0" range="0 2.4" />
+            <geom fromto="0 0 0 0 0 -0.28" size="0.042" mass="1.3" name="athlete_geom_8" />
+            <site name="elbowR" />
+            <body name="hand_R" pos="0 0 -0.28">
+              <geom type="ellipsoid" size="0.038 0.055 0.09" pos="0 0 -0.055" mass="0.6" name="athlete_geom_9" />
+              <site name="wristR" />
+              <site name="handR" pos="0 0 -0.13" />
+            </body>
+          </body>
+        </body>
+      </body>
+      <body name="thigh_L" pos="0 0.105 -0.055" childclass="leg">
+        <joint name="hip_L" axis="0 -1 0" range="-0.5 2.3" />
+<joint name="hip_adduction_L" axis="-1 0 0" range="-0.2 0.25" damping="2" />
+        <geom fromto="0 0 0 0 0 -0.42" mass="7" name="athlete_geom_10" />
+        <site name="hipL" />
+        <body name="shin_L" pos="0 0 -0.42">
+          <joint name="knee_L" axis="0 1 0" range="0 2.7" />
+          <geom fromto="0 0 0 0 0 -0.42" size="0.06" mass="3.5" name="athlete_geom_11" />
+          <site name="kneeL" />
+          <body name="foot_L" pos="0 0 -0.42">
+            <joint name="ankle_L" axis="0 1 0" range="-0.6 1.4" />
+            <geom type="box" size="0.13 0.055 0.04" pos="0.055 0 -0.025" mass="1" name="athlete_geom_12" />
+            <site name="contactL" type="box" size="0.13 0.055 0.041" pos="0.055 0 -0.025" />
+            <site name="ankleL" />
+            <site name="toeL" pos="0.17 0 -0.025" />
+          </body>
+        </body>
+      </body>
+      <body name="thigh_R" pos="0 -0.105 -0.055" childclass="leg">
+        <joint name="hip_R" axis="0 -1 0" range="-0.5 2.3" />
+<joint name="hip_adduction_R" axis="1 0 0" range="-0.2 0.25" damping="2" />
+        <geom fromto="0 0 0 0 0 -0.42" mass="7" name="athlete_geom_13" />
+        <site name="hipR" />
+        <body name="shin_R" pos="0 0 -0.42">
+          <joint name="knee_R" axis="0 1 0" range="0 2.7" />
+          <geom fromto="0 0 0 0 0 -0.42" size="0.06" mass="3.5" name="athlete_geom_14" />
+          <site name="kneeR" />
+          <body name="foot_R" pos="0 0 -0.42">
+            <joint name="ankle_R" axis="0 1 0" range="-0.6 1.4" />
+            <geom type="box" size="0.13 0.055 0.04" pos="0.055 0 -0.025" mass="1" name="athlete_geom_15" />
+            <site name="contactR" type="box" size="0.13 0.055 0.041" pos="0.055 0 -0.025" />
+            <site name="ankleR" />
+            <site name="toeR" pos="0.17 0 -0.025" />
+          </body>
+        </body>
+      </body>
+    </body>
+    <body name="pool" mocap="true" pos="0 0 -7.5">
+      <geom name="pool_floor" type="box" pos="5.45 0 -5.08" size="5.9 3.575 .08" density="0" friction=".8 .02 .002" />
+      <geom name="pool_left" type="box" pos="-.53 0 -2.5" size=".09 3.65 2.5" density="0" friction=".8 .02 .002" />
+      <geom name="pool_right" type="box" pos="11.43 0 -2.5" size=".09 3.65 2.5" density="0" friction=".8 .02 .002" />
+      <geom name="pool_near" type="box" pos="5.45 -3.64 -2.5" size="6.05 .08 2.5" density="0" friction=".8 .02 .002" />
+      <geom name="pool_far" type="box" pos="5.45 3.64 -2.5" size="6.05 .08 2.5" density="0" friction=".8 .02 .002" />
+    </body>
+    <!-- Fixed load-bearing stand colliders match the exposed slab, housing,
+         columns and upper rails. Column bottoms extend below the deck so their
+         exposed surface is correct at every supported height (3–10 m).
+         Decorative ladder rungs and diagonal braces are not collision meshes. -->
+    <body name="stand">
+      <geom name="stand_slab" type="box" pos="-3.1 0 -.17" size=".85 .9 .10" density="0" />
+      <geom name="spring_housing" type="box" pos="-2.14 0 -.74" size=".44 .5 .06" density="0" />
+      <geom type="box" pos="-3.66 -0.64 -5.675" size=".11 .11 5.325" density="0" />
+      <geom type="box" pos="-3.66 0.64 -5.675" size=".11 .11 5.325" density="0" />
+      <geom type="box" pos="-2.56 -0.64 -5.675" size=".11 .11 5.325" density="0" />
+      <geom type="box" pos="-2.56 0.64 -5.675" size=".11 .11 5.325" density="0" />
+      <geom type="capsule" fromto="-3.84 -0.83 .01 -3.84 -0.83 .82" size=".026" density="0" />
+      <geom type="capsule" fromto="-2.54 -0.83 .01 -2.54 -0.83 .82" size=".026" density="0" />
+      <geom type="capsule" fromto="-3.84 -0.83 .82 -2.54 -0.83 .82" size=".026" density="0" />
+      <geom type="capsule" fromto="-3.81 -0.83 .45 -2.57 -0.83 .45" size=".022" density="0" />
+      <geom type="capsule" fromto="-3.84 0.83 .01 -3.84 0.83 .82" size=".026" density="0" />
+      <geom type="capsule" fromto="-2.54 0.83 .01 -2.54 0.83 .82" size=".026" density="0" />
+      <geom type="capsule" fromto="-3.84 0.83 .82 -2.54 0.83 .82" size=".026" density="0" />
+      <geom type="capsule" fromto="-3.81 0.83 .45 -2.57 0.83 .45" size=".022" density="0" />
+    </body>
+  </worldbody>
+  <contact>
+    <exclude body1="board" body2="stand" />
+    <exclude body1="torso" body2="thigh_L" />
+    <exclude body1="torso" body2="thigh_R" />
+  </contact>
+  <actuator>
+    <position name="hip_L" joint="hip_L" kp="180" kv="18" ctrlrange="-0.5 2.3" forcerange="-160 160" />
+    <position name="knee_L" joint="knee_L" kp="180" kv="18" ctrlrange="0 2.7" forcerange="-180 180" />
+    <position name="ankle_L" joint="ankle_L" kp="100" kv="10" ctrlrange="-0.6 1.4" forcerange="-100 100" />
+    <position name="hip_R" joint="hip_R" kp="180" kv="18" ctrlrange="-0.5 2.3" forcerange="-160 160" />
+    <position name="knee_R" joint="knee_R" kp="180" kv="18" ctrlrange="0 2.7" forcerange="-180 180" />
+    <position name="ankle_R" joint="ankle_R" kp="100" kv="10" ctrlrange="-0.6 1.4" forcerange="-100 100" />
+    <position name="shoulder_pitch_L" joint="shoulder_pitch_L" kp="65" kv="6" ctrlrange="-0.6 3.25" forcerange="-65 65" />
+    <position name="shoulder_roll_L" joint="shoulder_roll_L" kp="45" kv="5" ctrlrange="-1.2 1.2" forcerange="-45 45" />
+    <position name="elbow_L" joint="elbow_L" kp="45" kv="4" ctrlrange="0 2.4" forcerange="-35 35" />
+    <position name="shoulder_pitch_R" joint="shoulder_pitch_R" kp="65" kv="6" ctrlrange="-0.6 3.25" forcerange="-65 65" />
+    <position name="shoulder_roll_R" joint="shoulder_roll_R" kp="45" kv="5" ctrlrange="-1.2 1.2" forcerange="-45 45" />
+    <position name="elbow_R" joint="elbow_R" kp="45" kv="4" ctrlrange="0 2.4" forcerange="-35 35" />
+  <position name="hip_adduction_L" joint="hip_adduction_L" kp="100" kv="10" ctrlrange="-0.15 0.18" forcerange="-80 80" />
+<position name="hip_adduction_R" joint="hip_adduction_R" kp="100" kv="10" ctrlrange="-0.15 0.18" forcerange="-80 80" />
+</actuator>
+  <sensor>
+    <subtreecom name="com" body="pelvis" />
+    <subtreelinvel name="com_velocity" body="pelvis" />
+    <subtreeangmom name="angular_momentum" body="pelvis" />
+    <framequat name="orientation" objtype="body" objname="pelvis" />
+    <frameangvel name="omega" objtype="body" objname="pelvis" />
+    <framepos name="toe_left" objtype="site" objname="toeL" />
+    <framepos name="toe_right" objtype="site" objname="toeR" />
+    <framepos name="hand_left" objtype="site" objname="handL" />
+    <framepos name="hand_right" objtype="site" objname="handR" />
+    <framepos name="head_position" objtype="site" objname="head" />
+    <framepos name="chest_position" objtype="site" objname="chest" />
+    <framepos name="pelvis_position" objtype="site" objname="pelvis" />
+    <framepos name="knee_left" objtype="site" objname="kneeL" />
+    <framepos name="knee_right" objtype="site" objname="kneeR" />
+    <touch name="left_contact" site="contactL" />
+    <touch name="right_contact" site="contactR" />
+    <framepos name="water_pos_1" objtype="geom" objname="hip_geom" />
+    <framequat name="water_quat_1" objtype="geom" objname="hip_geom" />
+    <framepos name="water_pos_2" objtype="geom" objname="athlete_geom_2" />
+    <framequat name="water_quat_2" objtype="geom" objname="athlete_geom_2" />
+    <framepos name="water_pos_3" objtype="geom" objname="athlete_geom_3" />
+    <framequat name="water_quat_3" objtype="geom" objname="athlete_geom_3" />
+    <framepos name="water_pos_4" objtype="geom" objname="athlete_geom_4" />
+    <framequat name="water_quat_4" objtype="geom" objname="athlete_geom_4" />
+    <framepos name="water_pos_5" objtype="geom" objname="athlete_geom_5" />
+    <framequat name="water_quat_5" objtype="geom" objname="athlete_geom_5" />
+    <framepos name="water_pos_6" objtype="geom" objname="athlete_geom_6" />
+    <framequat name="water_quat_6" objtype="geom" objname="athlete_geom_6" />
+    <framepos name="water_pos_7" objtype="geom" objname="athlete_geom_7" />
+    <framequat name="water_quat_7" objtype="geom" objname="athlete_geom_7" />
+    <framepos name="water_pos_8" objtype="geom" objname="athlete_geom_8" />
+    <framequat name="water_quat_8" objtype="geom" objname="athlete_geom_8" />
+    <framepos name="water_pos_9" objtype="geom" objname="athlete_geom_9" />
+    <framequat name="water_quat_9" objtype="geom" objname="athlete_geom_9" />
+    <framepos name="water_pos_10" objtype="geom" objname="athlete_geom_10" />
+    <framequat name="water_quat_10" objtype="geom" objname="athlete_geom_10" />
+    <framepos name="water_pos_11" objtype="geom" objname="athlete_geom_11" />
+    <framequat name="water_quat_11" objtype="geom" objname="athlete_geom_11" />
+    <framepos name="water_pos_12" objtype="geom" objname="athlete_geom_12" />
+    <framequat name="water_quat_12" objtype="geom" objname="athlete_geom_12" />
+    <framepos name="water_pos_13" objtype="geom" objname="athlete_geom_13" />
+    <framequat name="water_quat_13" objtype="geom" objname="athlete_geom_13" />
+    <framepos name="water_pos_14" objtype="geom" objname="athlete_geom_14" />
+    <framequat name="water_quat_14" objtype="geom" objname="athlete_geom_14" />
+    <framepos name="water_pos_15" objtype="geom" objname="athlete_geom_15" />
+    <framequat name="water_quat_15" objtype="geom" objname="athlete_geom_15" />
+    <contact name="board_contact_1" geom1="board_surface" geom2="hip_geom" data="found force" reduce="netforce" />
+    <contact name="board_contact_2" geom1="board_surface" geom2="athlete_geom_2" data="found force" reduce="netforce" />
+    <contact name="board_contact_3" geom1="board_surface" geom2="athlete_geom_3" data="found force" reduce="netforce" />
+    <contact name="board_contact_4" geom1="board_surface" geom2="athlete_geom_4" data="found force" reduce="netforce" />
+    <contact name="board_contact_5" geom1="board_surface" geom2="athlete_geom_5" data="found force" reduce="netforce" />
+    <contact name="board_contact_6" geom1="board_surface" geom2="athlete_geom_6" data="found force" reduce="netforce" />
+    <contact name="board_contact_7" geom1="board_surface" geom2="athlete_geom_7" data="found force" reduce="netforce" />
+    <contact name="board_contact_8" geom1="board_surface" geom2="athlete_geom_8" data="found force" reduce="netforce" />
+    <contact name="board_contact_9" geom1="board_surface" geom2="athlete_geom_9" data="found force" reduce="netforce" />
+    <contact name="board_contact_10" geom1="board_surface" geom2="athlete_geom_10" data="found force" reduce="netforce" />
+    <contact name="board_contact_11" geom1="board_surface" geom2="athlete_geom_11" data="found force" reduce="netforce" />
+    <contact name="board_contact_12" geom1="board_surface" geom2="athlete_geom_12" data="found force" reduce="netforce" />
+    <contact name="board_contact_13" geom1="board_surface" geom2="athlete_geom_13" data="found force" reduce="netforce" />
+    <contact name="board_contact_14" geom1="board_surface" geom2="athlete_geom_14" data="found force" reduce="netforce" />
+    <contact name="board_contact_15" geom1="board_surface" geom2="athlete_geom_15" data="found force" reduce="netforce" />
+    <contact name="stand_contact_1" body1="stand" geom2="hip_geom" data="found force" reduce="netforce" />
+    <contact name="stand_contact_2" body1="stand" geom2="athlete_geom_2" data="found force" reduce="netforce" />
+    <contact name="stand_contact_3" body1="stand" geom2="athlete_geom_3" data="found force" reduce="netforce" />
+    <contact name="stand_contact_4" body1="stand" geom2="athlete_geom_4" data="found force" reduce="netforce" />
+    <contact name="stand_contact_5" body1="stand" geom2="athlete_geom_5" data="found force" reduce="netforce" />
+    <contact name="stand_contact_6" body1="stand" geom2="athlete_geom_6" data="found force" reduce="netforce" />
+    <contact name="stand_contact_7" body1="stand" geom2="athlete_geom_7" data="found force" reduce="netforce" />
+    <contact name="stand_contact_8" body1="stand" geom2="athlete_geom_8" data="found force" reduce="netforce" />
+    <contact name="stand_contact_9" body1="stand" geom2="athlete_geom_9" data="found force" reduce="netforce" />
+    <contact name="stand_contact_10" body1="stand" geom2="athlete_geom_10" data="found force" reduce="netforce" />
+    <contact name="stand_contact_11" body1="stand" geom2="athlete_geom_11" data="found force" reduce="netforce" />
+    <contact name="stand_contact_12" body1="stand" geom2="athlete_geom_12" data="found force" reduce="netforce" />
+    <contact name="stand_contact_13" body1="stand" geom2="athlete_geom_13" data="found force" reduce="netforce" />
+    <contact name="stand_contact_14" body1="stand" geom2="athlete_geom_14" data="found force" reduce="netforce" />
+    <contact name="stand_contact_15" body1="stand" geom2="athlete_geom_15" data="found force" reduce="netforce" />
+  
+    <!-- V8 append-only world velocities at each single-geom body COM. -->
+    <framelinvel name="water_linear_0" objtype="geom" objname="hip_geom" />
+    <frameangvel name="water_angular_0" objtype="geom" objname="hip_geom" />
+    <framelinvel name="water_linear_1" objtype="geom" objname="athlete_geom_2" />
+    <frameangvel name="water_angular_1" objtype="geom" objname="athlete_geom_2" />
+    <framelinvel name="water_linear_2" objtype="geom" objname="athlete_geom_3" />
+    <frameangvel name="water_angular_2" objtype="geom" objname="athlete_geom_3" />
+    <framelinvel name="water_linear_3" objtype="geom" objname="athlete_geom_4" />
+    <frameangvel name="water_angular_3" objtype="geom" objname="athlete_geom_4" />
+    <framelinvel name="water_linear_4" objtype="geom" objname="athlete_geom_5" />
+    <frameangvel name="water_angular_4" objtype="geom" objname="athlete_geom_5" />
+    <framelinvel name="water_linear_5" objtype="geom" objname="athlete_geom_6" />
+    <frameangvel name="water_angular_5" objtype="geom" objname="athlete_geom_6" />
+    <framelinvel name="water_linear_6" objtype="geom" objname="athlete_geom_7" />
+    <frameangvel name="water_angular_6" objtype="geom" objname="athlete_geom_7" />
+    <framelinvel name="water_linear_7" objtype="geom" objname="athlete_geom_8" />
+    <frameangvel name="water_angular_7" objtype="geom" objname="athlete_geom_8" />
+    <framelinvel name="water_linear_8" objtype="geom" objname="athlete_geom_9" />
+    <frameangvel name="water_angular_8" objtype="geom" objname="athlete_geom_9" />
+    <framelinvel name="water_linear_9" objtype="geom" objname="athlete_geom_10" />
+    <frameangvel name="water_angular_9" objtype="geom" objname="athlete_geom_10" />
+    <framelinvel name="water_linear_10" objtype="geom" objname="athlete_geom_11" />
+    <frameangvel name="water_angular_10" objtype="geom" objname="athlete_geom_11" />
+    <framelinvel name="water_linear_11" objtype="geom" objname="athlete_geom_12" />
+    <frameangvel name="water_angular_11" objtype="geom" objname="athlete_geom_12" />
+    <framelinvel name="water_linear_12" objtype="geom" objname="athlete_geom_13" />
+    <frameangvel name="water_angular_12" objtype="geom" objname="athlete_geom_13" />
+    <framelinvel name="water_linear_13" objtype="geom" objname="athlete_geom_14" />
+    <frameangvel name="water_angular_13" objtype="geom" objname="athlete_geom_14" />
+    <framelinvel name="water_linear_14" objtype="geom" objname="athlete_geom_15" />
+    <frameangvel name="water_angular_14" objtype="geom" objname="athlete_geom_15" />
+  </sensor>
+<equality><joint name="rigid_platform" joint1="board_spring" polycoef="0 0 0 0 0" active="false" solref="0.002 1" /></equality></mujoco>

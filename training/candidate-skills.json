@@ -1,0 +1,31 @@
+{
+  "status": "Untrained candidates. Not imported by the runtime catalog or exposed in the UI. Train and qualify after the current six skills are reliable.",
+  "reference": {
+    "title": "World Aquatics Competition Regulations, February 2026, Appendix 9",
+    "url": "https://resources.fina.org/fina/document/2026/02/18/e6815ecc-06d9-4f0b-98e9-4c441cf5e6a3/2026-02-18_World-Aquatics_CR-Final.pdf",
+    "table": "3 m springboard reference difficulty, also labeled as a reference at variable practice heights"
+  },
+  "candidates": [
+    {
+      "id": "105C",
+      "code": 105,
+      "name": "Forward 2½ somersaults · tuck",
+      "turns": 2.5,
+      "twists": 0,
+      "back": 0,
+      "shape": 0,
+      "referenceDifficulty": 2.2
+    },
+    {
+      "id": "5134D",
+      "code": 5134,
+      "name": "Forward 1½ somersaults · 2 twists",
+      "turns": 1.5,
+      "twists": 2,
+      "back": 0,
+      "shape": 2,
+      "referenceDifficulty": 2.5
+    }
+  ],
+  "qualification": "Use the existing continuous turn/twist goal inputs, unchanged motor limits and exact announced-dive scoring. Choose conservative high-board eligibility from measured development cases, then test held-out heights/perturbations before enabling either dive. Do not infer proficiency from interpolation, a showcase or the original six-skill controller."
+}

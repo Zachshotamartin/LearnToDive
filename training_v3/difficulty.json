@@ -1,0 +1,3084 @@
+{
+  "source": "https://resources.fina.org/fina/document/2026/02/18/e6815ecc-06d9-4f0b-98e9-4c441cf5e6a3/2026-02-18_World-Aquatics_CR-Final.pdf",
+  "sourceSHA256": "f255f4228c89127270c80944a0fb3ac038152202cbc10ff84d5978f0fd2e4595",
+  "version": "World Aquatics February 2026, appendices 9 and 11",
+  "rows": [
+    {
+      "id": "1011C",
+      "code": 1011,
+      "position": "C",
+      "name": "Forward 5\u00bd Somersaults",
+      "difficulty": {
+        "platform:10": 4.7
+      }
+    },
+    {
+      "id": "101A",
+      "code": 101,
+      "position": "A",
+      "name": "Forward Dive",
+      "difficulty": {
+        "springboard:1": 1.4,
+        "springboard:3": 1.6,
+        "platform:10": 1.6,
+        "platform:7.5": 1.6,
+        "platform:5": 1.4
+      }
+    },
+    {
+      "id": "101B",
+      "code": 101,
+      "position": "B",
+      "name": "Forward Dive",
+      "difficulty": {
+        "springboard:1": 1.3,
+        "springboard:3": 1.5,
+        "platform:10": 1.5,
+        "platform:7.5": 1.5,
+        "platform:5": 1.3
+      }
+    },
+    {
+      "id": "101C",
+      "code": 101,
+      "position": "C",
+      "name": "Forward Dive",
+      "difficulty": {
+        "springboard:1": 1.2,
+        "springboard:3": 1.4,
+        "platform:10": 1.4,
+        "platform:7.5": 1.4,
+        "platform:5": 1.2
+      }
+    },
+    {
+      "id": "102A",
+      "code": 102,
+      "position": "A",
+      "name": "Forward Somersault",
+      "difficulty": {
+        "springboard:1": 1.6,
+        "springboard:3": 1.7,
+        "platform:10": 1.8,
+        "platform:7.5": 1.7,
+        "platform:5": 1.6
+      }
+    },
+    {
+      "id": "102B",
+      "code": 102,
+      "position": "B",
+      "name": "Forward Somersault",
+      "difficulty": {
+        "springboard:1": 1.5,
+        "springboard:3": 1.6,
+        "platform:10": 1.7,
+        "platform:7.5": 1.6,
+        "platform:5": 1.5
+      }
+    },
+    {
+      "id": "102C",
+      "code": 102,
+      "position": "C",
+      "name": "Forward Somersault",
+      "difficulty": {
+        "springboard:1": 1.4,
+        "springboard:3": 1.5,
+        "platform:10": 1.6,
+        "platform:7.5": 1.5,
+        "platform:5": 1.4
+      }
+    },
+    {
+      "id": "103A",
+      "code": 103,
+      "position": "A",
+      "name": "Forward 1\u00bd Somersaults",
+      "difficulty": {
+        "springboard:1": 2.0,
+        "springboard:3": 1.9,
+        "platform:10": 1.9,
+        "platform:7.5": 1.9,
+        "platform:5": 2.0
+      }
+    },
+    {
+      "id": "103B",
+      "code": 103,
+      "position": "B",
+      "name": "Forward 1\u00bd Somersaults",
+      "difficulty": {
+        "springboard:1": 1.7,
+        "springboard:3": 1.6,
+        "platform:10": 1.6,
+        "platform:7.5": 1.6,
+        "platform:5": 1.7
+      }
+    },
+    {
+      "id": "103C",
+      "code": 103,
+      "position": "C",
+      "name": "Forward 1\u00bd Somersaults",
+      "difficulty": {
+        "springboard:1": 1.6,
+        "springboard:3": 1.5,
+        "platform:10": 1.5,
+        "platform:7.5": 1.5,
+        "platform:5": 1.6
+      }
+    },
+    {
+      "id": "104A",
+      "code": 104,
+      "position": "A",
+      "name": "Forward 2 Somersaults",
+      "difficulty": {
+        "springboard:1": 2.6,
+        "springboard:3": 2.4,
+        "platform:10": 2.5,
+        "platform:7.5": 2.4,
+        "platform:5": 2.6
+      }
+    },
+    {
+      "id": "104B",
+      "code": 104,
+      "position": "B",
+      "name": "Forward 2 Somersaults",
+      "difficulty": {
+        "springboard:1": 2.3,
+        "springboard:3": 2.1,
+        "platform:10": 2.2,
+        "platform:7.5": 2.1,
+        "platform:5": 2.3
+      }
+    },
+    {
+      "id": "104C",
+      "code": 104,
+      "position": "C",
+      "name": "Forward 2 Somersaults",
+      "difficulty": {
+        "springboard:1": 2.2,
+        "springboard:3": 2.0,
+        "platform:10": 2.1,
+        "platform:7.5": 2.0,
+        "platform:5": 2.2
+      }
+    },
+    {
+      "id": "105A",
+      "code": 105,
+      "position": "A",
+      "name": "Forward 2\u00bd Somersaults",
+      "difficulty": {
+        "springboard:3": 2.8,
+        "platform:10": 2.7
+      }
+    },
+    {
+      "id": "105B",
+      "code": 105,
+      "position": "B",
+      "name": "Forward 2\u00bd Somersaults",
+      "difficulty": {
+        "springboard:1": 2.6,
+        "springboard:3": 2.4,
+        "platform:10": 2.3,
+        "platform:7.5": 2.4,
+        "platform:5": 2.6
+      }
+    },
+    {
+      "id": "105C",
+      "code": 105,
+      "position": "C",
+      "name": "Forward 2\u00bd Somersaults",
+      "difficulty": {
+        "springboard:1": 2.4,
+        "springboard:3": 2.2,
+        "platform:10": 2.1,
+        "platform:7.5": 2.2,
+        "platform:5": 2.4
+      }
+    },
+    {
+      "id": "106B",
+      "code": 106,
+      "position": "B",
+      "name": "Forward 3 Somersaults",
+      "difficulty": {
+        "springboard:1": 3.2,
+        "springboard:3": 2.8,
+        "platform:10": 3.0,
+        "platform:7.5": 2.8,
+        "platform:5": 3.2
+      }
+    },
+    {
+      "id": "106C",
+      "code": 106,
+      "position": "C",
+      "name": "Forward 3 Somersaults",
+      "difficulty": {
+        "springboard:1": 2.9,
+        "springboard:3": 2.5,
+        "platform:10": 2.7,
+        "platform:7.5": 2.5,
+        "platform:5": 2.9
+      }
+    },
+    {
+      "id": "107B",
+      "code": 107,
+      "position": "B",
+      "name": "Forward 3\u00bd Somersaults",
+      "difficulty": {
+        "springboard:1": 3.3,
+        "springboard:3": 3.1,
+        "platform:10": 3.0,
+        "platform:7.5": 3.1
+      }
+    },
+    {
+      "id": "107C",
+      "code": 107,
+      "position": "C",
+      "name": "Forward 3\u00bd Somersaults",
+      "difficulty": {
+        "springboard:1": 3.0,
+        "springboard:3": 2.8,
+        "platform:10": 2.7,
+        "platform:7.5": 2.8,
+        "platform:5": 3.0
+      }
+    },
+    {
+      "id": "108B",
+      "code": 108,
+      "position": "B",
+      "name": "Forward 4 Somersaults",
+      "difficulty": {
+        "springboard:3": 3.8,
+        "platform:10": 4.1
+      }
+    },
+    {
+      "id": "108C",
+      "code": 108,
+      "position": "C",
+      "name": "Forward 4 Somersaults",
+      "difficulty": {
+        "springboard:1": 4.0,
+        "springboard:3": 3.4,
+        "platform:10": 3.7
+      }
+    },
+    {
+      "id": "109B",
+      "code": 109,
+      "position": "B",
+      "name": "Forward 4\u00bd Somersaults",
+      "difficulty": {
+        "springboard:3": 4.2,
+        "platform:10": 4.1
+      }
+    },
+    {
+      "id": "109C",
+      "code": 109,
+      "position": "C",
+      "name": "Forward 4\u00bd Somersaults",
+      "difficulty": {
+        "springboard:1": 4.3,
+        "springboard:3": 3.8,
+        "platform:10": 3.7
+      }
+    },
+    {
+      "id": "112B",
+      "code": 112,
+      "position": "B",
+      "name": "Forward Flying Somersault",
+      "difficulty": {
+        "springboard:1": 1.7,
+        "springboard:3": 1.8,
+        "platform:10": 1.9,
+        "platform:7.5": 1.8,
+        "platform:5": 1.7
+      }
+    },
+    {
+      "id": "112C",
+      "code": 112,
+      "position": "C",
+      "name": "Forward Flying Somersault",
+      "difficulty": {
+        "springboard:1": 1.6,
+        "springboard:3": 1.7,
+        "platform:10": 1.8,
+        "platform:7.5": 1.7,
+        "platform:5": 1.6
+      }
+    },
+    {
+      "id": "113B",
+      "code": 113,
+      "position": "B",
+      "name": "Forward Flying 1\u00bd Somersaults",
+      "difficulty": {
+        "springboard:1": 1.9,
+        "springboard:3": 1.8,
+        "platform:10": 1.8,
+        "platform:7.5": 1.8,
+        "platform:5": 1.9
+      }
+    },
+    {
+      "id": "113C",
+      "code": 113,
+      "position": "C",
+      "name": "Forward Flying 1\u00bd Somersaults",
+      "difficulty": {
+        "springboard:1": 1.8,
+        "springboard:3": 1.7,
+        "platform:10": 1.7,
+        "platform:7.5": 1.7,
+        "platform:5": 1.8
+      }
+    },
+    {
+      "id": "114B",
+      "code": 114,
+      "position": "B",
+      "name": "Forward Flying 2 Somersaults",
+      "difficulty": {
+        "platform:10": 2.4,
+        "platform:7.5": 2.3,
+        "platform:5": 2.5
+      }
+    },
+    {
+      "id": "114C",
+      "code": 114,
+      "position": "C",
+      "name": "Forward Flying 2 Somersaults",
+      "difficulty": {
+        "platform:10": 2.3,
+        "platform:7.5": 2.2,
+        "platform:5": 2.4
+      }
+    },
+    {
+      "id": "115B",
+      "code": 115,
+      "position": "B",
+      "name": "Forward Flying 2\u00bd Somersaults",
+      "difficulty": {
+        "springboard:3": 2.7,
+        "platform:10": 2.6
+      }
+    },
+    {
+      "id": "115C",
+      "code": 115,
+      "position": "C",
+      "name": "Forward Flying 2\u00bd Somersaults",
+      "difficulty": {
+        "springboard:3": 2.5,
+        "platform:10": 2.4,
+        "platform:7.5": 2.5
+      }
+    },
+    {
+      "id": "201A",
+      "code": 201,
+      "position": "A",
+      "name": "Back Dive",
+      "difficulty": {
+        "springboard:1": 1.7,
+        "springboard:3": 1.9,
+        "platform:10": 1.9,
+        "platform:7.5": 1.9,
+        "platform:5": 1.7
+      }
+    },
+    {
+      "id": "201B",
+      "code": 201,
+      "position": "B",
+      "name": "Back Dive",
+      "difficulty": {
+        "springboard:1": 1.6,
+        "springboard:3": 1.8,
+        "platform:10": 1.8,
+        "platform:7.5": 1.8,
+        "platform:5": 1.6
+      }
+    },
+    {
+      "id": "201C",
+      "code": 201,
+      "position": "C",
+      "name": "Back Dive",
+      "difficulty": {
+        "springboard:1": 1.5,
+        "springboard:3": 1.7,
+        "platform:10": 1.7,
+        "platform:7.5": 1.7,
+        "platform:5": 1.5
+      }
+    },
+    {
+      "id": "202A",
+      "code": 202,
+      "position": "A",
+      "name": "Back Somersault",
+      "difficulty": {
+        "springboard:1": 1.7,
+        "springboard:3": 1.8,
+        "platform:10": 1.9,
+        "platform:7.5": 1.8,
+        "platform:5": 1.7
+      }
+    },
+    {
+      "id": "202B",
+      "code": 202,
+      "position": "B",
+      "name": "Back Somersault",
+      "difficulty": {
+        "springboard:1": 1.6,
+        "springboard:3": 1.7,
+        "platform:10": 1.8,
+        "platform:7.5": 1.7,
+        "platform:5": 1.6
+      }
+    },
+    {
+      "id": "202C",
+      "code": 202,
+      "position": "C",
+      "name": "Back Somersault",
+      "difficulty": {
+        "springboard:1": 1.5,
+        "springboard:3": 1.6,
+        "platform:10": 1.7,
+        "platform:7.5": 1.6,
+        "platform:5": 1.5
+      }
+    },
+    {
+      "id": "203A",
+      "code": 203,
+      "position": "A",
+      "name": "Back 1\u00bd Somersaults",
+      "difficulty": {
+        "springboard:1": 2.5,
+        "springboard:3": 2.4,
+        "platform:10": 2.4,
+        "platform:7.5": 2.4,
+        "platform:5": 2.5
+      }
+    },
+    {
+      "id": "203B",
+      "code": 203,
+      "position": "B",
+      "name": "Back 1\u00bd Somersaults",
+      "difficulty": {
+        "springboard:1": 2.3,
+        "springboard:3": 2.2,
+        "platform:10": 2.2,
+        "platform:7.5": 2.2,
+        "platform:5": 2.3
+      }
+    },
+    {
+      "id": "203C",
+      "code": 203,
+      "position": "C",
+      "name": "Back 1\u00bd Somersaults",
+      "difficulty": {
+        "springboard:1": 2.0,
+        "springboard:3": 1.9,
+        "platform:10": 1.9,
+        "platform:7.5": 1.9,
+        "platform:5": 2.0
+      }
+    },
+    {
+      "id": "204A",
+      "code": 204,
+      "position": "A",
+      "name": "Back 2 Somersaults",
+      "difficulty": {
+        "springboard:3": 2.5,
+        "platform:10": 2.6,
+        "platform:7.5": 2.5
+      }
+    },
+    {
+      "id": "204B",
+      "code": 204,
+      "position": "B",
+      "name": "Back 2 Somersaults",
+      "difficulty": {
+        "springboard:1": 2.5,
+        "springboard:3": 2.3,
+        "platform:10": 2.4,
+        "platform:7.5": 2.3,
+        "platform:5": 2.5
+      }
+    },
+    {
+      "id": "204C",
+      "code": 204,
+      "position": "C",
+      "name": "Back 2 Somersaults",
+      "difficulty": {
+        "springboard:1": 2.2,
+        "springboard:3": 2.0,
+        "platform:10": 2.1,
+        "platform:7.5": 2.0,
+        "platform:5": 2.2
+      }
+    },
+    {
+      "id": "205A",
+      "code": 205,
+      "position": "A",
+      "name": "Back 2\u00bd Somersaults",
+      "difficulty": {
+        "platform:10": 3.3
+      }
+    },
+    {
+      "id": "205B",
+      "code": 205,
+      "position": "B",
+      "name": "Back 2\u00bd Somersaults",
+      "difficulty": {
+        "springboard:1": 3.2,
+        "springboard:3": 3.0,
+        "platform:10": 2.9,
+        "platform:7.5": 3.0,
+        "platform:5": 3.2
+      }
+    },
+    {
+      "id": "205C",
+      "code": 205,
+      "position": "C",
+      "name": "Back 2\u00bd Somersaults",
+      "difficulty": {
+        "springboard:1": 3.0,
+        "springboard:3": 2.8,
+        "platform:10": 2.7,
+        "platform:7.5": 2.8,
+        "platform:5": 3.0
+      }
+    },
+    {
+      "id": "206B",
+      "code": 206,
+      "position": "B",
+      "name": "Back 3 Somersaults",
+      "difficulty": {
+        "springboard:1": 3.2,
+        "springboard:3": 2.8,
+        "platform:10": 3.0,
+        "platform:7.5": 2.8,
+        "platform:5": 3.2
+      }
+    },
+    {
+      "id": "206C",
+      "code": 206,
+      "position": "C",
+      "name": "Back 3 Somersaults",
+      "difficulty": {
+        "springboard:1": 2.9,
+        "springboard:3": 2.5,
+        "platform:10": 2.7,
+        "platform:7.5": 2.5,
+        "platform:5": 2.9
+      }
+    },
+    {
+      "id": "207B",
+      "code": 207,
+      "position": "B",
+      "name": "Back 3\u00bd Somersaults",
+      "difficulty": {
+        "springboard:3": 3.9,
+        "platform:10": 3.6
+      }
+    },
+    {
+      "id": "207C",
+      "code": 207,
+      "position": "C",
+      "name": "Back 3\u00bd Somersaults",
+      "difficulty": {
+        "springboard:3": 3.6,
+        "platform:10": 3.3,
+        "platform:7.5": 3.5
+      }
+    },
+    {
+      "id": "208B",
+      "code": 208,
+      "position": "B",
+      "name": "Back 4 Somersaults",
+      "difficulty": {
+        "springboard:3": 3.7,
+        "platform:10": 4.1,
+        "platform:7.5": 4.2,
+        "platform:5": 4.4
+      }
+    },
+    {
+      "id": "208C",
+      "code": 208,
+      "position": "C",
+      "name": "Back 4 Somersaults",
+      "difficulty": {
+        "springboard:3": 3.4,
+        "platform:10": 3.8,
+        "platform:7.5": 3.9,
+        "platform:5": 4.1
+      }
+    },
+    {
+      "id": "209B",
+      "code": 209,
+      "position": "B",
+      "name": "Back 4\u00bd Somersaults",
+      "difficulty": {
+        "springboard:3": 4.7,
+        "platform:10": 4.5
+      }
+    },
+    {
+      "id": "209C",
+      "code": 209,
+      "position": "C",
+      "name": "Back 4\u00bd Somersaults",
+      "difficulty": {
+        "springboard:3": 4.4,
+        "platform:10": 4.2
+      }
+    },
+    {
+      "id": "212B",
+      "code": 212,
+      "position": "B",
+      "name": "Back Flying Somersault",
+      "difficulty": {
+        "springboard:1": 1.7,
+        "springboard:3": 1.8,
+        "platform:10": 1.9,
+        "platform:7.5": 1.8,
+        "platform:5": 1.7
+      }
+    },
+    {
+      "id": "212C",
+      "code": 212,
+      "position": "C",
+      "name": "Back Flying Somersault",
+      "difficulty": {
+        "springboard:1": 1.6,
+        "springboard:3": 1.7,
+        "platform:10": 1.8,
+        "platform:7.5": 1.7,
+        "platform:5": 1.6
+      }
+    },
+    {
+      "id": "213B",
+      "code": 213,
+      "position": "B",
+      "name": "Back Flying 1\u00bd Somersaults",
+      "difficulty": {
+        "springboard:3": 2.4,
+        "platform:10": 2.4,
+        "platform:7.5": 2.4,
+        "platform:5": 2.5
+      }
+    },
+    {
+      "id": "213C",
+      "code": 213,
+      "position": "C",
+      "name": "Back Flying 1\u00bd Somersaults",
+      "difficulty": {
+        "springboard:3": 2.1,
+        "platform:10": 2.1,
+        "platform:7.5": 2.1,
+        "platform:5": 2.2
+      }
+    },
+    {
+      "id": "215B",
+      "code": 215,
+      "position": "B",
+      "name": "Back Flying 2\u00bd Somersaults",
+      "difficulty": {
+        "springboard:3": 3.3,
+        "platform:10": 3.2
+      }
+    },
+    {
+      "id": "215C",
+      "code": 215,
+      "position": "C",
+      "name": "Back Flying 2\u00bd Somersaults",
+      "difficulty": {
+        "springboard:3": 3.1,
+        "platform:10": 3.0
+      }
+    },
+    {
+      "id": "301A",
+      "code": 301,
+      "position": "A",
+      "name": "Reverse Dive",
+      "difficulty": {
+        "springboard:1": 1.8,
+        "springboard:3": 2.0,
+        "platform:10": 2.0,
+        "platform:7.5": 2.0,
+        "platform:5": 1.8
+      }
+    },
+    {
+      "id": "301B",
+      "code": 301,
+      "position": "B",
+      "name": "Reverse Dive",
+      "difficulty": {
+        "springboard:1": 1.7,
+        "springboard:3": 1.9,
+        "platform:10": 1.9,
+        "platform:7.5": 1.9,
+        "platform:5": 1.7
+      }
+    },
+    {
+      "id": "301C",
+      "code": 301,
+      "position": "C",
+      "name": "Reverse Dive",
+      "difficulty": {
+        "springboard:1": 1.6,
+        "springboard:3": 1.8,
+        "platform:10": 1.8,
+        "platform:7.5": 1.8,
+        "platform:5": 1.6
+      }
+    },
+    {
+      "id": "302A",
+      "code": 302,
+      "position": "A",
+      "name": "Reverse Somersault",
+      "difficulty": {
+        "springboard:1": 1.8,
+        "springboard:3": 1.9,
+        "platform:10": 2.0,
+        "platform:7.5": 1.9,
+        "platform:5": 1.8
+      }
+    },
+    {
+      "id": "302B",
+      "code": 302,
+      "position": "B",
+      "name": "Reverse Somersault",
+      "difficulty": {
+        "springboard:1": 1.7,
+        "springboard:3": 1.8,
+        "platform:10": 1.9,
+        "platform:7.5": 1.8,
+        "platform:5": 1.7
+      }
+    },
+    {
+      "id": "302C",
+      "code": 302,
+      "position": "C",
+      "name": "Reverse Somersault",
+      "difficulty": {
+        "springboard:1": 1.6,
+        "springboard:3": 1.7,
+        "platform:10": 1.8,
+        "platform:7.5": 1.7,
+        "platform:5": 1.6
+      }
+    },
+    {
+      "id": "303A",
+      "code": 303,
+      "position": "A",
+      "name": "Reverse 1\u00bd Somersaults",
+      "difficulty": {
+        "springboard:1": 2.7,
+        "springboard:3": 2.6,
+        "platform:10": 2.6,
+        "platform:7.5": 2.6,
+        "platform:5": 2.7
+      }
+    },
+    {
+      "id": "303B",
+      "code": 303,
+      "position": "B",
+      "name": "Reverse 1\u00bd Somersaults",
+      "difficulty": {
+        "springboard:1": 2.4,
+        "springboard:3": 2.3,
+        "platform:10": 2.3,
+        "platform:7.5": 2.3,
+        "platform:5": 2.4
+      }
+    },
+    {
+      "id": "303C",
+      "code": 303,
+      "position": "C",
+      "name": "Reverse 1\u00bd Somersaults",
+      "difficulty": {
+        "springboard:1": 2.1,
+        "springboard:3": 2.0,
+        "platform:10": 2.0,
+        "platform:7.5": 2.0,
+        "platform:5": 2.1
+      }
+    },
+    {
+      "id": "304A",
+      "code": 304,
+      "position": "A",
+      "name": "Reverse 2 Somersaults",
+      "difficulty": {
+        "springboard:1": 2.9,
+        "springboard:3": 2.7,
+        "platform:10": 2.8,
+        "platform:7.5": 2.7,
+        "platform:5": 2.9
+      }
+    },
+    {
+      "id": "304B",
+      "code": 304,
+      "position": "B",
+      "name": "Reverse 2 Somersaults",
+      "difficulty": {
+        "springboard:1": 2.6,
+        "springboard:3": 2.4,
+        "platform:10": 2.5,
+        "platform:7.5": 2.4,
+        "platform:5": 2.6
+      }
+    },
+    {
+      "id": "304C",
+      "code": 304,
+      "position": "C",
+      "name": "Reverse 2 Somersaults",
+      "difficulty": {
+        "springboard:1": 2.3,
+        "springboard:3": 2.1,
+        "platform:10": 2.2,
+        "platform:7.5": 2.1,
+        "platform:5": 2.3
+      }
+    },
+    {
+      "id": "305A",
+      "code": 305,
+      "position": "A",
+      "name": "Reverse 2\u00bd Somersaults",
+      "difficulty": {
+        "springboard:3": 3.4,
+        "platform:10": 3.4,
+        "platform:7.5": 3.5
+      }
+    },
+    {
+      "id": "305B",
+      "code": 305,
+      "position": "B",
+      "name": "Reverse 2\u00bd Somersaults",
+      "difficulty": {
+        "springboard:1": 3.2,
+        "springboard:3": 3.0,
+        "platform:10": 3.0,
+        "platform:7.5": 3.1,
+        "platform:5": 3.3
+      }
+    },
+    {
+      "id": "305C",
+      "code": 305,
+      "position": "C",
+      "name": "Reverse 2\u00bd Somersaults",
+      "difficulty": {
+        "springboard:1": 3.0,
+        "springboard:3": 2.8,
+        "platform:10": 2.8,
+        "platform:7.5": 2.9,
+        "platform:5": 3.1
+      }
+    },
+    {
+      "id": "306B",
+      "code": 306,
+      "position": "B",
+      "name": "Reverse 3 Somersaults",
+      "difficulty": {
+        "springboard:1": 3.3,
+        "springboard:3": 2.9,
+        "platform:10": 3.2,
+        "platform:7.5": 3.0,
+        "platform:5": 3.4
+      }
+    },
+    {
+      "id": "306C",
+      "code": 306,
+      "position": "C",
+      "name": "Reverse 3 Somersaults",
+      "difficulty": {
+        "springboard:1": 3.0,
+        "springboard:3": 2.6,
+        "platform:10": 2.9,
+        "platform:7.5": 2.7,
+        "platform:5": 3.1
+      }
+    },
+    {
+      "id": "307B",
+      "code": 307,
+      "position": "B",
+      "name": "Reverse 3\u00bd Somersaults",
+      "difficulty": {
+        "springboard:3": 3.8,
+        "platform:10": 3.7
+      }
+    },
+    {
+      "id": "307C",
+      "code": 307,
+      "position": "C",
+      "name": "Reverse 3\u00bd Somersaults",
+      "difficulty": {
+        "springboard:3": 3.5,
+        "platform:10": 3.4
+      }
+    },
+    {
+      "id": "308B",
+      "code": 308,
+      "position": "B",
+      "name": "Reverse 4 Somersaults",
+      "difficulty": {
+        "springboard:3": 3.7,
+        "platform:10": 4.4,
+        "platform:7.5": 4.5
+      }
+    },
+    {
+      "id": "308C",
+      "code": 308,
+      "position": "C",
+      "name": "Reverse 4 Somersaults",
+      "difficulty": {
+        "springboard:3": 3.4,
+        "platform:10": 4.1,
+        "platform:7.5": 4.2
+      }
+    },
+    {
+      "id": "309B",
+      "code": 309,
+      "position": "B",
+      "name": "Reverse 4\u00bd Somersaults",
+      "difficulty": {
+        "springboard:3": 4.7,
+        "platform:10": 4.8
+      }
+    },
+    {
+      "id": "309C",
+      "code": 309,
+      "position": "C",
+      "name": "Reverse 4\u00bd Somersaults",
+      "difficulty": {
+        "springboard:3": 4.4,
+        "platform:10": 4.5
+      }
+    },
+    {
+      "id": "312B",
+      "code": 312,
+      "position": "B",
+      "name": "Reverse Flying Somersault",
+      "difficulty": {
+        "springboard:1": 1.8,
+        "springboard:3": 1.9,
+        "platform:10": 2.0,
+        "platform:7.5": 1.9,
+        "platform:5": 1.8
+      }
+    },
+    {
+      "id": "312C",
+      "code": 312,
+      "position": "C",
+      "name": "Reverse Flying Somersault",
+      "difficulty": {
+        "springboard:1": 1.7,
+        "springboard:3": 1.8,
+        "platform:10": 1.9,
+        "platform:7.5": 1.8,
+        "platform:5": 1.7
+      }
+    },
+    {
+      "id": "313B",
+      "code": 313,
+      "position": "B",
+      "name": "Reverse Flying 1\u00bd Somersaults",
+      "difficulty": {
+        "springboard:1": 2.6,
+        "springboard:3": 2.5,
+        "platform:10": 2.5,
+        "platform:7.5": 2.5,
+        "platform:5": 2.6
+      }
+    },
+    {
+      "id": "313C",
+      "code": 313,
+      "position": "C",
+      "name": "Reverse Flying 1\u00bd Somersaults",
+      "difficulty": {
+        "springboard:1": 2.3,
+        "springboard:3": 2.2,
+        "platform:10": 2.2,
+        "platform:7.5": 2.2,
+        "platform:5": 2.3
+      }
+    },
+    {
+      "id": "401A",
+      "code": 401,
+      "position": "A",
+      "name": "Inward Dive",
+      "difficulty": {
+        "springboard:1": 1.8,
+        "springboard:3": 1.7,
+        "platform:10": 1.7,
+        "platform:7.5": 1.7,
+        "platform:5": 1.8
+      }
+    },
+    {
+      "id": "401B",
+      "code": 401,
+      "position": "B",
+      "name": "Inward Dive",
+      "difficulty": {
+        "springboard:1": 1.5,
+        "springboard:3": 1.4,
+        "platform:10": 1.4,
+        "platform:7.5": 1.4,
+        "platform:5": 1.5
+      }
+    },
+    {
+      "id": "401C",
+      "code": 401,
+      "position": "C",
+      "name": "Inward Dive",
+      "difficulty": {
+        "springboard:1": 1.4,
+        "springboard:3": 1.3,
+        "platform:10": 1.3,
+        "platform:7.5": 1.3,
+        "platform:5": 1.4
+      }
+    },
+    {
+      "id": "402A",
+      "code": 402,
+      "position": "A",
+      "name": "Inward Somersault",
+      "difficulty": {
+        "springboard:1": 2.0,
+        "springboard:3": 1.8,
+        "platform:10": 1.9,
+        "platform:7.5": 1.8,
+        "platform:5": 2.0
+      }
+    },
+    {
+      "id": "402B",
+      "code": 402,
+      "position": "B",
+      "name": "Inward Somersault",
+      "difficulty": {
+        "springboard:1": 1.7,
+        "springboard:3": 1.5,
+        "platform:10": 1.6,
+        "platform:7.5": 1.5,
+        "platform:5": 1.7
+      }
+    },
+    {
+      "id": "402C",
+      "code": 402,
+      "position": "C",
+      "name": "Inward Somersault",
+      "difficulty": {
+        "springboard:1": 1.6,
+        "springboard:3": 1.4,
+        "platform:10": 1.5,
+        "platform:7.5": 1.4,
+        "platform:5": 1.6
+      }
+    },
+    {
+      "id": "403B",
+      "code": 403,
+      "position": "B",
+      "name": "Inward 1\u00bd Somersaults",
+      "difficulty": {
+        "springboard:1": 2.4,
+        "springboard:3": 2.1,
+        "platform:10": 2.0,
+        "platform:7.5": 2.1,
+        "platform:5": 2.4
+      }
+    },
+    {
+      "id": "403C",
+      "code": 403,
+      "position": "C",
+      "name": "Inward 1\u00bd Somersaults",
+      "difficulty": {
+        "springboard:1": 2.2,
+        "springboard:3": 1.9,
+        "platform:10": 1.8,
+        "platform:7.5": 1.9,
+        "platform:5": 2.2
+      }
+    },
+    {
+      "id": "404B",
+      "code": 404,
+      "position": "B",
+      "name": "Inward 2 Somersaults",
+      "difficulty": {
+        "springboard:1": 3.0,
+        "springboard:3": 2.6,
+        "platform:10": 2.6,
+        "platform:7.5": 2.6,
+        "platform:5": 3.0
+      }
+    },
+    {
+      "id": "404C",
+      "code": 404,
+      "position": "C",
+      "name": "Inward 2 Somersaults",
+      "difficulty": {
+        "springboard:1": 2.8,
+        "springboard:3": 2.4,
+        "platform:10": 2.4,
+        "platform:7.5": 2.4,
+        "platform:5": 2.8
+      }
+    },
+    {
+      "id": "405B",
+      "code": 405,
+      "position": "B",
+      "name": "Inward 2\u00bd Somersaults",
+      "difficulty": {
+        "springboard:1": 3.4,
+        "springboard:3": 3.0,
+        "platform:10": 2.8,
+        "platform:7.5": 3.0,
+        "platform:5": 3.4
+      }
+    },
+    {
+      "id": "405C",
+      "code": 405,
+      "position": "C",
+      "name": "Inward 2\u00bd Somersaults",
+      "difficulty": {
+        "springboard:1": 3.1,
+        "springboard:3": 2.7,
+        "platform:10": 2.5,
+        "platform:7.5": 2.7,
+        "platform:5": 3.1
+      }
+    },
+    {
+      "id": "406B",
+      "code": 406,
+      "position": "B",
+      "name": "Inward 3 Somersaults",
+      "difficulty": {
+        "platform:10": 3.5,
+        "platform:7.5": 3.4,
+        "platform:5": 4.0
+      }
+    },
+    {
+      "id": "406C",
+      "code": 406,
+      "position": "C",
+      "name": "Inward 3 Somersaults",
+      "difficulty": {
+        "platform:10": 3.2,
+        "platform:7.5": 3.1,
+        "platform:5": 3.7
+      }
+    },
+    {
+      "id": "407B",
+      "code": 407,
+      "position": "B",
+      "name": "Inward 3\u00bd Somersaults",
+      "difficulty": {
+        "springboard:3": 3.7,
+        "platform:10": 3.5
+      }
+    },
+    {
+      "id": "407C",
+      "code": 407,
+      "position": "C",
+      "name": "Inward 3\u00bd Somersaults",
+      "difficulty": {
+        "springboard:3": 3.4,
+        "platform:10": 3.2,
+        "platform:7.5": 3.4
+      }
+    },
+    {
+      "id": "408B",
+      "code": 408,
+      "position": "B",
+      "name": "Inward 4 Somersaults",
+      "difficulty": {
+        "platform:10": 4.4
+      }
+    },
+    {
+      "id": "408C",
+      "code": 408,
+      "position": "C",
+      "name": "Inward 4 Somersaults",
+      "difficulty": {
+        "platform:10": 4.1
+      }
+    },
+    {
+      "id": "409B",
+      "code": 409,
+      "position": "B",
+      "name": "Inward 4\u00bd Somersaults",
+      "difficulty": {
+        "springboard:3": 4.6,
+        "platform:10": 4.4
+      }
+    },
+    {
+      "id": "409C",
+      "code": 409,
+      "position": "C",
+      "name": "Inward 4\u00bd Somersaults",
+      "difficulty": {
+        "springboard:3": 4.2,
+        "platform:10": 4.1
+      }
+    },
+    {
+      "id": "412B",
+      "code": 412,
+      "position": "B",
+      "name": "Inward Flying Somersault",
+      "difficulty": {
+        "springboard:1": 2.1,
+        "springboard:3": 1.9,
+        "platform:10": 2.0,
+        "platform:7.5": 1.9,
+        "platform:5": 2.1
+      }
+    },
+    {
+      "id": "412C",
+      "code": 412,
+      "position": "C",
+      "name": "Inward Flying Somersault",
+      "difficulty": {
+        "springboard:1": 2.0,
+        "springboard:3": 1.8,
+        "platform:10": 1.9,
+        "platform:7.5": 1.8,
+        "platform:5": 2.0
+      }
+    },
+    {
+      "id": "413B",
+      "code": 413,
+      "position": "B",
+      "name": "Inward Flying 1\u00bd Somersaults",
+      "difficulty": {
+        "springboard:1": 2.9,
+        "springboard:3": 2.6,
+        "platform:10": 2.5,
+        "platform:7.5": 2.6,
+        "platform:5": 2.9
+      }
+    },
+    {
+      "id": "413C",
+      "code": 413,
+      "position": "C",
+      "name": "Inward Flying 1\u00bd Somersaults",
+      "difficulty": {
+        "springboard:1": 2.7,
+        "springboard:3": 2.4,
+        "platform:10": 2.3,
+        "platform:7.5": 2.4,
+        "platform:5": 2.7
+      }
+    },
+    {
+      "id": "5111A",
+      "code": 5111,
+      "position": "A",
+      "name": "Forward Dive \u00bd Twist",
+      "difficulty": {
+        "springboard:1": 1.8,
+        "springboard:3": 2.0,
+        "platform:10": 2.0,
+        "platform:7.5": 2.0,
+        "platform:5": 1.8
+      }
+    },
+    {
+      "id": "5111B",
+      "code": 5111,
+      "position": "B",
+      "name": "Forward Dive \u00bd Twist",
+      "difficulty": {
+        "springboard:1": 1.7,
+        "springboard:3": 1.9,
+        "platform:10": 1.9,
+        "platform:7.5": 1.9,
+        "platform:5": 1.7
+      }
+    },
+    {
+      "id": "5111C",
+      "code": 5111,
+      "position": "C",
+      "name": "Forward Dive \u00bd Twist",
+      "difficulty": {
+        "springboard:1": 1.6,
+        "springboard:3": 1.8,
+        "platform:10": 1.8,
+        "platform:7.5": 1.8,
+        "platform:5": 1.6
+      }
+    },
+    {
+      "id": "5112A",
+      "code": 5112,
+      "position": "A",
+      "name": "Forward Dive 1 Twist",
+      "difficulty": {
+        "springboard:1": 2.0,
+        "springboard:3": 2.2,
+        "platform:10": 2.2,
+        "platform:7.5": 2.2,
+        "platform:5": 2.0
+      }
+    },
+    {
+      "id": "5112B",
+      "code": 5112,
+      "position": "B",
+      "name": "Forward Dive 1 Twist",
+      "difficulty": {
+        "springboard:1": 1.9,
+        "springboard:3": 2.1,
+        "platform:10": 2.1,
+        "platform:7.5": 2.1,
+        "platform:5": 1.9
+      }
+    },
+    {
+      "id": "5121D",
+      "code": 5121,
+      "position": "D",
+      "name": "Forward Somersault \u00bd Twist",
+      "difficulty": {
+        "springboard:1": 1.7,
+        "springboard:3": 1.8,
+        "platform:10": 1.9,
+        "platform:7.5": 1.8,
+        "platform:5": 1.7
+      }
+    },
+    {
+      "id": "5122D",
+      "code": 5122,
+      "position": "D",
+      "name": "Forward Somersault 1 Twist",
+      "difficulty": {
+        "springboard:1": 1.9,
+        "springboard:3": 2.0,
+        "platform:10": 2.1,
+        "platform:7.5": 2.0,
+        "platform:5": 1.9
+      }
+    },
+    {
+      "id": "5124D",
+      "code": 5124,
+      "position": "D",
+      "name": "Forward Somersault 2 Twists",
+      "difficulty": {
+        "springboard:1": 2.3,
+        "springboard:3": 2.4,
+        "platform:10": 2.5,
+        "platform:7.5": 2.4,
+        "platform:5": 2.3
+      }
+    },
+    {
+      "id": "5126D",
+      "code": 5126,
+      "position": "D",
+      "name": "Forward Somersault 3 Twists",
+      "difficulty": {
+        "springboard:1": 2.8,
+        "springboard:3": 2.9
+      }
+    },
+    {
+      "id": "5131D",
+      "code": 5131,
+      "position": "D",
+      "name": "Forward 1\u00bd Somersaults \u00bd Twist",
+      "difficulty": {
+        "springboard:1": 2.0,
+        "springboard:3": 1.9,
+        "platform:10": 1.9,
+        "platform:7.5": 1.9,
+        "platform:5": 2.0
+      }
+    },
+    {
+      "id": "5132D",
+      "code": 5132,
+      "position": "D",
+      "name": "Forward 1\u00bd Somersaults 1 Twist",
+      "difficulty": {
+        "springboard:1": 2.2,
+        "springboard:3": 2.1,
+        "platform:10": 2.1,
+        "platform:7.5": 2.1,
+        "platform:5": 2.2
+      }
+    },
+    {
+      "id": "5134D",
+      "code": 5134,
+      "position": "D",
+      "name": "Forward 1\u00bd Somersaults 2 Twists",
+      "difficulty": {
+        "springboard:1": 2.6,
+        "springboard:3": 2.5,
+        "platform:10": 2.5,
+        "platform:7.5": 2.5,
+        "platform:5": 2.6
+      }
+    },
+    {
+      "id": "5136D",
+      "code": 5136,
+      "position": "D",
+      "name": "Forward 1\u00bd Somersaults 3 Twists",
+      "difficulty": {
+        "springboard:1": 3.1,
+        "springboard:3": 3.0,
+        "platform:10": 3.0,
+        "platform:7.5": 3.0,
+        "platform:5": 3.1
+      }
+    },
+    {
+      "id": "5138D",
+      "code": 5138,
+      "position": "D",
+      "name": "Forward 1\u00bd Somersaults 4 Twists",
+      "difficulty": {
+        "springboard:1": 3.5,
+        "springboard:3": 3.4,
+        "platform:10": 3.4,
+        "platform:7.5": 3.4,
+        "platform:5": 3.5
+      }
+    },
+    {
+      "id": "5151B",
+      "code": 5151,
+      "position": "B",
+      "name": "Forward 2\u00bd Somersaults \u00bd Twist",
+      "difficulty": {
+        "springboard:1": 3.0,
+        "springboard:3": 2.8
+      }
+    },
+    {
+      "id": "5151C",
+      "code": 5151,
+      "position": "C",
+      "name": "Forward 2\u00bd Somersaults \u00bd Twist",
+      "difficulty": {
+        "springboard:1": 2.8,
+        "springboard:3": 2.6
+      }
+    },
+    {
+      "id": "5152B",
+      "code": 5152,
+      "position": "B",
+      "name": "Forward 2\u00bd Somersaults 1 Twist",
+      "difficulty": {
+        "springboard:1": 3.2,
+        "springboard:3": 3.0,
+        "platform:10": 2.9,
+        "platform:7.5": 3.0,
+        "platform:5": 3.2
+      }
+    },
+    {
+      "id": "5152C",
+      "code": 5152,
+      "position": "C",
+      "name": "Forward 2\u00bd Somersaults 1 Twist",
+      "difficulty": {
+        "springboard:1": 3.0,
+        "springboard:3": 2.8,
+        "platform:10": 2.7,
+        "platform:7.5": 2.8,
+        "platform:5": 3.0
+      }
+    },
+    {
+      "id": "5154B",
+      "code": 5154,
+      "position": "B",
+      "name": "Forward 2\u00bd Somersaults 2 Twists",
+      "difficulty": {
+        "springboard:1": 3.6,
+        "springboard:3": 3.4,
+        "platform:10": 3.3,
+        "platform:7.5": 3.4,
+        "platform:5": 3.6
+      }
+    },
+    {
+      "id": "5154C",
+      "code": 5154,
+      "position": "C",
+      "name": "Forward 2\u00bd Somersaults 2 Twists",
+      "difficulty": {
+        "springboard:1": 3.4,
+        "springboard:3": 3.2,
+        "platform:10": 3.1,
+        "platform:7.5": 3.2,
+        "platform:5": 3.4
+      }
+    },
+    {
+      "id": "5156B",
+      "code": 5156,
+      "position": "B",
+      "name": "Forward 2\u00bd Somersaults 3 Twists",
+      "difficulty": {
+        "springboard:3": 3.9,
+        "platform:10": 3.8
+      }
+    },
+    {
+      "id": "5156C",
+      "code": 5156,
+      "position": "C",
+      "name": "Forward 2\u00bd Somersaults 3 Twists",
+      "difficulty": {
+        "springboard:3": 3.7,
+        "platform:10": 3.6
+      }
+    },
+    {
+      "id": "5172B",
+      "code": 5172,
+      "position": "B",
+      "name": "Forward 3\u00bd Somersaults 1 Twist",
+      "difficulty": {
+        "springboard:3": 3.7,
+        "platform:10": 3.6,
+        "platform:7.5": 3.7
+      }
+    },
+    {
+      "id": "5172C",
+      "code": 5172,
+      "position": "C",
+      "name": "Forward 3\u00bd Somersaults 1 Twist",
+      "difficulty": {
+        "springboard:3": 3.4,
+        "platform:10": 3.3,
+        "platform:7.5": 3.4
+      }
+    },
+    {
+      "id": "5211A",
+      "code": 5211,
+      "position": "A",
+      "name": "Back Dive \u00bd Twist",
+      "difficulty": {
+        "springboard:1": 1.8,
+        "springboard:3": 2.0,
+        "platform:10": 2.0,
+        "platform:7.5": 2.0,
+        "platform:5": 1.8
+      }
+    },
+    {
+      "id": "5211B",
+      "code": 5211,
+      "position": "B",
+      "name": "Back Dive \u00bd Twist",
+      "difficulty": {
+        "springboard:1": 1.7,
+        "springboard:3": 1.9,
+        "platform:10": 1.9,
+        "platform:7.5": 1.9,
+        "platform:5": 1.7
+      }
+    },
+    {
+      "id": "5211C",
+      "code": 5211,
+      "position": "C",
+      "name": "Back Dive \u00bd Twist",
+      "difficulty": {
+        "springboard:1": 1.6,
+        "springboard:3": 1.8,
+        "platform:10": 1.8,
+        "platform:7.5": 1.8,
+        "platform:5": 1.6
+      }
+    },
+    {
+      "id": "5212A",
+      "code": 5212,
+      "position": "A",
+      "name": "Back Dive 1 Twist",
+      "difficulty": {
+        "springboard:1": 2.0,
+        "springboard:3": 2.2,
+        "platform:10": 2.2,
+        "platform:7.5": 2.2,
+        "platform:5": 2.0
+      }
+    },
+    {
+      "id": "5221D",
+      "code": 5221,
+      "position": "D",
+      "name": "Back Somersault \u00bd Twist",
+      "difficulty": {
+        "springboard:1": 1.7,
+        "springboard:3": 1.8,
+        "platform:10": 1.9,
+        "platform:7.5": 1.8,
+        "platform:5": 1.7
+      }
+    },
+    {
+      "id": "5222D",
+      "code": 5222,
+      "position": "D",
+      "name": "Back Somersault 1 Twist",
+      "difficulty": {
+        "springboard:1": 1.9,
+        "springboard:3": 2.0,
+        "platform:10": 2.1,
+        "platform:7.5": 2.0,
+        "platform:5": 1.9
+      }
+    },
+    {
+      "id": "5223D",
+      "code": 5223,
+      "position": "D",
+      "name": "Back Somersault 1\u00bd Twists",
+      "difficulty": {
+        "springboard:1": 2.3,
+        "springboard:3": 2.4,
+        "platform:10": 2.5,
+        "platform:7.5": 2.4,
+        "platform:5": 2.3
+      }
+    },
+    {
+      "id": "5225D",
+      "code": 5225,
+      "position": "D",
+      "name": "Back Somersault 2\u00bd Twists",
+      "difficulty": {
+        "springboard:1": 2.7,
+        "springboard:3": 2.8,
+        "platform:10": 2.9,
+        "platform:7.5": 2.8,
+        "platform:5": 2.7
+      }
+    },
+    {
+      "id": "5227D",
+      "code": 5227,
+      "position": "D",
+      "name": "Back Somersault 3\u00bd Twists",
+      "difficulty": {
+        "springboard:1": 3.2,
+        "springboard:3": 3.3
+      }
+    },
+    {
+      "id": "5231D",
+      "code": 5231,
+      "position": "D",
+      "name": "Back 1\u00bd Somersaults \u00bd Twist",
+      "difficulty": {
+        "springboard:1": 2.1,
+        "springboard:3": 2.0,
+        "platform:10": 2.0,
+        "platform:7.5": 2.0,
+        "platform:5": 2.1
+      }
+    },
+    {
+      "id": "5233D",
+      "code": 5233,
+      "position": "D",
+      "name": "Back 1\u00bd Somersaults 1\u00bd Twists",
+      "difficulty": {
+        "springboard:1": 2.5,
+        "springboard:3": 2.4,
+        "platform:10": 2.4,
+        "platform:7.5": 2.4,
+        "platform:5": 2.5
+      }
+    },
+    {
+      "id": "5235D",
+      "code": 5235,
+      "position": "D",
+      "name": "Back 1\u00bd Somersaults 2\u00bd Twists",
+      "difficulty": {
+        "springboard:1": 2.9,
+        "springboard:3": 2.8,
+        "platform:10": 2.8,
+        "platform:7.5": 2.8,
+        "platform:5": 2.9
+      }
+    },
+    {
+      "id": "5237D",
+      "code": 5237,
+      "position": "D",
+      "name": "Back 1\u00bd Somersaults 3\u00bd Twists",
+      "difficulty": {
+        "springboard:3": 3.3,
+        "platform:10": 3.3,
+        "platform:7.5": 3.3,
+        "platform:5": 3.4
+      }
+    },
+    {
+      "id": "5239D",
+      "code": 5239,
+      "position": "D",
+      "name": "Back 1\u00bd Somersaults 4\u00bd Twists",
+      "difficulty": {
+        "springboard:3": 3.7,
+        "platform:10": 3.7,
+        "platform:7.5": 3.7,
+        "platform:5": 3.8
+      }
+    },
+    {
+      "id": "5251B",
+      "code": 5251,
+      "position": "B",
+      "name": "Back 2\u00bd Somersaults \u00bd Twist",
+      "difficulty": {
+        "springboard:1": 2.9,
+        "springboard:3": 2.7,
+        "platform:10": 2.6,
+        "platform:7.5": 2.7,
+        "platform:5": 2.9
+      }
+    },
+    {
+      "id": "5251C",
+      "code": 5251,
+      "position": "C",
+      "name": "Back 2\u00bd Somersaults \u00bd Twist",
+      "difficulty": {
+        "springboard:1": 2.7,
+        "springboard:3": 2.5,
+        "platform:10": 2.4,
+        "platform:7.5": 2.5,
+        "platform:5": 2.7
+      }
+    },
+    {
+      "id": "5253B",
+      "code": 5253,
+      "position": "B",
+      "name": "Back 2\u00bd Somersaults 1\u00bd Twists",
+      "difficulty": {
+        "springboard:3": 3.4,
+        "platform:10": 3.2,
+        "platform:7.5": 3.3
+      }
+    },
+    {
+      "id": "5253C",
+      "code": 5253,
+      "position": "C",
+      "name": "Back 2\u00bd Somersaults 1\u00bd Twists",
+      "difficulty": {
+        "springboard:3": 3.2,
+        "platform:10": 3.0,
+        "platform:7.5": 3.1
+      }
+    },
+    {
+      "id": "5255B",
+      "code": 5255,
+      "position": "B",
+      "name": "Back 2\u00bd Somersaults 2\u00bd Twists",
+      "difficulty": {
+        "springboard:3": 3.8,
+        "platform:10": 3.6
+      }
+    },
+    {
+      "id": "5255C",
+      "code": 5255,
+      "position": "C",
+      "name": "Back 2\u00bd Somersaults 2\u00bd Twists",
+      "difficulty": {
+        "springboard:3": 3.6,
+        "platform:10": 3.4
+      }
+    },
+    {
+      "id": "5257B",
+      "code": 5257,
+      "position": "B",
+      "name": "Back 2\u00bd Somersaults 3\u00bd Twists",
+      "difficulty": {
+        "platform:10": 4.1
+      }
+    },
+    {
+      "id": "5257C",
+      "code": 5257,
+      "position": "C",
+      "name": "Back 2\u00bd Somersaults 3\u00bd Twists",
+      "difficulty": {
+        "platform:10": 3.9
+      }
+    },
+    {
+      "id": "5271B",
+      "code": 5271,
+      "position": "B",
+      "name": "Back 3\u00bd Somersaults \u00bd Twist",
+      "difficulty": {
+        "platform:10": 3.2
+      }
+    },
+    {
+      "id": "5271C",
+      "code": 5271,
+      "position": "C",
+      "name": "Back 3\u00bd Somersaults \u00bd Twist",
+      "difficulty": {
+        "platform:10": 2.9
+      }
+    },
+    {
+      "id": "5273B",
+      "code": 5273,
+      "position": "B",
+      "name": "Back 3\u00bd Somersaults 1\u00bd Twist",
+      "difficulty": {
+        "platform:10": 3.8
+      }
+    },
+    {
+      "id": "5273C",
+      "code": 5273,
+      "position": "C",
+      "name": "Back 3\u00bd Somersaults 1\u00bd Twist",
+      "difficulty": {
+        "platform:10": 3.5
+      }
+    },
+    {
+      "id": "5275B",
+      "code": 5275,
+      "position": "B",
+      "name": "Back 3\u00bd Somersaults 2\u00bd Twist",
+      "difficulty": {
+        "platform:10": 4.2
+      }
+    },
+    {
+      "id": "5275C",
+      "code": 5275,
+      "position": "C",
+      "name": "Back 3\u00bd Somersaults 2\u00bd Twist",
+      "difficulty": {
+        "platform:10": 3.9
+      }
+    },
+    {
+      "id": "5311A",
+      "code": 5311,
+      "position": "A",
+      "name": "Reverse Dive \u00bd Twist",
+      "difficulty": {
+        "springboard:1": 1.9,
+        "springboard:3": 2.1,
+        "platform:10": 2.1,
+        "platform:7.5": 2.1,
+        "platform:5": 1.9
+      }
+    },
+    {
+      "id": "5311B",
+      "code": 5311,
+      "position": "B",
+      "name": "Reverse Dive \u00bd Twist",
+      "difficulty": {
+        "springboard:1": 1.8,
+        "springboard:3": 2.0,
+        "platform:10": 2.0,
+        "platform:7.5": 2.0,
+        "platform:5": 1.8
+      }
+    },
+    {
+      "id": "5311C",
+      "code": 5311,
+      "position": "C",
+      "name": "Reverse Dive \u00bd Twist",
+      "difficulty": {
+        "springboard:1": 1.7,
+        "springboard:3": 1.9,
+        "platform:10": 1.9,
+        "platform:7.5": 1.9,
+        "platform:5": 1.7
+      }
+    },
+    {
+      "id": "5312A",
+      "code": 5312,
+      "position": "A",
+      "name": "Reverse Dive 1 Twist",
+      "difficulty": {
+        "springboard:1": 2.1,
+        "springboard:3": 2.3,
+        "platform:10": 2.3,
+        "platform:7.5": 2.3,
+        "platform:5": 2.1
+      }
+    },
+    {
+      "id": "5321D",
+      "code": 5321,
+      "position": "D",
+      "name": "Reverse Somersault \u00bd Twist",
+      "difficulty": {
+        "springboard:1": 1.8,
+        "springboard:3": 1.9,
+        "platform:10": 2.0,
+        "platform:7.5": 1.9,
+        "platform:5": 1.8
+      }
+    },
+    {
+      "id": "5322D",
+      "code": 5322,
+      "position": "D",
+      "name": "Reverse Somersault 1Twist",
+      "difficulty": {
+        "springboard:1": 2.0,
+        "springboard:3": 2.1,
+        "platform:10": 2.2,
+        "platform:7.5": 2.1,
+        "platform:5": 2.0
+      }
+    },
+    {
+      "id": "5323D",
+      "code": 5323,
+      "position": "D",
+      "name": "Reverse Somersault 1\u00bd Twists",
+      "difficulty": {
+        "springboard:1": 2.4,
+        "springboard:3": 2.5,
+        "platform:10": 2.6,
+        "platform:7.5": 2.5,
+        "platform:5": 2.4
+      }
+    },
+    {
+      "id": "5325D",
+      "code": 5325,
+      "position": "D",
+      "name": "Reverse Somersault 2\u00bd Twists",
+      "difficulty": {
+        "springboard:1": 2.8,
+        "springboard:3": 2.9,
+        "platform:10": 3.0,
+        "platform:7.5": 2.9,
+        "platform:5": 2.8
+      }
+    },
+    {
+      "id": "5331D",
+      "code": 5331,
+      "position": "D",
+      "name": "Reverse 1\u00bd Somersaults \u00bd Twist",
+      "difficulty": {
+        "springboard:1": 2.2,
+        "springboard:3": 2.1,
+        "platform:10": 2.1,
+        "platform:7.5": 2.1,
+        "platform:5": 2.2
+      }
+    },
+    {
+      "id": "5333D",
+      "code": 5333,
+      "position": "D",
+      "name": "Reverse 1\u00bd Somersaults 1\u00bd Twists",
+      "difficulty": {
+        "springboard:1": 2.6,
+        "springboard:3": 2.5,
+        "platform:10": 2.5,
+        "platform:7.5": 2.5,
+        "platform:5": 2.6
+      }
+    },
+    {
+      "id": "5335D",
+      "code": 5335,
+      "position": "D",
+      "name": "Reverse 1\u00bd Somersaults 2\u00bd Twists",
+      "difficulty": {
+        "springboard:1": 3.0,
+        "springboard:3": 2.9,
+        "platform:10": 2.9,
+        "platform:7.5": 2.9,
+        "platform:5": 3.0
+      }
+    },
+    {
+      "id": "5337D",
+      "code": 5337,
+      "position": "D",
+      "name": "Reverse 1\u00bd Somersaults 3\u00bd Twists",
+      "difficulty": {
+        "springboard:1": 3.6,
+        "springboard:3": 3.5,
+        "platform:10": 3.4,
+        "platform:7.5": 3.4,
+        "platform:5": 3.5
+      }
+    },
+    {
+      "id": "5339D",
+      "code": 5339,
+      "position": "D",
+      "name": "Reverse 1\u00bd Somersaults 4\u00bd Twists",
+      "difficulty": {
+        "springboard:3": 3.8,
+        "platform:10": 3.8,
+        "platform:7.5": 3.8
+      }
+    },
+    {
+      "id": "5351B",
+      "code": 5351,
+      "position": "B",
+      "name": "Reverse 2\u00bd Somersaults \u00bd Twist",
+      "difficulty": {
+        "springboard:1": 2.9,
+        "springboard:3": 2.7,
+        "platform:10": 2.7,
+        "platform:7.5": 2.8,
+        "platform:5": 3.0
+      }
+    },
+    {
+      "id": "5351C",
+      "code": 5351,
+      "position": "C",
+      "name": "Reverse 2\u00bd Somersaults \u00bd Twist",
+      "difficulty": {
+        "springboard:1": 2.7,
+        "springboard:3": 2.5,
+        "platform:10": 2.5,
+        "platform:7.5": 2.6,
+        "platform:5": 2.8
+      }
+    },
+    {
+      "id": "5353B",
+      "code": 5353,
+      "position": "B",
+      "name": "Reverse 2\u00bd Somersaults 1\u00bd Twists",
+      "difficulty": {
+        "springboard:1": 3.5,
+        "springboard:3": 3.3,
+        "platform:10": 3.3,
+        "platform:7.5": 3.4
+      }
+    },
+    {
+      "id": "5353C",
+      "code": 5353,
+      "position": "C",
+      "name": "Reverse 2\u00bd Somersaults 1\u00bd Twists",
+      "difficulty": {
+        "springboard:1": 3.3,
+        "springboard:3": 3.1,
+        "platform:10": 3.1,
+        "platform:7.5": 3.2,
+        "platform:5": 3.4
+      }
+    },
+    {
+      "id": "5355B",
+      "code": 5355,
+      "position": "B",
+      "name": "Reverse 2\u00bd Somersaults 2\u00bd Twists",
+      "difficulty": {
+        "springboard:1": 3.9,
+        "springboard:3": 3.7,
+        "platform:10": 3.7,
+        "platform:7.5": 3.8
+      }
+    },
+    {
+      "id": "5355C",
+      "code": 5355,
+      "position": "C",
+      "name": "Reverse 2\u00bd Somersaults 2\u00bd Twists",
+      "difficulty": {
+        "springboard:1": 3.7,
+        "springboard:3": 3.5,
+        "platform:10": 3.5,
+        "platform:7.5": 3.6,
+        "platform:5": 3.8
+      }
+    },
+    {
+      "id": "5371B",
+      "code": 5371,
+      "position": "B",
+      "name": "Reverse 3\u00bd Somersaults \u00bd Twist",
+      "difficulty": {
+        "springboard:3": 3.4,
+        "platform:10": 3.3
+      }
+    },
+    {
+      "id": "5371C",
+      "code": 5371,
+      "position": "C",
+      "name": "Reverse 3\u00bd Somersaults \u00bd Twist",
+      "difficulty": {
+        "springboard:3": 3.1,
+        "platform:10": 3.0
+      }
+    },
+    {
+      "id": "5373C",
+      "code": 5373,
+      "position": "C",
+      "name": "Reverse 3\u00bd Somersaults 1\u00bd Twists",
+      "difficulty": {
+        "springboard:3": 3.7,
+        "platform:10": 3.6
+      }
+    },
+    {
+      "id": "5375C",
+      "code": 5375,
+      "position": "C",
+      "name": "Reverse 3\u00bd Somersaults 2 \u00bd Twists",
+      "difficulty": {
+        "springboard:3": 4.1,
+        "platform:10": 4.0
+      }
+    },
+    {
+      "id": "5411A",
+      "code": 5411,
+      "position": "A",
+      "name": "Inward Dive \u00bd Twist",
+      "difficulty": {
+        "springboard:1": 2.0,
+        "springboard:3": 1.9,
+        "platform:10": 1.9,
+        "platform:7.5": 1.9,
+        "platform:5": 2.0
+      }
+    },
+    {
+      "id": "5411B",
+      "code": 5411,
+      "position": "B",
+      "name": "Inward Dive \u00bd Twist",
+      "difficulty": {
+        "springboard:1": 1.7,
+        "springboard:3": 1.6,
+        "platform:10": 1.6,
+        "platform:7.5": 1.6,
+        "platform:5": 1.7
+      }
+    },
+    {
+      "id": "5411C",
+      "code": 5411,
+      "position": "C",
+      "name": "Inward Dive \u00bd Twist",
+      "difficulty": {
+        "springboard:1": 1.6,
+        "springboard:3": 1.5,
+        "platform:10": 1.5,
+        "platform:7.5": 1.5,
+        "platform:5": 1.6
+      }
+    },
+    {
+      "id": "5412A",
+      "code": 5412,
+      "position": "A",
+      "name": "Inward Dive 1 Twist",
+      "difficulty": {
+        "springboard:1": 2.2,
+        "springboard:3": 2.1,
+        "platform:10": 2.1,
+        "platform:7.5": 2.1,
+        "platform:5": 2.2
+      }
+    },
+    {
+      "id": "5412B",
+      "code": 5412,
+      "position": "B",
+      "name": "Inward Dive 1 Twist",
+      "difficulty": {
+        "springboard:1": 1.9,
+        "springboard:3": 1.8,
+        "platform:10": 1.8,
+        "platform:7.5": 1.8,
+        "platform:5": 1.9
+      }
+    },
+    {
+      "id": "5412C",
+      "code": 5412,
+      "position": "C",
+      "name": "Inward Dive 1 Twist",
+      "difficulty": {
+        "springboard:1": 1.8,
+        "springboard:3": 1.7,
+        "platform:10": 1.7,
+        "platform:7.5": 1.7,
+        "platform:5": 1.8
+      }
+    },
+    {
+      "id": "5421D",
+      "code": 5421,
+      "position": "D",
+      "name": "Inward Somersault \u00bd Twist",
+      "difficulty": {
+        "springboard:1": 1.9,
+        "springboard:3": 1.7,
+        "platform:10": 1.8,
+        "platform:7.5": 1.7,
+        "platform:5": 1.9
+      }
+    },
+    {
+      "id": "5422D",
+      "code": 5422,
+      "position": "D",
+      "name": "Inward Somersault 1 Twist",
+      "difficulty": {
+        "springboard:1": 2.1,
+        "springboard:3": 1.9,
+        "platform:10": 2.0,
+        "platform:7.5": 1.9,
+        "platform:5": 2.1
+      }
+    },
+    {
+      "id": "5432D",
+      "code": 5432,
+      "position": "D",
+      "name": "Inward 1\u00bd Somersaults 1 Twist",
+      "difficulty": {
+        "springboard:1": 2.7,
+        "springboard:3": 2.4,
+        "platform:10": 2.3,
+        "platform:7.5": 2.4,
+        "platform:5": 2.7
+      }
+    },
+    {
+      "id": "5434D",
+      "code": 5434,
+      "position": "D",
+      "name": "Inward 1\u00bd Somersaults 2 Twists",
+      "difficulty": {
+        "springboard:1": 3.1,
+        "springboard:3": 2.8,
+        "platform:10": 2.7,
+        "platform:7.5": 2.8,
+        "platform:5": 3.1
+      }
+    },
+    {
+      "id": "5436D",
+      "code": 5436,
+      "position": "D",
+      "name": "Inward 1\u00bd Somersaults 3 Twists",
+      "difficulty": {
+        "springboard:3": 3.5,
+        "platform:10": 3.4
+      }
+    },
+    {
+      "id": "610A",
+      "code": 610,
+      "position": "A",
+      "name": "Armstand Dive (Armstand with body back to water)",
+      "difficulty": {
+        "platform:10": 1.6,
+        "platform:7.5": 1.6,
+        "platform:5": 1.5
+      }
+    },
+    {
+      "id": "611A",
+      "code": 611,
+      "position": "A",
+      "name": "Armstand Forward \u00bd Somersault",
+      "difficulty": {
+        "platform:10": 2.0,
+        "platform:7.5": 2.0,
+        "platform:5": 1.8
+      }
+    },
+    {
+      "id": "611B",
+      "code": 611,
+      "position": "B",
+      "name": "Armstand Forward \u00bd Somersault",
+      "difficulty": {
+        "platform:10": 1.9,
+        "platform:7.5": 1.9,
+        "platform:5": 1.7
+      }
+    },
+    {
+      "id": "611C",
+      "code": 611,
+      "position": "C",
+      "name": "Armstand Forward \u00bd Somersault",
+      "difficulty": {
+        "platform:10": 1.7,
+        "platform:7.5": 1.7,
+        "platform:5": 1.5
+      }
+    },
+    {
+      "id": "6122D",
+      "code": 6122,
+      "position": "D",
+      "name": "Armstand Fwd Som. 1 Twist",
+      "difficulty": {
+        "platform:10": 2.6,
+        "platform:7.5": 2.5,
+        "platform:5": 2.4
+      }
+    },
+    {
+      "id": "6124D",
+      "code": 6124,
+      "position": "D",
+      "name": "Armstand Fwd Som. 2 Twists",
+      "difficulty": {
+        "platform:10": 2.9,
+        "platform:7.5": 2.8,
+        "platform:5": 2.7
+      }
+    },
+    {
+      "id": "612A",
+      "code": 612,
+      "position": "A",
+      "name": "Armstand Forward 1 Somersault",
+      "difficulty": {
+        "platform:10": 2.0,
+        "platform:7.5": 1.9,
+        "platform:5": 1.8
+      }
+    },
+    {
+      "id": "612B",
+      "code": 612,
+      "position": "B",
+      "name": "Armstand Forward 1 Somersault",
+      "difficulty": {
+        "platform:10": 1.9,
+        "platform:7.5": 1.8,
+        "platform:5": 1.7
+      }
+    },
+    {
+      "id": "612C",
+      "code": 612,
+      "position": "C",
+      "name": "Armstand Forward 1 Somersault",
+      "difficulty": {
+        "platform:10": 1.7,
+        "platform:7.5": 1.6,
+        "platform:5": 1.5
+      }
+    },
+    {
+      "id": "6142D",
+      "code": 6142,
+      "position": "D",
+      "name": "Armstand Fwd 2 Soms. 1 Twist",
+      "difficulty": {
+        "platform:10": 3.1,
+        "platform:7.5": 3.0,
+        "platform:5": 3.2
+      }
+    },
+    {
+      "id": "6144D",
+      "code": 6144,
+      "position": "D",
+      "name": "Armstand Fwd 2 Soms. 2 Twists",
+      "difficulty": {
+        "platform:10": 3.4,
+        "platform:7.5": 3.3,
+        "platform:5": 3.5
+      }
+    },
+    {
+      "id": "614B",
+      "code": 614,
+      "position": "B",
+      "name": "Armstand Forward 2 Somersaults",
+      "difficulty": {
+        "platform:10": 2.4,
+        "platform:7.5": 2.3,
+        "platform:5": 2.5
+      }
+    },
+    {
+      "id": "614C",
+      "code": 614,
+      "position": "C",
+      "name": "Armstand Forward 2 Somersaults",
+      "difficulty": {
+        "platform:10": 2.1,
+        "platform:7.5": 2.0,
+        "platform:5": 2.2
+      }
+    },
+    {
+      "id": "6162C",
+      "code": 6162,
+      "position": "C",
+      "name": "Armstand Fwd 3 Soms. 1 Twist",
+      "difficulty": {
+        "platform:10": 3.9
+      }
+    },
+    {
+      "id": "616B",
+      "code": 616,
+      "position": "B",
+      "name": "Armstand Forward 3 Somersaults",
+      "difficulty": {
+        "platform:10": 3.3
+      }
+    },
+    {
+      "id": "616C",
+      "code": 616,
+      "position": "C",
+      "name": "Armstand Forward 3 Somersaults",
+      "difficulty": {
+        "platform:10": 3.1
+      }
+    },
+    {
+      "id": "621A",
+      "code": 621,
+      "position": "A",
+      "name": "Armstand Back \u00bd Somersault",
+      "difficulty": {
+        "platform:10": 1.9,
+        "platform:7.5": 1.9,
+        "platform:5": 1.7
+      }
+    },
+    {
+      "id": "621B",
+      "code": 621,
+      "position": "B",
+      "name": "Armstand Back \u00bd Somersault",
+      "difficulty": {
+        "platform:10": 1.8,
+        "platform:7.5": 1.8,
+        "platform:5": 1.6
+      }
+    },
+    {
+      "id": "621C",
+      "code": 621,
+      "position": "C",
+      "name": "Armstand Back \u00bd Somersault",
+      "difficulty": {
+        "platform:10": 1.6,
+        "platform:7.5": 1.6,
+        "platform:5": 1.4
+      }
+    },
+    {
+      "id": "6221D",
+      "code": 6221,
+      "position": "D",
+      "name": "Armstand Back Som. \u00bd Twist",
+      "difficulty": {
+        "platform:10": 1.8,
+        "platform:7.5": 1.7,
+        "platform:5": 1.6
+      }
+    },
+    {
+      "id": "622A",
+      "code": 622,
+      "position": "A",
+      "name": "Armstand Back Somersault",
+      "difficulty": {
+        "platform:10": 2.3,
+        "platform:7.5": 2.2,
+        "platform:5": 2.1
+      }
+    },
+    {
+      "id": "622B",
+      "code": 622,
+      "position": "B",
+      "name": "Armstand Back Somersault",
+      "difficulty": {
+        "platform:10": 2.2,
+        "platform:7.5": 2.1,
+        "platform:5": 2.0
+      }
+    },
+    {
+      "id": "622C",
+      "code": 622,
+      "position": "C",
+      "name": "Armstand Back Somersault",
+      "difficulty": {
+        "platform:10": 2.0,
+        "platform:7.5": 1.9,
+        "platform:5": 1.8
+      }
+    },
+    {
+      "id": "623B",
+      "code": 623,
+      "position": "B",
+      "name": "Armstand Back 1\u00bd Somersaults",
+      "difficulty": {
+        "platform:10": 2.2,
+        "platform:7.5": 2.2,
+        "platform:5": 2.3
+      }
+    },
+    {
+      "id": "623C",
+      "code": 623,
+      "position": "C",
+      "name": "Armstand Back 1\u00bd Somersaults",
+      "difficulty": {
+        "platform:10": 1.9,
+        "platform:7.5": 1.9,
+        "platform:5": 2.0
+      }
+    },
+    {
+      "id": "6241B",
+      "code": 6241,
+      "position": "B",
+      "name": "Armstand Back 2 Soms. \u00bd Twist",
+      "difficulty": {
+        "platform:10": 2.7,
+        "platform:7.5": 2.6,
+        "platform:5": 2.8
+      }
+    },
+    {
+      "id": "6241C",
+      "code": 6241,
+      "position": "C",
+      "name": "Armstand Back 2 Soms. \u00bd Twist",
+      "difficulty": {
+        "platform:10": 2.4,
+        "platform:7.5": 2.3,
+        "platform:5": 2.5
+      }
+    },
+    {
+      "id": "6243D",
+      "code": 6243,
+      "position": "D",
+      "name": "Armstand Back 2 Soms 1\u00bd Twists",
+      "difficulty": {
+        "platform:10": 3.2,
+        "platform:7.5": 3.1,
+        "platform:5": 3.3
+      }
+    },
+    {
+      "id": "6245D",
+      "code": 6245,
+      "position": "D",
+      "name": "Armstand Back 2 Soms 2\u00bd Twists",
+      "difficulty": {
+        "platform:10": 3.6,
+        "platform:7.5": 3.5,
+        "platform:5": 3.7
+      }
+    },
+    {
+      "id": "6247D",
+      "code": 6247,
+      "position": "D",
+      "name": "Armstand Back 2 Soms 3\u00bd Twists",
+      "difficulty": {
+        "platform:10": 4.0
+      }
+    },
+    {
+      "id": "624A",
+      "code": 624,
+      "position": "A",
+      "name": "Armstand Back 2 Somersaults",
+      "difficulty": {
+        "platform:10": 3.0,
+        "platform:7.5": 2.9,
+        "platform:5": 3.1
+      }
+    },
+    {
+      "id": "624B",
+      "code": 624,
+      "position": "B",
+      "name": "Armstand Back 2 Somersaults",
+      "difficulty": {
+        "platform:10": 2.8,
+        "platform:7.5": 2.7,
+        "platform:5": 2.9
+      }
+    },
+    {
+      "id": "624C",
+      "code": 624,
+      "position": "C",
+      "name": "Armstand Back 2 Somersaults",
+      "difficulty": {
+        "platform:10": 2.5,
+        "platform:7.5": 2.4,
+        "platform:5": 2.6
+      }
+    },
+    {
+      "id": "6261B",
+      "code": 6261,
+      "position": "B",
+      "name": "Armstand Back 3 Soms. \u00bd Twist",
+      "difficulty": {
+        "platform:10": 3.4,
+        "platform:7.5": 3.2,
+        "platform:5": 3.6
+      }
+    },
+    {
+      "id": "6261C",
+      "code": 6261,
+      "position": "C",
+      "name": "Armstand Back 3 Soms. \u00bd Twist",
+      "difficulty": {
+        "platform:10": 3.2,
+        "platform:7.5": 3.0,
+        "platform:5": 3.4
+      }
+    },
+    {
+      "id": "6263B",
+      "code": 6263,
+      "position": "B",
+      "name": "Armstand Back 3 Soms 1\u00bd Twists",
+      "difficulty": {
+        "platform:10": 4.2
+      }
+    },
+    {
+      "id": "6263C",
+      "code": 6263,
+      "position": "C",
+      "name": "Armstand Back 3 Soms 1\u00bd Twists",
+      "difficulty": {
+        "platform:10": 4.0
+      }
+    },
+    {
+      "id": "6265B",
+      "code": 6265,
+      "position": "B",
+      "name": "Armstand Back 3 Soms 2\u00bd Twists",
+      "difficulty": {
+        "platform:10": 4.6
+      }
+    },
+    {
+      "id": "6265C",
+      "code": 6265,
+      "position": "C",
+      "name": "Armstand Back 3 Soms 2\u00bd Twists",
+      "difficulty": {
+        "platform:10": 4.4
+      }
+    },
+    {
+      "id": "626B",
+      "code": 626,
+      "position": "B",
+      "name": "Armstand Back 3 Somersaults",
+      "difficulty": {
+        "platform:10": 3.5,
+        "platform:7.5": 3.3
+      }
+    },
+    {
+      "id": "626C",
+      "code": 626,
+      "position": "C",
+      "name": "Armstand Back 3 Somersaults",
+      "difficulty": {
+        "platform:10": 3.3,
+        "platform:7.5": 3.1,
+        "platform:5": 3.5
+      }
+    },
+    {
+      "id": "628B",
+      "code": 628,
+      "position": "B",
+      "name": "Armstand Back 4 Somersaults",
+      "difficulty": {
+        "platform:10": 4.7
+      }
+    },
+    {
+      "id": "628C",
+      "code": 628,
+      "position": "C",
+      "name": "Armstand Back 4 Somersaults",
+      "difficulty": {
+        "platform:10": 4.5
+      }
+    },
+    {
+      "id": "631A",
+      "code": 631,
+      "position": "A",
+      "name": "Armstand Reverse \u00bd Somersault",
+      "difficulty": {
+        "platform:10": 2.0,
+        "platform:7.5": 2.0,
+        "platform:5": 1.8
+      }
+    },
+    {
+      "id": "631B",
+      "code": 631,
+      "position": "B",
+      "name": "Armstand Reverse \u00bd Somersault",
+      "difficulty": {
+        "platform:10": 1.9,
+        "platform:7.5": 1.9,
+        "platform:5": 1.7
+      }
+    },
+    {
+      "id": "631C",
+      "code": 631,
+      "position": "C",
+      "name": "Armstand Reverse \u00bd Somersault",
+      "difficulty": {
+        "platform:10": 1.7,
+        "platform:7.5": 1.7,
+        "platform:5": 1.5
+      }
+    },
+    {
+      "id": "632B",
+      "code": 632,
+      "position": "B",
+      "name": "Armstand Reverse 1 Somersault",
+      "difficulty": {
+        "platform:10": 2.3,
+        "platform:7.5": 2.2,
+        "platform:5": 2.1
+      }
+    },
+    {
+      "id": "632C",
+      "code": 632,
+      "position": "C",
+      "name": "Armstand Reverse 1 Somersault",
+      "difficulty": {
+        "platform:10": 2.1,
+        "platform:7.5": 2.0,
+        "platform:5": 1.9
+      }
+    },
+    {
+      "id": "633B",
+      "code": 633,
+      "position": "B",
+      "name": "Armstand Reverse 1\u00bd Somersaults",
+      "difficulty": {
+        "platform:10": 2.3,
+        "platform:7.5": 2.3,
+        "platform:5": 2.4
+      }
+    },
+    {
+      "id": "633C",
+      "code": 633,
+      "position": "C",
+      "name": "Armstand Reverse 1\u00bd Somersaults",
+      "difficulty": {
+        "platform:10": 2.0,
+        "platform:7.5": 2.0,
+        "platform:5": 2.1
+      }
+    },
+    {
+      "id": "634B",
+      "code": 634,
+      "position": "B",
+      "name": "Armstand Reverse 2 Somersaults",
+      "difficulty": {
+        "platform:10": 2.9,
+        "platform:7.5": 2.8,
+        "platform:5": 3.0
+      }
+    },
+    {
+      "id": "634C",
+      "code": 634,
+      "position": "C",
+      "name": "Armstand Reverse 2 Somersaults",
+      "difficulty": {
+        "platform:10": 2.6,
+        "platform:7.5": 2.5,
+        "platform:5": 2.7
+      }
+    },
+    {
+      "id": "636B",
+      "code": 636,
+      "position": "B",
+      "name": "Armstand Reverse 3 Somersaults",
+      "difficulty": {
+        "platform:10": 3.6
+      }
+    },
+    {
+      "id": "636C",
+      "code": 636,
+      "position": "C",
+      "name": "Armstand Reverse 3 Somersaults",
+      "difficulty": {
+        "platform:10": 3.4,
+        "platform:7.5": 3.2
+      }
+    },
+    {
+      "id": "638B",
+      "code": 638,
+      "position": "B",
+      "name": "Armstand Reverse 4 Somersaults",
+      "difficulty": {
+        "platform:10": 4.8
+      }
+    },
+    {
+      "id": "638C",
+      "code": 638,
+      "position": "C",
+      "name": "Armstand Reverse 4 Somersaults",
+      "difficulty": {
+        "platform:10": 4.6
+      }
+    },
+    {
+      "id": "640A",
+      "code": 640,
+      "position": "A",
+      "name": "Armstand Dive (Armstand with body front to water)",
+      "difficulty": {
+        "platform:10": 1.7,
+        "platform:7.5": 1.7,
+        "platform:5": 1.6
+      }
+    },
+    {
+      "id": "641B",
+      "code": 641,
+      "position": "B",
+      "name": "Armstand Inward 1/2 Somersault",
+      "difficulty": {
+        "platform:10": 2.0,
+        "platform:7.5": 2.0,
+        "platform:5": 1.8
+      }
+    },
+    {
+      "id": "641C",
+      "code": 641,
+      "position": "C",
+      "name": "Armstand Inward 1/2 Somersault",
+      "difficulty": {
+        "platform:10": 1.8,
+        "platform:7.5": 1.8,
+        "platform:5": 1.6
+      }
+    },
+    {
+      "id": "642B",
+      "code": 642,
+      "position": "B",
+      "name": "Armstand Inward 1 Somersault",
+      "difficulty": {
+        "platform:10": 2.0,
+        "platform:7.5": 1.9,
+        "platform:5": 1.8
+      }
+    },
+    {
+      "id": "642C",
+      "code": 642,
+      "position": "C",
+      "name": "Armstand Inward 1 Somersault",
+      "difficulty": {
+        "platform:10": 1.8,
+        "platform:7.5": 1.7,
+        "platform:5": 1.6
+      }
+    },
+    {
+      "id": "644B",
+      "code": 644,
+      "position": "B",
+      "name": "Armstand Inward 2 Somersaults",
+      "difficulty": {
+        "platform:10": 2.5,
+        "platform:7.5": 2.4,
+        "platform:5": 2.6
+      }
+    },
+    {
+      "id": "644C",
+      "code": 644,
+      "position": "C",
+      "name": "Armstand Inward 2 Somersaults",
+      "difficulty": {
+        "platform:10": 2.2,
+        "platform:7.5": 2.1,
+        "platform:5": 2.3
+      }
+    },
+    {
+      "id": "646B",
+      "code": 646,
+      "position": "B",
+      "name": "Armstand Inward 3 Somersaults",
+      "difficulty": {
+        "platform:10": 3.4
+      }
+    },
+    {
+      "id": "646C",
+      "code": 646,
+      "position": "C",
+      "name": "Armstand Inward 3 Somersaults",
+      "difficulty": {
+        "platform:10": 3.2
+      }
+    }
+  ]
+}

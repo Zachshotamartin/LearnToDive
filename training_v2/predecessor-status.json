@@ -1,0 +1,3510 @@
+{
+  "createdUTC": "2026-09-10T15:55:12.781108+00:00",
+  "history": [
+    {
+      "additionalSteps": 0,
+      "metrics": {
+        "all": {
+          "clean": 0.0,
+          "execution": 1.83203125,
+          "alignment": -19.589545410666982,
+          "geometry": 0.010416666666666666
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 1.625,
+          "alignment": -23.749450661627108,
+          "geometry": 0.0
+        },
+        "103C": {
+          "clean": 0.0,
+          "execution": 1.96875,
+          "alignment": -15.471894921849628,
+          "geometry": 0.0
+        },
+        "103B": {
+          "clean": 0.0,
+          "execution": 1.96875,
+          "alignment": -19.560247881946886,
+          "geometry": 0.0
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 1.90625,
+          "alignment": -15.850606199948004,
+          "geometry": 0.0625
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 1.6875,
+          "alignment": -20.36546395369612,
+          "geometry": 0.0
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 1.8359375,
+          "alignment": -22.539608844934136,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/training/ppo-normalized-entry-v3/evaluated/step-000193536000-update-00000100/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/baseline/evaluation.json"
+    },
+    {
+      "additionalSteps": 2048000,
+      "metrics": {
+        "all": {
+          "clean": 0.0,
+          "execution": 1.7682291666666667,
+          "alignment": -18.384474833707255,
+          "geometry": 0.0
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 1.3828125,
+          "alignment": -25.723969996475756,
+          "geometry": 0.0
+        },
+        "103C": {
+          "clean": 0.0,
+          "execution": 1.9609375,
+          "alignment": -14.72596844234727,
+          "geometry": 0.0
+        },
+        "103B": {
+          "clean": 0.0,
+          "execution": 1.7734375,
+          "alignment": -16.433548960894825,
+          "geometry": 0.0
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 1.8671875,
+          "alignment": -12.664712535398417,
+          "geometry": 0.0
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 1.84375,
+          "alignment": -19.227642806676343,
+          "geometry": 0.0
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 1.78125,
+          "alignment": -21.531006260450912,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0001/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0001/evaluation.json"
+    },
+    {
+      "additionalSteps": 4096000,
+      "metrics": {
+        "all": {
+          "clean": 0.0,
+          "execution": 1.7747395833333333,
+          "alignment": -17.70895439775568,
+          "geometry": 0.0
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 1.4453125,
+          "alignment": -23.659244710563154,
+          "geometry": 0.0
+        },
+        "103C": {
+          "clean": 0.0,
+          "execution": 1.9921875,
+          "alignment": -15.268768415918805,
+          "geometry": 0.0
+        },
+        "103B": {
+          "clean": 0.0,
+          "execution": 1.78125,
+          "alignment": -13.17279684129199,
+          "geometry": 0.0
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 1.859375,
+          "alignment": -14.273989806215793,
+          "geometry": 0.0
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 1.9453125,
+          "alignment": -18.071884191702487,
+          "geometry": 0.0
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 1.625,
+          "alignment": -21.807042420841867,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0002/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0002/evaluation.json"
+    },
+    {
+      "additionalSteps": 6144000,
+      "metrics": {
+        "all": {
+          "clean": 0.0,
+          "execution": 1.7838541666666667,
+          "alignment": -17.14080449373323,
+          "geometry": 0.0
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 1.71875,
+          "alignment": -19.830307303762304,
+          "geometry": 0.0
+        },
+        "103C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -13.758381493252106,
+          "geometry": 0.0
+        },
+        "103B": {
+          "clean": 0.0,
+          "execution": 1.90625,
+          "alignment": -12.81437124941383,
+          "geometry": 0.0
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 1.9296875,
+          "alignment": -12.545437066658137,
+          "geometry": 0.0
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 1.96875,
+          "alignment": -16.674427305158524,
+          "geometry": 0.0
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 1.1796875,
+          "alignment": -27.221902544154496,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0003/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0003/evaluation.json"
+    },
+    {
+      "additionalSteps": 8192000,
+      "metrics": {
+        "all": {
+          "clean": 0.0,
+          "execution": 1.85546875,
+          "alignment": -16.2463272033029,
+          "geometry": 0.0
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 1.890625,
+          "alignment": -16.18881228414756,
+          "geometry": 0.0
+        },
+        "103C": {
+          "clean": 0.0,
+          "execution": 1.96875,
+          "alignment": -14.728230243920159,
+          "geometry": 0.0
+        },
+        "103B": {
+          "clean": 0.0,
+          "execution": 1.90625,
+          "alignment": -13.233183626305618,
+          "geometry": 0.0
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -9.970370097226875,
+          "geometry": 0.0
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 1.9765625,
+          "alignment": -17.298351571513308,
+          "geometry": 0.0
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 1.390625,
+          "alignment": -26.05901539670389,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0004/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0004/evaluation.json"
+    },
+    {
+      "additionalSteps": 10240000,
+      "metrics": {
+        "all": {
+          "clean": 0.0,
+          "execution": 1.8190104166666667,
+          "alignment": -16.120794210548706,
+          "geometry": 0.0026041666666666665
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 1.828125,
+          "alignment": -16.145329834911806,
+          "geometry": 0.0
+        },
+        "103C": {
+          "clean": 0.0,
+          "execution": 1.984375,
+          "alignment": -14.901644609553673,
+          "geometry": 0.0
+        },
+        "103B": {
+          "clean": 0.0,
+          "execution": 1.96875,
+          "alignment": -13.518594857478512,
+          "geometry": 0.015625
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -10.943908269493399,
+          "geometry": 0.0
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 1.875,
+          "alignment": -15.2398038276435,
+          "geometry": 0.0
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 1.2578125,
+          "alignment": -25.975483864211338,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0005/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0005/evaluation.json"
+    },
+    {
+      "additionalSteps": 12288000,
+      "metrics": {
+        "all": {
+          "clean": 0.0,
+          "execution": 1.8580729166666667,
+          "alignment": -15.722440780195276,
+          "geometry": 0.0026041666666666665
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 1.921875,
+          "alignment": -13.592229077436212,
+          "geometry": 0.0
+        },
+        "103C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -12.696005633776256,
+          "geometry": 0.0
+        },
+        "103B": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -12.40706901099418,
+          "geometry": 0.015625
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -12.418380301472355,
+          "geometry": 0.0
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 1.90625,
+          "alignment": -17.043693937427044,
+          "geometry": 0.0
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 1.3203125,
+          "alignment": -26.17726672006561,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0006/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0006/evaluation.json"
+    },
+    {
+      "additionalSteps": 14336000,
+      "metrics": {
+        "all": {
+          "clean": 0.0,
+          "execution": 1.9075520833333333,
+          "alignment": -15.255239063283065,
+          "geometry": 0.005208333333333333
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 1.9296875,
+          "alignment": -14.57371966080821,
+          "geometry": 0.0
+        },
+        "103C": {
+          "clean": 0.0,
+          "execution": 1.9921875,
+          "alignment": -14.955622603638549,
+          "geometry": 0.0
+        },
+        "103B": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -12.709174799119012,
+          "geometry": 0.0
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -11.483281022691052,
+          "geometry": 0.03125
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 1.90625,
+          "alignment": -14.834214752897351,
+          "geometry": 0.0
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 1.6171875,
+          "alignment": -22.97542154054423,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0007/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0007/evaluation.json"
+    },
+    {
+      "additionalSteps": 16384000,
+      "metrics": {
+        "all": {
+          "clean": 0.0,
+          "execution": 1.94140625,
+          "alignment": -15.095721475932459,
+          "geometry": 0.033854166666666664
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 2.0234375,
+          "alignment": -14.377096034217466,
+          "geometry": 0.140625
+        },
+        "103C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -16.13010927773558,
+          "geometry": 0.0
+        },
+        "103B": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -13.235983209902326,
+          "geometry": 0.046875
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -12.814581653205018,
+          "geometry": 0.015625
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 1.90625,
+          "alignment": -13.585265772796836,
+          "geometry": 0.0
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 1.71875,
+          "alignment": -20.431292907737518,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0008/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0008/evaluation.json"
+    },
+    {
+      "additionalSteps": 18432000,
+      "metrics": {
+        "all": {
+          "clean": 0.0,
+          "execution": 1.83984375,
+          "alignment": -15.989332228311804,
+          "geometry": 0.03125
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 1.8046875,
+          "alignment": -15.837911400013686,
+          "geometry": 0.046875
+        },
+        "103C": {
+          "clean": 0.0,
+          "execution": 1.96875,
+          "alignment": -13.0262967582826,
+          "geometry": 0.015625
+        },
+        "103B": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -13.227048683827393,
+          "geometry": 0.0
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 1.984375,
+          "alignment": -13.970434802110887,
+          "geometry": 0.125
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -14.18179281782087,
+          "geometry": 0.0
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 1.28125,
+          "alignment": -25.692508907815387,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0009/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0009/evaluation.json"
+    },
+    {
+      "additionalSteps": 20480000,
+      "metrics": {
+        "all": {
+          "clean": 0.0,
+          "execution": 1.859375,
+          "alignment": -14.568080417360699,
+          "geometry": 0.020833333333333332
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 1.90625,
+          "alignment": -14.220044852763927,
+          "geometry": 0.015625
+        },
+        "103C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -12.216938610225528,
+          "geometry": 0.0
+        },
+        "103B": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -11.667114509515066,
+          "geometry": 0.0625
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 1.9375,
+          "alignment": -12.927366285656483,
+          "geometry": 0.046875
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 1.9609375,
+          "alignment": -11.997270391158654,
+          "geometry": 0.0
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 1.3515625,
+          "alignment": -24.379747854844545,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0010/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0010/evaluation.json"
+    },
+    {
+      "additionalSteps": 22528000,
+      "metrics": {
+        "all": {
+          "clean": 0.0,
+          "execution": 1.8567708333333333,
+          "alignment": -15.97174902948539,
+          "geometry": 0.10677083333333333
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 1.84375,
+          "alignment": -14.932942245182797,
+          "geometry": 0.109375
+        },
+        "103C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -16.627986088085656,
+          "geometry": 0.015625
+        },
+        "103B": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -13.56010627503115,
+          "geometry": 0.40625
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 1.9609375,
+          "alignment": -14.61316191324927,
+          "geometry": 0.109375
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -11.630825523502448,
+          "geometry": 0.0
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 1.3359375,
+          "alignment": -24.465472131861027,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0011/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0011/evaluation.json"
+    },
+    {
+      "additionalSteps": 24576000,
+      "metrics": {
+        "all": {
+          "clean": 0.0,
+          "execution": 1.8411458333333333,
+          "alignment": -15.086875733568412,
+          "geometry": 0.041666666666666664
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 1.78125,
+          "alignment": -14.781661956180123,
+          "geometry": 0.03125
+        },
+        "103C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -14.256171115288545,
+          "geometry": 0.0
+        },
+        "103B": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -10.971796060211163,
+          "geometry": 0.125
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 1.984375,
+          "alignment": -14.940484630322985,
+          "geometry": 0.09375
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -11.447219382715488,
+          "geometry": 0.0
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 1.28125,
+          "alignment": -24.123921256692157,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0012/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0012/evaluation.json"
+    },
+    {
+      "additionalSteps": 26624000,
+      "metrics": {
+        "all": {
+          "clean": 0.0,
+          "execution": 1.91796875,
+          "alignment": -14.136032531394044,
+          "geometry": 0.08333333333333333
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 1.859375,
+          "alignment": -14.296108187752061,
+          "geometry": 0.046875
+        },
+        "103C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -13.44398157367431,
+          "geometry": 0.125
+        },
+        "103B": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -10.988960177932118,
+          "geometry": 0.1875
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 1.9375,
+          "alignment": -14.854109069986057,
+          "geometry": 0.140625
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -11.422589022856794,
+          "geometry": 0.0
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 1.7109375,
+          "alignment": -19.810447156162912,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0013/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0013/evaluation.json"
+    },
+    {
+      "additionalSteps": 28672000,
+      "metrics": {
+        "all": {
+          "clean": 0.0,
+          "execution": 1.9322916666666667,
+          "alignment": -14.33149721276834,
+          "geometry": 0.06510416666666667
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 1.8828125,
+          "alignment": -14.242416338619993,
+          "geometry": 0.015625
+        },
+        "103C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -14.092780487883621,
+          "geometry": 0.0
+        },
+        "103B": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -11.522488305285576,
+          "geometry": 0.21875
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -14.431552542259297,
+          "geometry": 0.15625
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 1.9921875,
+          "alignment": -12.632071910901605,
+          "geometry": 0.0
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 1.71875,
+          "alignment": -19.06767369165995,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0014/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0014/evaluation.json"
+    },
+    {
+      "additionalSteps": 30720000,
+      "metrics": {
+        "all": {
+          "clean": 0.0,
+          "execution": 1.8502604166666667,
+          "alignment": -15.617067254537469,
+          "geometry": 0.026041666666666668
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 1.7578125,
+          "alignment": -16.089148315541095,
+          "geometry": 0.0
+        },
+        "103C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -15.64573800586491,
+          "geometry": 0.0
+        },
+        "103B": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -12.010489582789255,
+          "geometry": 0.03125
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -13.287534266528345,
+          "geometry": 0.125
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 1.96875,
+          "alignment": -13.506684341213422,
+          "geometry": 0.0
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 1.375,
+          "alignment": -23.162809015287785,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0015/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0015/evaluation.json"
+    },
+    {
+      "additionalSteps": 32768000,
+      "metrics": {
+        "all": {
+          "clean": 0.005208333333333333,
+          "execution": 2.0247395833333335,
+          "alignment": -13.34075746922809,
+          "geometry": 0.12239583333333333
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 1.9296875,
+          "alignment": -15.9319120977473,
+          "geometry": 0.15625
+        },
+        "103C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -12.402442679501837,
+          "geometry": 0.046875
+        },
+        "103B": {
+          "clean": 0.03125,
+          "execution": 2.3984375,
+          "alignment": -10.429923183919602,
+          "geometry": 0.34375
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 1.984375,
+          "alignment": -11.557054766529168,
+          "geometry": 0.1875
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -12.858830916029044,
+          "geometry": 0.0
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 1.8359375,
+          "alignment": -16.864381171641586,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0016/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0016/evaluation.json"
+    },
+    {
+      "additionalSteps": 34816000,
+      "metrics": {
+        "all": {
+          "clean": 0.0,
+          "execution": 1.92578125,
+          "alignment": -14.048386206482157,
+          "geometry": 0.125
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 1.9375,
+          "alignment": -14.504456825389662,
+          "geometry": 0.015625
+        },
+        "103C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -14.263533131144609,
+          "geometry": 0.0
+        },
+        "103B": {
+          "clean": 0.0,
+          "execution": 2.0625,
+          "alignment": -10.69946153602615,
+          "geometry": 0.328125
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 1.984375,
+          "alignment": -12.45809664374704,
+          "geometry": 0.40625
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 1.984375,
+          "alignment": -12.836671733953308,
+          "geometry": 0.0
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 1.5859375,
+          "alignment": -19.528097368632167,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0017/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0017/evaluation.json"
+    },
+    {
+      "additionalSteps": 36864000,
+      "metrics": {
+        "all": {
+          "clean": 0.0078125,
+          "execution": 1.9973958333333333,
+          "alignment": -13.889148494118508,
+          "geometry": 0.1796875
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 1.9609375,
+          "alignment": -12.16238215055492,
+          "geometry": 0.09375
+        },
+        "103C": {
+          "clean": 0.0,
+          "execution": 1.96875,
+          "alignment": -16.10879263873673,
+          "geometry": 0.015625
+        },
+        "103B": {
+          "clean": 0.046875,
+          "execution": 2.359375,
+          "alignment": -9.757385951367205,
+          "geometry": 0.359375
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -12.735928458733728,
+          "geometry": 0.59375
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 1.9921875,
+          "alignment": -12.802284403568702,
+          "geometry": 0.015625
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 1.703125,
+          "alignment": -19.76811736174976,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0018/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0018/evaluation.json"
+    },
+    {
+      "additionalSteps": 38912000,
+      "metrics": {
+        "all": {
+          "clean": 0.0026041666666666665,
+          "execution": 1.9635416666666667,
+          "alignment": -13.761767403393256,
+          "geometry": 0.10416666666666667
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 1.9375,
+          "alignment": -12.253536073334818,
+          "geometry": 0.109375
+        },
+        "103C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -14.408255944003947,
+          "geometry": 0.0
+        },
+        "103B": {
+          "clean": 0.015625,
+          "execution": 2.0625,
+          "alignment": -10.706874717387382,
+          "geometry": 0.234375
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 1.9296875,
+          "alignment": -16.16318327315609,
+          "geometry": 0.234375
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 1.9921875,
+          "alignment": -12.827639788765229,
+          "geometry": 0.046875
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 1.859375,
+          "alignment": -16.211114623712064,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0019/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0019/evaluation.json"
+    },
+    {
+      "additionalSteps": 40960000,
+      "metrics": {
+        "all": {
+          "clean": 0.0026041666666666665,
+          "execution": 2.0052083333333335,
+          "alignment": -14.257362520868796,
+          "geometry": 0.15104166666666666
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 1.9375,
+          "alignment": -13.715933524819903,
+          "geometry": 0.1875
+        },
+        "103C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -14.33726204649359,
+          "geometry": 0.046875
+        },
+        "103B": {
+          "clean": 0.015625,
+          "execution": 2.40625,
+          "alignment": -10.088936972173402,
+          "geometry": 0.34375
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 1.9375,
+          "alignment": -15.896228263981316,
+          "geometry": 0.328125
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -13.203638700707046,
+          "geometry": 0.0
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 1.75,
+          "alignment": -18.302175617037513,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0020/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0020/evaluation.json"
+    },
+    {
+      "additionalSteps": 43008000,
+      "metrics": {
+        "all": {
+          "clean": 0.013020833333333334,
+          "execution": 2.0377604166666665,
+          "alignment": -14.384525037091585,
+          "geometry": 0.13541666666666666
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 1.9375,
+          "alignment": -12.707477310335417,
+          "geometry": 0.015625
+        },
+        "103C": {
+          "clean": 0.0,
+          "execution": 1.96875,
+          "alignment": -15.012044576654267,
+          "geometry": 0.078125
+        },
+        "103B": {
+          "clean": 0.078125,
+          "execution": 2.6484375,
+          "alignment": -11.838761320369796,
+          "geometry": 0.3125
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 1.8359375,
+          "alignment": -14.728114007423383,
+          "geometry": 0.34375
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -13.373899442098,
+          "geometry": 0.0625
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 1.8359375,
+          "alignment": -18.646853565668646,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0021/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0021/evaluation.json"
+    },
+    {
+      "additionalSteps": 45056000,
+      "metrics": {
+        "all": {
+          "clean": 0.005208333333333333,
+          "execution": 1.93359375,
+          "alignment": -14.348193626719182,
+          "geometry": 0.21875
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 1.84375,
+          "alignment": -14.801356893497765,
+          "geometry": 0.015625
+        },
+        "103C": {
+          "clean": 0.0,
+          "execution": 1.96875,
+          "alignment": -14.212496353426513,
+          "geometry": 0.203125
+        },
+        "103B": {
+          "clean": 0.03125,
+          "execution": 2.2734375,
+          "alignment": -12.36002817737431,
+          "geometry": 0.578125
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 1.6171875,
+          "alignment": -15.133609864693975,
+          "geometry": 0.359375
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -13.281187706981607,
+          "geometry": 0.15625
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 1.8984375,
+          "alignment": -16.300482764340924,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0022/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0022/evaluation.json"
+    },
+    {
+      "additionalSteps": 47104000,
+      "metrics": {
+        "all": {
+          "clean": 0.013020833333333334,
+          "execution": 2.0677083333333335,
+          "alignment": -13.750785784360588,
+          "geometry": 0.1875
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 1.96875,
+          "alignment": -11.269269439920002,
+          "geometry": 0.015625
+        },
+        "103C": {
+          "clean": 0.0,
+          "execution": 1.96875,
+          "alignment": -12.791097571840663,
+          "geometry": 0.125
+        },
+        "103B": {
+          "clean": 0.078125,
+          "execution": 2.75,
+          "alignment": -12.60876402196207,
+          "geometry": 0.34375
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 1.9296875,
+          "alignment": -12.936006986531822,
+          "geometry": 0.46875
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -14.084416677255657,
+          "geometry": 0.171875
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 1.7890625,
+          "alignment": -18.815160008653297,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0023/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0023/evaluation.json"
+    },
+    {
+      "additionalSteps": 49152000,
+      "metrics": {
+        "all": {
+          "clean": 0.020833333333333332,
+          "execution": 2.1653645833333335,
+          "alignment": -14.160370872315772,
+          "geometry": 0.24739583333333334
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 1.9375,
+          "alignment": -11.43189001560011,
+          "geometry": 0.015625
+        },
+        "103C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -16.541317133495493,
+          "geometry": 0.03125
+        },
+        "103B": {
+          "clean": 0.125,
+          "execution": 3.4140625,
+          "alignment": -12.924387214832487,
+          "geometry": 0.59375
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 1.96875,
+          "alignment": -14.034018789015327,
+          "geometry": 0.390625
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -13.579819876245134,
+          "geometry": 0.453125
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 1.671875,
+          "alignment": -16.450792204706087,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0024/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0024/evaluation.json"
+    },
+    {
+      "additionalSteps": 51200000,
+      "metrics": {
+        "all": {
+          "clean": 0.036458333333333336,
+          "execution": 2.3190104166666665,
+          "alignment": -12.584015168952257,
+          "geometry": 0.4166666666666667
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 1.9453125,
+          "alignment": -10.497417464931216,
+          "geometry": 0.015625
+        },
+        "103C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -12.885163688056332,
+          "geometry": 0.34375
+        },
+        "103B": {
+          "clean": 0.21875,
+          "execution": 4.1171875,
+          "alignment": -11.041402415360022,
+          "geometry": 0.9375
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 1.9921875,
+          "alignment": -13.088152498841499,
+          "geometry": 0.453125
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -12.313052000212231,
+          "geometry": 0.75
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 1.859375,
+          "alignment": -15.678902946312256,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0025/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0025/evaluation.json"
+    },
+    {
+      "additionalSteps": 53248000,
+      "metrics": {
+        "all": {
+          "clean": 0.026041666666666668,
+          "execution": 2.3072916666666665,
+          "alignment": -13.258150136396644,
+          "geometry": 0.3385416666666667
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -9.542350254212215,
+          "geometry": 0.09375
+        },
+        "103C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -13.91594634428441,
+          "geometry": 0.40625
+        },
+        "103B": {
+          "clean": 0.15625,
+          "execution": 4.046875,
+          "alignment": -12.410761216388853,
+          "geometry": 0.71875
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 1.9921875,
+          "alignment": -12.339847479864524,
+          "geometry": 0.53125
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -12.805045786557944,
+          "geometry": 0.28125
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 1.8046875,
+          "alignment": -18.53494973707192,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0026/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0026/evaluation.json"
+    },
+    {
+      "additionalSteps": 55296000,
+      "metrics": {
+        "all": {
+          "clean": 0.0234375,
+          "execution": 2.3111979166666665,
+          "alignment": -11.559909502669301,
+          "geometry": 0.3411458333333333
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -9.214450657459857,
+          "geometry": 0.046875
+        },
+        "103C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -12.79966149396223,
+          "geometry": 0.21875
+        },
+        "103B": {
+          "clean": 0.140625,
+          "execution": 3.9453125,
+          "alignment": -9.692025228216975,
+          "geometry": 0.71875
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -11.891088686495188,
+          "geometry": 0.546875
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -11.641013850148916,
+          "geometry": 0.515625
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 1.921875,
+          "alignment": -14.121217099732643,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0027/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0027/evaluation.json"
+    },
+    {
+      "additionalSteps": 57344000,
+      "metrics": {
+        "all": {
+          "clean": 0.0078125,
+          "execution": 2.0442708333333335,
+          "alignment": -12.477920393646011,
+          "geometry": 0.23697916666666666
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 1.9375,
+          "alignment": -10.180493933660147,
+          "geometry": 0.09375
+        },
+        "103C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -14.99844495139605,
+          "geometry": 0.0
+        },
+        "103B": {
+          "clean": 0.046875,
+          "execution": 2.3984375,
+          "alignment": -12.503893544122992,
+          "geometry": 0.125
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -10.39355128960741,
+          "geometry": 0.8125
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -12.138561732148851,
+          "geometry": 0.390625
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 1.9296875,
+          "alignment": -14.65257691094061,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0028/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0028/evaluation.json"
+    },
+    {
+      "additionalSteps": 59392000,
+      "metrics": {
+        "all": {
+          "clean": 0.018229166666666668,
+          "execution": 2.23046875,
+          "alignment": -11.80071749049607,
+          "geometry": 0.2994791666666667
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 1.9375,
+          "alignment": -9.097945037606038,
+          "geometry": 0.109375
+        },
+        "103C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -13.771844852107986,
+          "geometry": 0.421875
+        },
+        "103B": {
+          "clean": 0.109375,
+          "execution": 3.4453125,
+          "alignment": -13.932610169125756,
+          "geometry": 0.453125
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -10.776829531816084,
+          "geometry": 0.5
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -12.808100039947572,
+          "geometry": 0.3125
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -10.416975312372987,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0029/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0029/evaluation.json"
+    },
+    {
+      "additionalSteps": 61440000,
+      "metrics": {
+        "all": {
+          "clean": 0.036458333333333336,
+          "execution": 2.4049479166666665,
+          "alignment": -10.759390780552286,
+          "geometry": 0.4322916666666667
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 1.96875,
+          "alignment": -8.96722462066294,
+          "geometry": 0.1875
+        },
+        "103C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -11.853938153980241,
+          "geometry": 0.484375
+        },
+        "103B": {
+          "clean": 0.21875,
+          "execution": 4.4609375,
+          "alignment": -11.166466863830724,
+          "geometry": 0.765625
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -9.819193861700397,
+          "geometry": 0.59375
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -12.904450877705113,
+          "geometry": 0.5625
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -9.845070305434305,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0030/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0030/evaluation.json"
+    },
+    {
+      "additionalSteps": 63488000,
+      "metrics": {
+        "all": {
+          "clean": 0.041666666666666664,
+          "execution": 2.3958333333333335,
+          "alignment": -10.892175767152153,
+          "geometry": 0.3515625
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 1.96875,
+          "alignment": -10.1119302322619,
+          "geometry": 0.21875
+        },
+        "103C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -11.438108038065845,
+          "geometry": 0.140625
+        },
+        "103B": {
+          "clean": 0.25,
+          "execution": 4.421875,
+          "alignment": -10.373606524703106,
+          "geometry": 0.734375
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 1.9921875,
+          "alignment": -9.812182191649105,
+          "geometry": 0.65625
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -11.84932678157525,
+          "geometry": 0.359375
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 1.9921875,
+          "alignment": -11.767900834657718,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0031/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0031/evaluation.json"
+    },
+    {
+      "additionalSteps": 65536000,
+      "metrics": {
+        "all": {
+          "clean": 0.026041666666666668,
+          "execution": 2.2421875,
+          "alignment": -11.317171547247133,
+          "geometry": 0.4635416666666667
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -8.694805073636081,
+          "geometry": 0.203125
+        },
+        "103C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -12.645460278787544,
+          "geometry": 0.671875
+        },
+        "103B": {
+          "clean": 0.15625,
+          "execution": 3.453125,
+          "alignment": -13.67528873985951,
+          "geometry": 0.390625
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -10.01651478481547,
+          "geometry": 0.84375
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -11.773456089182384,
+          "geometry": 0.671875
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -11.097504317201816,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0032/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0032/evaluation.json"
+    },
+    {
+      "additionalSteps": 67584000,
+      "metrics": {
+        "all": {
+          "clean": 0.028645833333333332,
+          "execution": 2.359375,
+          "alignment": -11.58673518487293,
+          "geometry": 0.3984375
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -8.462314167390913,
+          "geometry": 0.3125
+        },
+        "103C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -12.446452358474366,
+          "geometry": 0.265625
+        },
+        "103B": {
+          "clean": 0.171875,
+          "execution": 4.2109375,
+          "alignment": -14.997474965243592,
+          "geometry": 0.65625
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -9.205709383401842,
+          "geometry": 0.546875
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -12.781346315326278,
+          "geometry": 0.609375
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 1.9453125,
+          "alignment": -11.627113919400603,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0033/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0033/evaluation.json"
+    },
+    {
+      "additionalSteps": 69632000,
+      "metrics": {
+        "all": {
+          "clean": 0.020833333333333332,
+          "execution": 2.421875,
+          "alignment": -11.568397889752381,
+          "geometry": 0.4427083333333333
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 1.96875,
+          "alignment": -9.714184717700071,
+          "geometry": 0.3125
+        },
+        "103C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -12.341954261421725,
+          "geometry": 0.234375
+        },
+        "103B": {
+          "clean": 0.125,
+          "execution": 4.5625,
+          "alignment": -14.065116104021808,
+          "geometry": 0.765625
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -10.688539305532318,
+          "geometry": 0.78125
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -12.905192519066485,
+          "geometry": 0.5625
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -9.695400430771878,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0034/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0034/evaluation.json"
+    },
+    {
+      "additionalSteps": 71680000,
+      "metrics": {
+        "all": {
+          "clean": 0.013020833333333334,
+          "execution": 2.33203125,
+          "alignment": -11.425896735620105,
+          "geometry": 0.4713541666666667
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -8.14833722089497,
+          "geometry": 0.234375
+        },
+        "103C": {
+          "clean": 0.0,
+          "execution": 1.96875,
+          "alignment": -11.60248259092452,
+          "geometry": 0.546875
+        },
+        "103B": {
+          "clean": 0.078125,
+          "execution": 4.1171875,
+          "alignment": -14.06092454116314,
+          "geometry": 0.640625
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 1.90625,
+          "alignment": -12.999072750248938,
+          "geometry": 0.671875
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -11.482376973531897,
+          "geometry": 0.734375
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -10.262186336957164,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0035/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0035/evaluation.json"
+    },
+    {
+      "additionalSteps": 73728000,
+      "metrics": {
+        "all": {
+          "clean": 0.0390625,
+          "execution": 2.4205729166666665,
+          "alignment": -11.384890325525966,
+          "geometry": 0.390625
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -8.720341193580737,
+          "geometry": 0.34375
+        },
+        "103C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -13.617921607623096,
+          "geometry": 0.3125
+        },
+        "103B": {
+          "clean": 0.234375,
+          "execution": 4.59375,
+          "alignment": -12.209416346961664,
+          "geometry": 0.859375
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 1.9375,
+          "alignment": -11.090485728966655,
+          "geometry": 0.203125
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 1.9921875,
+          "alignment": -12.530932705924837,
+          "geometry": 0.625
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -10.140244370098802,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0036/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0036/evaluation.json"
+    },
+    {
+      "additionalSteps": 75776000,
+      "metrics": {
+        "all": {
+          "clean": 0.0234375,
+          "execution": 2.2877604166666665,
+          "alignment": -12.407494658107694,
+          "geometry": 0.421875
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -9.238989028633993,
+          "geometry": 0.359375
+        },
+        "103C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -14.93978647568771,
+          "geometry": 0.234375
+        },
+        "103B": {
+          "clean": 0.140625,
+          "execution": 4.046875,
+          "alignment": -15.49997843670717,
+          "geometry": 0.640625
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 1.71875,
+          "alignment": -12.735578498493398,
+          "geometry": 0.46875
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -10.964645920144648,
+          "geometry": 0.828125
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 1.9609375,
+          "alignment": -11.065989588979239,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0037/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0037/evaluation.json"
+    },
+    {
+      "additionalSteps": 77824000,
+      "metrics": {
+        "all": {
+          "clean": 0.028645833333333332,
+          "execution": 2.4127604166666665,
+          "alignment": -11.876358584677531,
+          "geometry": 0.4375
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 1.96875,
+          "alignment": -9.679891695602077,
+          "geometry": 0.421875
+        },
+        "103C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -12.463304271677014,
+          "geometry": 0.09375
+        },
+        "103B": {
+          "clean": 0.171875,
+          "execution": 4.5859375,
+          "alignment": -13.12758045549526,
+          "geometry": 0.78125
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 1.96875,
+          "alignment": -12.843486989399757,
+          "geometry": 0.640625
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -12.10536634200469,
+          "geometry": 0.6875
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 1.953125,
+          "alignment": -11.03852175388639,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0038/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0038/evaluation.json"
+    },
+    {
+      "additionalSteps": 79872000,
+      "metrics": {
+        "all": {
+          "clean": 0.015625,
+          "execution": 2.1575520833333335,
+          "alignment": -12.371484668992224,
+          "geometry": 0.4557291666666667
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -8.964346622022315,
+          "geometry": 0.5625
+        },
+        "103C": {
+          "clean": 0.0,
+          "execution": 1.96875,
+          "alignment": -14.673718649891631,
+          "geometry": 0.171875
+        },
+        "103B": {
+          "clean": 0.09375,
+          "execution": 3.0625,
+          "alignment": -14.608770032226452,
+          "geometry": 0.296875
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -10.482191981623625,
+          "geometry": 0.84375
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -12.554526424638196,
+          "geometry": 0.859375
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 1.9140625,
+          "alignment": -12.945354303551126,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0039/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0039/evaluation.json"
+    },
+    {
+      "additionalSteps": 81920000,
+      "metrics": {
+        "all": {
+          "clean": 0.033854166666666664,
+          "execution": 2.4309895833333335,
+          "alignment": -11.323199774721969,
+          "geometry": 0.5807291666666666
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -8.03906685706281,
+          "geometry": 0.6875
+        },
+        "103C": {
+          "clean": 0.0,
+          "execution": 2.046875,
+          "alignment": -14.336385799201746,
+          "geometry": 0.40625
+        },
+        "103B": {
+          "clean": 0.203125,
+          "execution": 4.5390625,
+          "alignment": -13.600291911488327,
+          "geometry": 0.765625
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -10.421557906522334,
+          "geometry": 0.8125
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -10.22346465549683,
+          "geometry": 0.8125
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -11.318431518559763,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0040/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0040/evaluation.json"
+    },
+    {
+      "additionalSteps": 83968000,
+      "metrics": {
+        "all": {
+          "clean": 0.0390625,
+          "execution": 2.37890625,
+          "alignment": -12.672593159561869,
+          "geometry": 0.5416666666666666
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -9.369139254907928,
+          "geometry": 0.484375
+        },
+        "103C": {
+          "clean": 0.0,
+          "execution": 2.09375,
+          "alignment": -14.167859417134867,
+          "geometry": 0.546875
+        },
+        "103B": {
+          "clean": 0.234375,
+          "execution": 4.2109375,
+          "alignment": -16.3850408726127,
+          "geometry": 0.703125
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -12.878431133726226,
+          "geometry": 0.765625
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -11.131556211944183,
+          "geometry": 0.75
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 1.96875,
+          "alignment": -12.103532067045311,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0041/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0041/evaluation.json"
+    },
+    {
+      "additionalSteps": 86016000,
+      "metrics": {
+        "all": {
+          "clean": 0.033854166666666664,
+          "execution": 2.3763020833333335,
+          "alignment": -12.078330229828856,
+          "geometry": 0.5234375
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -9.105497666076063,
+          "geometry": 0.4375
+        },
+        "103C": {
+          "clean": 0.0,
+          "execution": 2.0390625,
+          "alignment": -13.877586970687767,
+          "geometry": 0.5625
+        },
+        "103B": {
+          "clean": 0.203125,
+          "execution": 4.3359375,
+          "alignment": -14.319233263470393,
+          "geometry": 0.6875
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -11.024611410378338,
+          "geometry": 0.765625
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -10.10154209586695,
+          "geometry": 0.6875
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 1.8828125,
+          "alignment": -14.041509972493621,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0042/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0042/evaluation.json"
+    },
+    {
+      "additionalSteps": 88064000,
+      "metrics": {
+        "all": {
+          "clean": 0.049479166666666664,
+          "execution": 2.48046875,
+          "alignment": -12.04164404718717,
+          "geometry": 0.5963541666666666
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -10.47916989287631,
+          "geometry": 0.4375
+        },
+        "103C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -12.928288693033625,
+          "geometry": 0.703125
+        },
+        "103B": {
+          "clean": 0.296875,
+          "execution": 4.921875,
+          "alignment": -13.918162342094686,
+          "geometry": 0.8125
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -11.415136977729945,
+          "geometry": 0.703125
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -11.08995761867752,
+          "geometry": 0.921875
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 1.9609375,
+          "alignment": -12.419148758710932,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0043/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0043/evaluation.json"
+    },
+    {
+      "additionalSteps": 90112000,
+      "metrics": {
+        "all": {
+          "clean": 0.0390625,
+          "execution": 2.49609375,
+          "alignment": -11.722456709598111,
+          "geometry": 0.5494791666666666
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -9.159223787219986,
+          "geometry": 0.515625
+        },
+        "103C": {
+          "clean": 0.015625,
+          "execution": 2.15625,
+          "alignment": -12.641122273069529,
+          "geometry": 0.6875
+        },
+        "103B": {
+          "clean": 0.21875,
+          "execution": 4.9140625,
+          "alignment": -13.598019256490522,
+          "geometry": 0.828125
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -12.447499475000486,
+          "geometry": 0.59375
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -11.680179214531677,
+          "geometry": 0.671875
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 1.90625,
+          "alignment": -10.808696251276475,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0044/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0044/evaluation.json"
+    },
+    {
+      "additionalSteps": 92160000,
+      "metrics": {
+        "all": {
+          "clean": 0.059895833333333336,
+          "execution": 2.5950520833333335,
+          "alignment": -11.311319585212537,
+          "geometry": 0.4921875
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -8.573388176152474,
+          "geometry": 0.5625
+        },
+        "103C": {
+          "clean": 0.03125,
+          "execution": 2.375,
+          "alignment": -11.619697750423391,
+          "geometry": 0.65625
+        },
+        "103B": {
+          "clean": 0.328125,
+          "execution": 5.2890625,
+          "alignment": -12.60384173354631,
+          "geometry": 0.890625
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 1.96875,
+          "alignment": -13.267178949667414,
+          "geometry": 0.203125
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -11.80560156469701,
+          "geometry": 0.640625
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 1.9375,
+          "alignment": -9.998209336788623,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0045/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0045/evaluation.json"
+    },
+    {
+      "additionalSteps": 94208000,
+      "metrics": {
+        "all": {
+          "clean": 0.049479166666666664,
+          "execution": 2.5989583333333335,
+          "alignment": -11.754332966822725,
+          "geometry": 0.5338541666666666
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -10.427684865467606,
+          "geometry": 0.609375
+        },
+        "103C": {
+          "clean": 0.015625,
+          "execution": 2.4453125,
+          "alignment": -13.807407226695641,
+          "geometry": 0.625
+        },
+        "103B": {
+          "clean": 0.28125,
+          "execution": 5.1796875,
+          "alignment": -13.575186158289263,
+          "geometry": 0.859375
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -10.649402943968663,
+          "geometry": 0.65625
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -11.395951884548182,
+          "geometry": 0.453125
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 1.96875,
+          "alignment": -10.670364721966997,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0046/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0046/evaluation.json"
+    },
+    {
+      "additionalSteps": 96256000,
+      "metrics": {
+        "all": {
+          "clean": 0.044270833333333336,
+          "execution": 2.57421875,
+          "alignment": -11.429277833380993,
+          "geometry": 0.6145833333333334
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 1.96875,
+          "alignment": -9.582027227652013,
+          "geometry": 0.5
+        },
+        "103C": {
+          "clean": 0.0,
+          "execution": 2.421875,
+          "alignment": -13.65462548843633,
+          "geometry": 0.65625
+        },
+        "103B": {
+          "clean": 0.265625,
+          "execution": 5.1171875,
+          "alignment": -14.26430438000513,
+          "geometry": 0.890625
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -8.46589282411264,
+          "geometry": 0.859375
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -11.001548784215757,
+          "geometry": 0.78125
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 1.9375,
+          "alignment": -11.6072682958641,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0047/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0047/evaluation.json"
+    },
+    {
+      "additionalSteps": 98304000,
+      "metrics": {
+        "all": {
+          "clean": 0.036458333333333336,
+          "execution": 2.4348958333333335,
+          "alignment": -10.955329794208732,
+          "geometry": 0.5390625
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -8.684574524952936,
+          "geometry": 0.59375
+        },
+        "103C": {
+          "clean": 0.015625,
+          "execution": 2.3515625,
+          "alignment": -13.920201517038814,
+          "geometry": 0.484375
+        },
+        "103B": {
+          "clean": 0.203125,
+          "execution": 4.5078125,
+          "alignment": -14.041201463595877,
+          "geometry": 0.765625
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -8.17084989447212,
+          "geometry": 0.828125
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -12.258050507684604,
+          "geometry": 0.5625
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 1.75,
+          "alignment": -8.657100857508055,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0048/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0048/evaluation.json"
+    },
+    {
+      "additionalSteps": 100352000,
+      "metrics": {
+        "all": {
+          "clean": 0.06510416666666667,
+          "execution": 2.69140625,
+          "alignment": -11.17889301059914,
+          "geometry": 0.6328125
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -9.484571478483797,
+          "geometry": 0.59375
+        },
+        "103C": {
+          "clean": 0.078125,
+          "execution": 2.9453125,
+          "alignment": -13.820428395683122,
+          "geometry": 0.671875
+        },
+        "103B": {
+          "clean": 0.3125,
+          "execution": 5.390625,
+          "alignment": -14.049382595154885,
+          "geometry": 0.953125
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -9.118367322932016,
+          "geometry": 0.8125
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -12.172619054030243,
+          "geometry": 0.765625
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 1.8125,
+          "alignment": -8.427989217310776,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0049/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0049/evaluation.json"
+    },
+    {
+      "additionalSteps": 102400000,
+      "metrics": {
+        "all": {
+          "clean": 0.052083333333333336,
+          "execution": 2.5390625,
+          "alignment": -11.50416428734693,
+          "geometry": 0.6171875
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -9.208412094077264,
+          "geometry": 0.640625
+        },
+        "103C": {
+          "clean": 0.03125,
+          "execution": 2.359375,
+          "alignment": -14.96099264067052,
+          "geometry": 0.5625
+        },
+        "103B": {
+          "clean": 0.28125,
+          "execution": 4.875,
+          "alignment": -14.40163443710519,
+          "geometry": 0.828125
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -8.51569302356797,
+          "geometry": 0.78125
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -11.526788782955938,
+          "geometry": 0.890625
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -10.411464745704702,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0050/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0050/evaluation.json"
+    },
+    {
+      "additionalSteps": 104448000,
+      "metrics": {
+        "all": {
+          "clean": 0.0703125,
+          "execution": 2.6158854166666665,
+          "alignment": -11.773754760934528,
+          "geometry": 0.59375
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 1.96875,
+          "alignment": -9.16716427766622,
+          "geometry": 0.625
+        },
+        "103C": {
+          "clean": 0.09375,
+          "execution": 2.9453125,
+          "alignment": -13.687769769410847,
+          "geometry": 0.546875
+        },
+        "103B": {
+          "clean": 0.328125,
+          "execution": 4.7890625,
+          "alignment": -14.975283587348308,
+          "geometry": 0.796875
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -10.220779079511953,
+          "geometry": 0.703125
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -11.086091755058339,
+          "geometry": 0.890625
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 1.9921875,
+          "alignment": -11.505440096611494,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0051/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0051/evaluation.json"
+    },
+    {
+      "additionalSteps": 106496000,
+      "metrics": {
+        "all": {
+          "clean": 0.0859375,
+          "execution": 2.8125,
+          "alignment": -11.27719825501581,
+          "geometry": 0.6614583333333334
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -9.021493583814614,
+          "geometry": 0.46875
+        },
+        "103C": {
+          "clean": 0.140625,
+          "execution": 3.3984375,
+          "alignment": -12.032670640961644,
+          "geometry": 0.765625
+        },
+        "103B": {
+          "clean": 0.375,
+          "execution": 5.484375,
+          "alignment": -12.467069427180526,
+          "geometry": 0.953125
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -10.030757341675333,
+          "geometry": 0.828125
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -13.039512796138212,
+          "geometry": 0.953125
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 1.9921875,
+          "alignment": -11.071685740324524,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0052/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0052/evaluation.json"
+    },
+    {
+      "additionalSteps": 108544000,
+      "metrics": {
+        "all": {
+          "clean": 0.08333333333333333,
+          "execution": 2.7630208333333335,
+          "alignment": -11.386027593847738,
+          "geometry": 0.5833333333333334
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -8.520023840459828,
+          "geometry": 0.203125
+        },
+        "103C": {
+          "clean": 0.171875,
+          "execution": 3.640625,
+          "alignment": -13.900487279915282,
+          "geometry": 0.859375
+        },
+        "103B": {
+          "clean": 0.328125,
+          "execution": 4.984375,
+          "alignment": -14.23880565526656,
+          "geometry": 0.84375
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -8.398278986448748,
+          "geometry": 0.75
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -11.749195663696097,
+          "geometry": 0.84375
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 1.953125,
+          "alignment": -11.509374137299906,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0053/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0053/evaluation.json"
+    },
+    {
+      "additionalSteps": 110592000,
+      "metrics": {
+        "all": {
+          "clean": 0.06770833333333333,
+          "execution": 2.5703125,
+          "alignment": -12.805928962047512,
+          "geometry": 0.5182291666666666
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 1.9375,
+          "alignment": -14.119560757062727,
+          "geometry": 0.015625
+        },
+        "103C": {
+          "clean": 0.15625,
+          "execution": 3.2265625,
+          "alignment": -14.549525272761262,
+          "geometry": 0.75
+        },
+        "103B": {
+          "clean": 0.25,
+          "execution": 4.2890625,
+          "alignment": -14.759781015414143,
+          "geometry": 0.671875
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -9.139282263417464,
+          "geometry": 0.75
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -11.969410067191106,
+          "geometry": 0.921875
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 1.96875,
+          "alignment": -12.298014396438377,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0054/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0054/evaluation.json"
+    },
+    {
+      "additionalSteps": 112640000,
+      "metrics": {
+        "all": {
+          "clean": 0.049479166666666664,
+          "execution": 2.4661458333333335,
+          "alignment": -12.046354337673828,
+          "geometry": 0.5677083333333334
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 1.96875,
+          "alignment": -11.180752868296626,
+          "geometry": 0.59375
+        },
+        "103C": {
+          "clean": 0.0625,
+          "execution": 2.7890625,
+          "alignment": -13.967482094733835,
+          "geometry": 0.796875
+        },
+        "103B": {
+          "clean": 0.234375,
+          "execution": 4.109375,
+          "alignment": -14.989643298602578,
+          "geometry": 0.640625
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 1.9375,
+          "alignment": -10.351315302862595,
+          "geometry": 0.421875
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -11.106558920738244,
+          "geometry": 0.953125
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 1.9921875,
+          "alignment": -10.682373540809099,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0055/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0055/evaluation.json"
+    },
+    {
+      "additionalSteps": 114688000,
+      "metrics": {
+        "all": {
+          "clean": 0.078125,
+          "execution": 2.6822916666666665,
+          "alignment": -11.557477728230394,
+          "geometry": 0.4791666666666667
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -9.645185611351137,
+          "geometry": 0.125
+        },
+        "103C": {
+          "clean": 0.125,
+          "execution": 3.21875,
+          "alignment": -14.116963214526796,
+          "geometry": 0.78125
+        },
+        "103B": {
+          "clean": 0.34375,
+          "execution": 4.875,
+          "alignment": -15.378479885068305,
+          "geometry": 0.8125
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -9.4862689990189,
+          "geometry": 0.265625
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -9.86306562163239,
+          "geometry": 0.890625
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -10.854903037784831,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0056/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0056/evaluation.json"
+    },
+    {
+      "additionalSteps": 116736000,
+      "metrics": {
+        "all": {
+          "clean": 0.0625,
+          "execution": 2.70703125,
+          "alignment": -11.289996657167492,
+          "geometry": 0.6197916666666666
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 1.96875,
+          "alignment": -10.024173324290444,
+          "geometry": 0.546875
+        },
+        "103C": {
+          "clean": 0.109375,
+          "execution": 3.1484375,
+          "alignment": -13.247629077537804,
+          "geometry": 0.875
+        },
+        "103B": {
+          "clean": 0.265625,
+          "execution": 5.15625,
+          "alignment": -13.107321481629814,
+          "geometry": 0.921875
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 1.96875,
+          "alignment": -10.120349187079007,
+          "geometry": 0.484375
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -10.130257494104338,
+          "geometry": 0.890625
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -11.110249378363548,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0057/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0057/evaluation.json"
+    },
+    {
+      "additionalSteps": 118784000,
+      "metrics": {
+        "all": {
+          "clean": 0.06770833333333333,
+          "execution": 2.73046875,
+          "alignment": -11.020846722738897,
+          "geometry": 0.6432291666666666
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -9.643505613490593,
+          "geometry": 0.484375
+        },
+        "103C": {
+          "clean": 0.15625,
+          "execution": 3.34375,
+          "alignment": -12.698825325058607,
+          "geometry": 0.890625
+        },
+        "103B": {
+          "clean": 0.25,
+          "execution": 5.0703125,
+          "alignment": -12.620251640741941,
+          "geometry": 0.890625
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 1.96875,
+          "alignment": -9.04910315910061,
+          "geometry": 0.703125
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -10.183199663840309,
+          "geometry": 0.890625
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -11.930194934201333,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0058/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0058/evaluation.json"
+    },
+    {
+      "additionalSteps": 120832000,
+      "metrics": {
+        "all": {
+          "clean": 0.052083333333333336,
+          "execution": 2.671875,
+          "alignment": -11.403198634928836,
+          "geometry": 0.6041666666666666
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -9.950049293475608,
+          "geometry": 0.53125
+        },
+        "103C": {
+          "clean": 0.171875,
+          "execution": 3.453125,
+          "alignment": -12.930707029716185,
+          "geometry": 0.84375
+        },
+        "103B": {
+          "clean": 0.140625,
+          "execution": 4.6328125,
+          "alignment": -13.742146154477034,
+          "geometry": 0.765625
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -10.263546890021948,
+          "geometry": 0.703125
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -8.87189894019442,
+          "geometry": 0.78125
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 1.9453125,
+          "alignment": -12.660843501687815,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0059/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0059/evaluation.json"
+    },
+    {
+      "additionalSteps": 122880000,
+      "metrics": {
+        "all": {
+          "clean": 0.07291666666666667,
+          "execution": 2.8203125,
+          "alignment": -11.929618154988937,
+          "geometry": 0.5598958333333334
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -9.105552124801651,
+          "geometry": 0.0625
+        },
+        "103C": {
+          "clean": 0.21875,
+          "execution": 4.015625,
+          "alignment": -13.113349803901293,
+          "geometry": 0.921875
+        },
+        "103B": {
+          "clean": 0.21875,
+          "execution": 5.0078125,
+          "alignment": -14.40618187205239,
+          "geometry": 0.890625
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 1.9296875,
+          "alignment": -10.647732471744796,
+          "geometry": 0.609375
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -9.45809598726077,
+          "geometry": 0.875
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 1.96875,
+          "alignment": -14.846796670172722,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0060/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0060/evaluation.json"
+    },
+    {
+      "additionalSteps": 124928000,
+      "metrics": {
+        "all": {
+          "clean": 0.08072916666666667,
+          "execution": 2.90234375,
+          "alignment": -10.969522367830422,
+          "geometry": 0.6848958333333334
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -9.595652943441502,
+          "geometry": 0.5
+        },
+        "103C": {
+          "clean": 0.25,
+          "execution": 4.1875,
+          "alignment": -13.678333607240834,
+          "geometry": 0.921875
+        },
+        "103B": {
+          "clean": 0.234375,
+          "execution": 5.3203125,
+          "alignment": -13.219935240976069,
+          "geometry": 0.9375
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 1.90625,
+          "alignment": -10.122010481327674,
+          "geometry": 0.796875
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -9.360691197541756,
+          "geometry": 0.953125
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -9.840510736454702,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0061/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0061/evaluation.json"
+    },
+    {
+      "additionalSteps": 126976000,
+      "metrics": {
+        "all": {
+          "clean": 0.0546875,
+          "execution": 2.5677083333333335,
+          "alignment": -11.308733932899836,
+          "geometry": 0.4973958333333333
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -8.713205360544737,
+          "geometry": 0.3125
+        },
+        "103C": {
+          "clean": 0.140625,
+          "execution": 3.4140625,
+          "alignment": -14.428083118120668,
+          "geometry": 0.625
+        },
+        "103B": {
+          "clean": 0.1875,
+          "execution": 4.0859375,
+          "alignment": -15.049018974149412,
+          "geometry": 0.640625
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 1.90625,
+          "alignment": -10.597326573201006,
+          "geometry": 0.578125
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -9.431387957289072,
+          "geometry": 0.828125
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -9.633381614094134,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0062/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0062/evaluation.json"
+    },
+    {
+      "additionalSteps": 129024000,
+      "metrics": {
+        "all": {
+          "clean": 0.03125,
+          "execution": 2.5481770833333335,
+          "alignment": -11.417314243995307,
+          "geometry": 0.5963541666666666
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 1.96875,
+          "alignment": -10.292340813852274,
+          "geometry": 0.625
+        },
+        "103C": {
+          "clean": 0.078125,
+          "execution": 2.921875,
+          "alignment": -13.721689754666919,
+          "geometry": 0.640625
+        },
+        "103B": {
+          "clean": 0.109375,
+          "execution": 4.4609375,
+          "alignment": -12.234820671260414,
+          "geometry": 0.71875
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 1.9375,
+          "alignment": -10.556990107666488,
+          "geometry": 0.625
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -10.605031052089927,
+          "geometry": 0.96875
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -11.09301306443582,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0063/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0063/evaluation.json"
+    },
+    {
+      "additionalSteps": 131072000,
+      "metrics": {
+        "all": {
+          "clean": 0.0703125,
+          "execution": 2.6380208333333335,
+          "alignment": -10.645873112879679,
+          "geometry": 0.6510416666666666
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 1.9296875,
+          "alignment": -10.739136343010717,
+          "geometry": 0.65625
+        },
+        "103C": {
+          "clean": 0.265625,
+          "execution": 3.7734375,
+          "alignment": -12.242805018517474,
+          "geometry": 0.9375
+        },
+        "103B": {
+          "clean": 0.15625,
+          "execution": 4.2265625,
+          "alignment": -11.546705225737666,
+          "geometry": 0.609375
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 1.90625,
+          "alignment": -10.23918673181867,
+          "geometry": 0.765625
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -8.96477181613925,
+          "geometry": 0.9375
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 1.9921875,
+          "alignment": -10.142633542054288,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0064/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0064/evaluation.json"
+    },
+    {
+      "additionalSteps": 133120000,
+      "metrics": {
+        "all": {
+          "clean": 0.09114583333333333,
+          "execution": 2.72265625,
+          "alignment": -10.177752072480514,
+          "geometry": 0.6380208333333334
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 1.96875,
+          "alignment": -9.78907890967727,
+          "geometry": 0.625
+        },
+        "103C": {
+          "clean": 0.234375,
+          "execution": 3.6953125,
+          "alignment": -10.786927736871593,
+          "geometry": 0.96875
+        },
+        "103B": {
+          "clean": 0.3125,
+          "execution": 4.84375,
+          "alignment": -10.60372091531524,
+          "geometry": 0.765625
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 1.96875,
+          "alignment": -10.621457971750122,
+          "geometry": 0.53125
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -10.04487194525582,
+          "geometry": 0.9375
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 1.859375,
+          "alignment": -9.22045495601304,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0065/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0065/evaluation.json"
+    },
+    {
+      "additionalSteps": 135168000,
+      "metrics": {
+        "all": {
+          "clean": 0.09114583333333333,
+          "execution": 2.7552083333333335,
+          "alignment": -10.32352229435058,
+          "geometry": 0.6692708333333334
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 1.96875,
+          "alignment": -9.874349861814713,
+          "geometry": 0.59375
+        },
+        "103C": {
+          "clean": 0.296875,
+          "execution": 3.6484375,
+          "alignment": -11.376948353915179,
+          "geometry": 0.90625
+        },
+        "103B": {
+          "clean": 0.25,
+          "execution": 4.9765625,
+          "alignment": -10.690302401818434,
+          "geometry": 0.890625
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 1.9375,
+          "alignment": -10.024632822265456,
+          "geometry": 0.734375
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -10.441863043481579,
+          "geometry": 0.890625
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -9.53303728280812,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0066/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0066/evaluation.json"
+    },
+    {
+      "additionalSteps": 137216000,
+      "metrics": {
+        "all": {
+          "clean": 0.057291666666666664,
+          "execution": 2.7434895833333335,
+          "alignment": -10.691335874181206,
+          "geometry": 0.6510416666666666
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 1.96875,
+          "alignment": -10.78747573658698,
+          "geometry": 0.578125
+        },
+        "103C": {
+          "clean": 0.140625,
+          "execution": 3.65625,
+          "alignment": -12.216480507048912,
+          "geometry": 0.875
+        },
+        "103B": {
+          "clean": 0.203125,
+          "execution": 4.8984375,
+          "alignment": -11.437779443425157,
+          "geometry": 0.796875
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 1.96875,
+          "alignment": -9.657659893236808,
+          "geometry": 0.734375
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -10.327943873208945,
+          "geometry": 0.921875
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 1.96875,
+          "alignment": -9.72067579158043,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0067/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0067/evaluation.json"
+    },
+    {
+      "additionalSteps": 139264000,
+      "metrics": {
+        "all": {
+          "clean": 0.07291666666666667,
+          "execution": 2.7096354166666665,
+          "alignment": -10.892001523273967,
+          "geometry": 0.6354166666666666
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 1.9140625,
+          "alignment": -10.211763430356388,
+          "geometry": 0.390625
+        },
+        "103C": {
+          "clean": 0.078125,
+          "execution": 2.984375,
+          "alignment": -13.879839165360915,
+          "geometry": 0.859375
+        },
+        "103B": {
+          "clean": 0.359375,
+          "execution": 5.390625,
+          "alignment": -12.924364839560793,
+          "geometry": 0.9375
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 1.96875,
+          "alignment": -9.208490705609567,
+          "geometry": 0.734375
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -8.76491184788398,
+          "geometry": 0.890625
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -10.36263915087215,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0068/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0068/evaluation.json"
+    },
+    {
+      "additionalSteps": 141312000,
+      "metrics": {
+        "all": {
+          "clean": 0.049479166666666664,
+          "execution": 2.6119791666666665,
+          "alignment": -11.2254013461377,
+          "geometry": 0.6328125
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 1.96875,
+          "alignment": -9.120419770592164,
+          "geometry": 0.59375
+        },
+        "103C": {
+          "clean": 0.0625,
+          "execution": 2.7265625,
+          "alignment": -13.509642244833161,
+          "geometry": 0.890625
+        },
+        "103B": {
+          "clean": 0.234375,
+          "execution": 5.109375,
+          "alignment": -13.601143808646956,
+          "geometry": 0.875
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 1.90625,
+          "alignment": -10.27796647024812,
+          "geometry": 0.5625
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -9.314472842876054,
+          "geometry": 0.875
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 1.9609375,
+          "alignment": -11.528762939629747,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0069/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0069/evaluation.json"
+    },
+    {
+      "additionalSteps": 143360000,
+      "metrics": {
+        "all": {
+          "clean": 0.049479166666666664,
+          "execution": 2.47265625,
+          "alignment": -10.701182128783666,
+          "geometry": 0.5286458333333334
+        },
+        "101C": {
+          "clean": 0.0,
+          "execution": 1.96875,
+          "alignment": -9.330438536280703,
+          "geometry": 0.578125
+        },
+        "103C": {
+          "clean": 0.046875,
+          "execution": 2.5859375,
+          "alignment": -12.93413648416858,
+          "geometry": 0.40625
+        },
+        "103B": {
+          "clean": 0.25,
+          "execution": 4.3828125,
+          "alignment": -12.488992075229005,
+          "geometry": 0.65625
+        },
+        "201C": {
+          "clean": 0.0,
+          "execution": 1.9921875,
+          "alignment": -8.946989089993643,
+          "geometry": 0.71875
+        },
+        "203C": {
+          "clean": 0.0,
+          "execution": 2.0,
+          "alignment": -10.287422754972885,
+          "geometry": 0.8125
+        },
+        "5132D": {
+          "clean": 0.0,
+          "execution": 1.90625,
+          "alignment": -10.219113832057188,
+          "geometry": 0.0
+        }
+      },
+      "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0070/checkpoint.pt",
+      "evaluation": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3/evaluation-0070/evaluation.json"
+    }
+  ],
+  "sourceCheckpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/training/ppo-normalized-entry-v3/evaluated/step-000193536000-update-00000100/checkpoint.pt",
+  "configuration": {
+    "checkpoint": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/training/ppo-normalized-entry-v3/evaluated/step-000193536000-update-00000100/checkpoint.pt",
+    "output": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/output/sustained-entry-v3",
+    "prefix": "ppo-entry-sustained",
+    "chunk_steps": 2048000,
+    "minimum_steps": 20480000,
+    "patience": 5
+  },
+  "thresholds": {
+    "clean": 0.01,
+    "execution": 0.1,
+    "alignment": 0.5,
+    "geometry": 0.02
+  },
+  "definition": "No meaningful fixed-development-case improvement in any tracked skill over the patience window, after minimum training. Plateau does not mean success.",
+  "publication": "Never automatic; final held-out qualification remains separate.",
+  "phase": "stage-71-train",
+  "childPID": 64339,
+  "updatedUTC": "2026-09-10T22:21:34.818415+00:00",
+  "pid": 23305,
+  "initialSteps": 193536000,
+  "pending": {
+    "index": 71,
+    "directory": "/Users/zacharymartin/Desktop/GraphicsExperiments/LearnToDive/training/ppo-entry-sustained-0071"
+  }
+}
