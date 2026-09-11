@@ -31,10 +31,16 @@ def main(a):
    command[command.index('--steps')+1]=str(remaining);command+=['--resume',str(checkpoint)]
   elif warm:command+=['--warm-start',warm]
   save(phase='training',current=name)
-  with (out/(name+'.log')).open('a') as log:
-   child=subprocess.Popen(command,cwd=ROOT,stdout=log,stderr=subprocess.STDOUT,env={**os.environ,'OMP_NUM_THREADS':'1','OPENBLAS_NUM_THREADS':'1'});save(childPID=child.pid)
-   code=child.wait();child=None
-  if code and not stop:raise RuntimeError(f'{name} failed; see its log')
+  for attempt in range(3):
+   if attempt and checkpoint.exists() and '--resume' not in command:
+    old=json.loads(status.read_text());command[command.index('--steps')+1]=str(steps-old['steps']);command+=['--resume',str(checkpoint)]
+   with (out/(name+'.log')).open('a') as log:
+    child=subprocess.Popen(command,cwd=ROOT,stdout=log,stderr=subprocess.STDOUT,env={**os.environ,'OMP_NUM_THREADS':'1','OPENBLAS_NUM_THREADS':'1'});save(childPID=child.pid,attempt=attempt)
+    code=child.wait();child=None
+   if not code or stop:return
+   # A transient failure resumes from the last saved update; a repeatable one stops the suite.
+   save(phase='retrying',lastExitCode=code);time.sleep(30)
+  raise RuntimeError(f'{name} failed three times; see its log')
  configurations={'96x96':[96,96],'256x256':[256,256],'256x256x128':[256,256,128]}
  if a.warm_start:configurations['256x256-warm']=[256,256]
  try:
@@ -46,16 +52,18 @@ def main(a):
     if not report_path.exists():raise RuntimeError('Pilot missing complete fixed-case evaluation')
     report=json.loads(report_path.read_text());record=dict(name=trial,architecture=name,seed=seed,metrics=report['summary']['full'])
     state['trials']=[x for x in state['trials'] if x['name']!=trial]+[record];save(phase='pilot-evaluated')
-  # Rank architecture medians across seeds, never one lucky maximum seed.
+  # Rank architecture medians across seeds, never one lucky maximum seed. Points
+  # come first; the dense development return (the actual training objective on
+  # the fixed cases) breaks ties while points are still zero.
   scores={}
   for name in configurations:
    rows=[r['metrics'] for r in state['trials'] if r['architecture']==name]
-   scores[name]=tuple(float(np.median([r[k] for r in rows]))*sign for k,sign in [('points',1),('execution',1),('clean',1),('entryAngle',-1)])
-  if all(score[0]<=0 for score in scores.values()):
-   save(phase='pilot-comparison-uninformative',architectureScores=scores,reason='No architecture scored above zero on the fixed development cases; ranking them would only compare noise. Review the environment before spending the continuation budget.')
-   raise RuntimeError('Pilot comparison uninformative: every architecture scored zero points')
+   scores[name]=tuple(float(np.median([r[k] for r in rows]))*sign for k,sign in [('points',1),('execution',1),('clean',1),('valid',1),('trainingReturn',1)])
+  if all(r['metrics']['valid']==0 for r in state['trials']):
+   save(phase='pilot-comparison-uninformative',architectureScores=scores,reason='No pilot completed a single declared dive; the environment needs review before spending the continuation budget.')
+   raise RuntimeError('Pilot comparison uninformative: no completed declared dive in any pilot')
   winner=max(scores,key=scores.get);candidates=[r for r in state['trials'] if r['architecture']==winner]
-  chosen=sorted(candidates,key=lambda r:(r['metrics']['points'],r['metrics']['execution'],-r['metrics']['entryAngle']))[len(candidates)//2]
+  chosen=sorted(candidates,key=lambda r:(r['metrics']['points'],r['metrics']['execution'],r['metrics']['valid'],r['metrics']['trainingReturn']))[len(candidates)//2]
   save(phase='pilot-comparison-complete',architectureScores=scores,selected=chosen,selectionEvidence='Median fixed-development score across seeds; alignment is a tie breaker, not qualification. Full held-out qualification remains required.')
   # Continue the median seed from its exact optimizer/environment checkpoint.
   long=out/'continued';long.mkdir(exist_ok=True)

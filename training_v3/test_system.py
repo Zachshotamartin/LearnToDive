@@ -101,6 +101,13 @@ class MeasurementTests(unittest.TestCase):
    _,_,done,_=p.step(a,auto_reset=False)
    if done[0]:break
   bounces=int(p.preparation_bounces[0]);p.close();return bounces
+ def test_instability_reset_ends_the_dive_instead_of_teleporting(self):
+  from engine import Arena as Physics
+  p=Physics(1,seed=2,threads=1,skills=[0],heights=(1,10),minimum_heights=[1]*6,training=False)
+  p.reset([0],[dict(skill=0,height=10,preload=0,disturbance=0,platform=True)]);p.platform[0]=True
+  p.state[0,2:5]=[2.,0.,-3.];p.state[0,26]=1e12   # state = [time, qpos(22), qvel(21)]: root z velocity beyond mjMAXVAL
+  _,_,done,info=p.step(np.zeros((1,9)),auto_reset=False)
+  self.assertTrue(done[0]);self.assertGreaterEqual(p.diverged_events,1);self.assertFalse(info[0]['water']);p.close()
  def test_preparation_bounce_requires_an_upward_hop(self):
   self.assertEqual(self.hop(-.2),0)   # dropped onto the platform: contact regained without a hop
   self.assertGreaterEqual(self.hop(1.8,gap=.02),1)  # launched upward, lands again: one hop
@@ -149,3 +156,18 @@ class StanceTests(unittest.TestCase):
   ascent=float(max(0,p.apex_com[0]-p.departure_com[0]));p.close()
   self.assertIsNotNone(info);self.assertTrue(info['water']);self.assertFalse(info['boardInvalid']);self.assertGreater(info['x'],.4)
   self.assertGreater(ascent,.2);self.assertGreater(info['takeoffVerticalSpeed'],2.)
+
+class PriorTests(unittest.TestCase):
+ def test_untrained_policy_holds_the_reset_stance_and_observes_support(self):
+  torch.manual_seed(1);e=Arena(2,seed=6,threads=1,training=False)
+  self.assertEqual(e.observation_size,223)
+  o=e.observe();support=o[:,4+6+14+14+9+3+3+11:4+6+14+14+9+3+3+11+4]
+  self.assertTrue((support[:,:2]==1).all(),'both feet start supported on springboard and platform alike')
+  self.assertTrue(np.all(np.abs(support[:,2]-np.where(e.apparatus==1,0,-.05123*4))<1e-3))
+  m=Policy(e.observation_size,(32,32),initial_action=e.initial_action)
+  previous=np.zeros(9,np.float32)
+  for _ in range(12):
+   obs=torch.tensor(np.concatenate([o[:1,:-9],previous[None]],axis=1));out=m(obs,torch.tensor(e.mask()[:1]),torch.tensor(e.choosing[:1]),deterministic=True)
+   previous=out['action'][0].detach().numpy()
+  np.testing.assert_allclose(previous,np.clip(e.initial_action,-.95,.95),atol=.06)
+  e.close()

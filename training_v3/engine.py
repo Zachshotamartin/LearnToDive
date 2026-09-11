@@ -118,7 +118,7 @@ def execution_estimate(angle,form,splash,bounces,board_twist,numeric,position,en
  value=np.where(numeric&(~invalid_launch),value,0)
  return np.floor(value*2+.5)/2
 
-def initial_state(m,d,height,skill,lean=.02,preload=-.18,hip=.12,knee=.2,toe_over=.03):
+def initial_state(m,d,height,skill,lean=.02,preload=-.18,hip=.12,knee=.2,toe_over=.03,platform=False):
  """Flat-footed standing start at the edge. The ankle angle is solved so both feet lie
  flat on the board, the leading edge of the feet (toes when facing the water, heels when
  facing away) overhangs the tip by toe_over, and the trunk leans toward the water by
@@ -130,7 +130,7 @@ def initial_state(m,d,height,skill,lean=.02,preload=-.18,hip=.12,knee=.2,toe_ove
  qadr=m.jnt_qposadr[m.actuator_trnid[:,0]]
  fg=[mujoco.mj_name2id(m,mujoco.mjtObj.mjOBJ_BODY,n) for n in ['foot_L','foot_R']];gids=[int(m.body_geomadr[b]) for b in fg]
  def place(ankle):
-  mujoco.mj_resetData(m,d);d.mocap_pos[0]=[0,0,-height];d.mocap_quat[0]=[1,0,0,0]
+  mujoco.mj_resetData(m,d);d.mocap_pos[0]=[0,0,-height];d.mocap_quat[0]=[1,0,0,0];d.eq_active[0]=platform
   d.qpos[4:8]=[np.cos(lean/2)*np.cos(yaw/2),np.sin(lean/2)*np.sin(yaw/2),np.sin(lean/2)*np.cos(yaw/2),np.cos(lean/2)*np.sin(yaw/2)]
   d.qpos[0]=preload;targets=np.array([hip,knee,ankle,.3,.3,0,0,0,0.])
   d.qpos[qadr]=targets[ACTUATOR_MAP];d.ctrl[:]=targets[ACTUATOR_MAP];mujoco.mj_forward(m,d)
@@ -172,7 +172,7 @@ class Arena:
   self.returns=np.zeros(n);self.max_torque=np.zeros(n);self.max_joint_speed=np.zeros(n)
   self.roll_state=np.empty((n,SUBSTEPS,self.ns));self.roll_sensor=np.empty((n,SUBSTEPS,self.model.nsensordata));self.ctrl=np.zeros((n,SUBSTEPS,self.model.nu+self.model.nbody*6+8))
   self.qadr=self.model.jnt_qposadr[self.model.actuator_trnid[:,0]];self.vadr=self.model.jnt_dofadr[self.model.actuator_trnid[:,0]]
-  self.practice=np.zeros(n,bool);self.banked=np.zeros(n,bool)
+  self.practice=np.zeros(n,bool);self.banked=np.zeros(n,bool);self.diverged_events=0
   self.surface_previous=np.zeros((n,15));self.surface_seen=np.zeros((n,15),bool);self.surface_finished=np.zeros((n,15),bool);self.surface_group_loss=np.zeros((n,6));self.surface_lateral=np.zeros(n)
   self.reset(np.arange(n))
  def close(self):self.pool.close()
@@ -184,7 +184,7 @@ class Arena:
    self.skill[i]=s;self.height[i]=h
    self.disturbance[i]=c.get("disturbance",0);self.disturbance_time[i]=c.get("disturbanceTime",self.rng.uniform(.65,1.05))
    initial,sens,target=initial_state(self.model,self.resetdata,h,s,lean=c.get('lean',self.rng.uniform(0,.05) if self.training else .02),preload=c.get('preload',self.rng.uniform(-.20,-.16) if self.training else -.18),
-    hip=c.get('hip',self.rng.uniform(.08,.2) if self.training else .12),knee=c.get('knee',self.rng.uniform(.15,.3) if self.training else .2),toe_over=c.get('toeOver',self.rng.uniform(0,.06) if self.training else .03))
+    hip=c.get('hip',self.rng.uniform(.08,.2) if self.training else .12),knee=c.get('knee',self.rng.uniform(.15,.3) if self.training else .2),toe_over=c.get('toeOver',self.rng.uniform(0,.06) if self.training else .03),platform=bool(c.get('platform',False)))
    self.state[i]=initial;self.sensors[i]=sens;self.targets[i]=target
    self.theta[i]=0;self.twist[i]=0;self.prev_pitch[i]=np.arctan2(quat_up(initial[5:9][None])[0,0],quat_up(initial[5:9][None])[0,2])
    self.applied_impulse[i]=0;self.push_duration[i]=0;self.first_geometry[i]=0;self.shape_angle[i]=0;self.max_progress[i]=0;self.board_twist[i]=0
@@ -399,7 +399,11 @@ class Arena:
   self.max_air=np.maximum(self.max_air,s[:,2]);up=ups[:,-1]
   joint=q[:,self.qadr];hip=joint[:,0];knee=joint[:,1];arms=(joint[:,6]+joint[:,9])*.5
   contacted=np.isfinite(self.entry_time)
-  done=np.isfinite(self.full_entry_time)|(contacted&(self.state[:,0]-self.entry_time>=.8-1e-9))|((~contacted)&(self.state[:,0]>=3.6))|(~np.isfinite(self.state).all(axis=1))
+  # MuJoCo silently resets an unstable world to its XML pose. An athlete cannot
+  # move a metre in one 20 ms step, so such a jump ends the dive as a failure.
+  jumped=np.linalg.norm(self.state[:,2:5]-old_state[:,2:5],axis=1)>1.
+  self.diverged_events+=int(jumped.sum())
+  done=np.isfinite(self.full_entry_time)|(contacted&(self.state[:,0]-self.entry_time>=.8-1e-9))|((~contacted)&(self.state[:,0]>=3.6))|(~np.isfinite(self.state).all(axis=1))|jumped
   geometry=entry_geometry(s);straight,limbs,geo_ok,loss=entry_posture(joint,geometry)
   self.entry_omega=np.where(contacted,np.maximum(self.entry_omega,np.linalg.norm(s[:,13:16],axis=1)),self.entry_omega)
   tuck=np.exp(-((hip-1.4)/.8)**2-((knee-2)/.8)**2)*np.exp(-(np.max(tuck_geometry(s)[0],axis=1)/.45)**2)

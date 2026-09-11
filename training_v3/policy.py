@@ -10,7 +10,7 @@ from rules import DIVES
 FORMAT='self-declared-diver-v11'
 
 class Policy(nn.Module):
- def __init__(self,obs,widths=(256,256),rho=.6):
+ def __init__(self,obs,widths=(256,256),rho=.6,initial_action=None):
   super().__init__();self.widths=tuple(widths);self.obs=obs;self.rho=rho
   layers=[];size=obs
   for width in widths:layers.extend([nn.Linear(size,width),nn.Tanh()]);size=width
@@ -19,6 +19,12 @@ class Policy(nn.Module):
   for layer in self.modules():
    if isinstance(layer,nn.Linear):nn.init.orthogonal_(layer.weight,math.sqrt(2));nn.init.zeros_(layer.bias)
   for layer in [self.motor,self.choice]:nn.init.orthogonal_(layer.weight,.01)
+  if initial_action is not None:
+   # Bias the motor mean so the untrained policy holds the reset stance at the
+   # autoregressive steady state: mean = 2 tanh(motor/2) when previous == raw.
+   with torch.no_grad():
+    raw=torch.as_tensor(initial_action,dtype=torch.float32).clamp(-.99,.99).atanh()
+    self.motor.bias.copy_(2*torch.atanh((raw/2).clamp(-.9,.9)))
  @staticmethod
  def log_jacobian(z):return 2*(math.log(2)-z-torch.nn.functional.softplus(-2*z))
  def forward(self,obs,mask,choosing,raw=None,choice=None,deterministic=False):

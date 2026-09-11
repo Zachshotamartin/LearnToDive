@@ -4,7 +4,7 @@ No trainer-selected dive targets or motion demonstrations.
 import copy
 import numpy as np
 import mujoco
-from engine import Arena as Physics, initial_state, framed_angles, STATE_SPEC
+from engine import Arena as Physics, initial_state, framed_angles, board_forces, ACTION_LOW, ACTION_HIGH, STATE_SPEC
 from rules import DIVES,CODES,CODE_INDEX,legal_mask,validate_declaration,POSITIONS
 from judge import judge,terminal_reward
 
@@ -14,9 +14,13 @@ def rows(engine):
  return {k:v for k,v in vars(engine).items() if isinstance(v,np.ndarray) and v.ndim and v.shape[0]==engine.n and k not in EXCLUDED}
 
 class Arena:
- def __init__(self,n=64,seed=1,threads=4,training=True):
-  self.perturb=False;self.n=n;self.training=training;self.rng=np.random.default_rng(seed)
+ def __init__(self,n=64,seed=1,threads=4,training=True,practice=.35):
+  self.perturb=False;self.n=n;self.training=training;self.rng=np.random.default_rng(seed);self.practice_rate=practice
   self.physics=Physics(n,seed,threads,skills=[0],heights=(1,10),minimum_heights=[1]*6,training=training)
+  # The normalized action that reproduces the evaluation stance; a policy whose
+  # initial mean holds still is the most neutral prior, not a prescribed motion.
+  _,_,stance=initial_state(self.physics.model,self.physics.resetdata,10,0)
+  self.initial_action=(2*(stance-ACTION_LOW)/(ACTION_HIGH-ACTION_LOW)-1).astype(np.float32)
   self.previous_actions=np.zeros((n,9),np.float32);self.choosing=np.ones(n,bool);self.declaration=np.zeros(n,int);self.group=np.ones(n,int)
   self.apparatus=np.zeros(n,int);self.height=np.zeros(n);self.used=np.zeros((n,len(CODES)),bool)
   self.auxiliary=np.zeros(n,bool);self.round=np.zeros(n,int);self.schedule=np.zeros((n,6),int);self.routine_points=np.zeros(n)
@@ -36,7 +40,7 @@ class Arena:
      self.schedule[i,0]=int(self.rng.choice(np.arange(1,7),p=weights/weights.sum()))
     self.round[i]=0;self.used[i]=False;self.routine_points[i]=0
    self.group[i]=self.schedule[i,self.round[i]];self.choosing[i]=True;self.returns[i]=0;self.practice[i]=False;self.previous_actions[i]=0
-   self.physics.reset([i],[dict(skill=0,height=self.height[i],preload=0 if self.apparatus[i] else -.05123,disturbance=0)])
+   self.physics.reset([i],[dict(skill=0,height=self.height[i],preload=0 if self.apparatus[i] else -.05123,disturbance=0,platform=bool(self.apparatus[i]))])
    self.physics.platform[i]=bool(self.apparatus[i]);self.physics.armstand[i]=False
   return self.observe()
  def mask(self):
@@ -48,16 +52,20 @@ class Arena:
   intent=np.zeros((self.n,9))
   for i in np.flatnonzero(~self.choosing):
    d=DIVES[self.declaration[i]];intent[i,:5]=[d['sign']*d['turns']/5,d['twists']/5,d['back'],d['armstand'],d['direction']/4];intent[i,5+POSITIONS.index(d['position'])]=1
+  # Foot contact flags and the board spring state are physical sensors the
+  # athlete has (pressure under the feet, the board moving); balance and the
+  # press need them. Nothing here is a future estimate or an assigned target.
+  support=np.concatenate([(board_forces(s)[:,[11,14]]>15).astype(float),q[:,0:1]*4,v[:,0:1]/3],axis=1)
   return np.concatenate([q[:,4:8],v[:,1:7]/10,q[:,e.qadr]/3,v[:,e.vadr]/15,e.targets/3,
    s[:,:3]/[4,2,10],s[:,3:6]/10,np.stack([e.phase_theta/(2*np.pi),e.air_twist/(2*np.pi),e.height/10,e.state[:,0]/4,e.released,e.platform,e.armstand,e.water_fraction,e.above_water/10,self.choosing,self.round/6],axis=1),
-   np.eye(6)[self.group-1],intent,self.used.astype(float),self.previous_actions],axis=1).clip(-10,10).astype(np.float32)
+   support,np.eye(6)[self.group-1],intent,self.used.astype(float),self.previous_actions],axis=1).clip(-10,10).astype(np.float32)
  def declare(self,i,choice):
   apparatus='platform' if self.apparatus[i] else 'springboard'
   d=validate_declaration(choice,int(self.group[i]),apparatus,self.height[i],np.asarray(CODES)[self.used[i]])
   e=self.physics;self.declaration[i]=choice;e.goals[i]=[d['sign']*d['turns'],d['twists'],d['back'],{'C':0,'B':1,'D':2,'A':3}[d['position']]]
   # Legal starting orientation follows the agent's chosen dive. There is no
   # modification to root state after launch.
-  e.reset([i],[dict(skill=3 if d['back'] else 0,height=self.height[i],preload=0 if self.apparatus[i] else -.05123,disturbance=0)])
+  e.reset([i],[dict(skill=3 if d['back'] else 0,height=self.height[i],preload=0 if self.apparatus[i] else -.05123,disturbance=0,platform=bool(self.apparatus[i]))])
   e.platform[i]=bool(self.apparatus[i]);e.armstand[i]=d['armstand'];e.headfirst[i]=d['headfirst'];e.height[i]=self.height[i]
   if d['armstand']:
    # Balanced handstand start: hands shoulder-width on the platform, arms straight,
@@ -84,7 +92,7 @@ class Arena:
   self.choosing[i]=False
   # Reachable recovery snapshots originate only from this learner's real dives.
   # Reuse the same self-declaration, apparatus and height, never assign a target.
-  g=self.group[i]-1;rate=self.clean[g]/max(1,self.attempts[g]);prob=.5*(1-rate)
+  g=self.group[i]-1;rate=self.clean[g]/max(1,self.attempts[g]);prob=self.practice_rate*(1-rate)
   eligible=[x for x in self.bank[g] if x['declaration']==choice and x['height']==self.height[i] and x['apparatus']==self.apparatus[i]]
   if self.training and eligible and self.rng.random()<prob:
    snap=eligible[int(self.rng.integers(len(eligible)))];

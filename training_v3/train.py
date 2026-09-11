@@ -34,7 +34,8 @@ def summary(records):
    clean=float(np.mean([r['clean'] for r in rows])) if rows else None,
    valid=float(np.mean([r['valid'] for r in rows])) if rows else None,
    uniqueDives=len({r['declaration'] for r in rows}),
-   entryAngle=float(np.mean([r['entryAngle'] for r in rows])) if rows else None)
+   entryAngle=float(np.mean([r['entryAngle'] for r in rows])) if rows else None,
+   trainingReturn=float(np.mean([r['return'] for r in rows])) if rows else None)
  return dict(full=group(full),categories={str(g):group([r for r in full if r['category']==g]) for g in range(1,7)},practiceEpisodes=len(records)-len(full))
 
 @torch.no_grad()
@@ -58,7 +59,7 @@ def train(args):
  out=Path(args.output).resolve();out.mkdir(parents=True,exist_ok=True)
  if (out/'latest.pt').exists() and not args.resume:raise ValueError('Use --resume; never overwrite a saved run')
  seed=args.seed;random.seed(seed);np.random.seed(seed);torch.manual_seed(seed)
- env=Arena(args.envs,seed,args.threads);policy=Policy(env.observation_size,tuple(args.widths),args.rho)
+ env=Arena(args.envs,seed,args.threads,practice=args.practice);policy=Policy(env.observation_size,tuple(args.widths),args.rho,initial_action=env.initial_action)
  optimizer=torch.optim.Adam(policy.parameters(),lr=args.lr,eps=1e-5)
  state=dict(steps=0,updates=0,elapsedSeconds=0,history=[],evaluations=[],bestValue=-1e30,stopReason=None)
  signature=hashes();contract=dict(format=FORMAT,judge=VERSION,water=WATER_VERSION,observationSize=env.observation_size,actions=9,declarations=[d['id'] for d in DIVES],sourceHashes=signature)
@@ -195,6 +196,6 @@ def parser():
  p=argparse.ArgumentParser(description=__doc__);p.add_argument('--output',required=True);p.add_argument('--resume');p.add_argument('--warm-start')
  p.add_argument('--widths',type=int,nargs='+',default=[256,256]);p.add_argument('--rho',type=float,default=.6)
  for name,default in [('envs',64),('threads',4),('horizon',160),('epochs',4),('batch',1024),('steps',2048000),('seed',109310),('archive-every',100),('evaluate-every',200),('eval-cases',24),('minimum-steps',102400000),('patience',10)]:p.add_argument('--'+name,type=int,default=default)
- p.add_argument('--lr',type=float,default=.0003);p.add_argument('--entropy',type=float,default=.006);p.add_argument('--declaration-entropy',type=float,default=.01)
+ p.add_argument('--lr',type=float,default=.0003);p.add_argument('--entropy',type=float,default=.006);p.add_argument('--declaration-entropy',type=float,default=.01);p.add_argument('--practice',type=float,default=.35)
  return p
 if __name__=='__main__':train(parser().parse_args())
