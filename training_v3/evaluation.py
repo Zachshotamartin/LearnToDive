@@ -2,11 +2,19 @@
 import numpy as np
 import torch
 
+import math
+
+from engine import DT, ENTRY_WINDOW, TIMEOUT
 from environment import Arena
 
 EVALUATION_SEED = 771100
 ROUTINE_LENGTH = 6
-MAX_TICKS = 1200
+# One dive lasts at most the no-water timeout plus the entry window, plus a
+# declaration tick and a reset tick. A fixed 1200-tick budget was enough only
+# while every dive was a short fall; jumping athletes overran it and the
+# evaluation raised mid-run.
+DIVE_TICKS = math.ceil((TIMEOUT + ENTRY_WINDOW) / DT) + 2
+MAX_TICKS = math.ceil(1.1 * ROUTINE_LENGTH * DIVE_TICKS)
 
 
 def mean(rows, key):

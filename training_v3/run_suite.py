@@ -50,11 +50,16 @@ class Suite:
             self.state = json.loads(self.state_path.read_text())
         else:
             self.state = dict(config=vars(args), trials=[], publication='No automatic publication')
-        if self.state['config'] != vars(args):
+        if self.identity(self.state['config']) != self.identity(vars(args)):
             raise ValueError('Resume with the same suite settings')
         self.configurations = {name: CONFIGURATIONS[name] for name in args.architectures}
         if args.warm_start:
             self.configurations['256x256-warm'] = [256, 256]
+
+    @staticmethod
+    def identity(config):
+        """The settings that define a suite; an explicit source amendment does not."""
+        return {k: v for k, v in config.items() if k != 'accept_source_change'}
 
     def save(self, **fields):
         self.state.update(fields, pid=os.getpid(), updated=time.time())
@@ -83,6 +88,8 @@ class Suite:
                 return None
             command[command.index('--steps') + 1] = str(remaining)
             command += ['--resume', str(checkpoint)]
+            if self.args.accept_source_change:
+                command += ['--accept-source-change', *self.args.accept_source_change]
         elif warm:
             command += ['--warm-start', warm]
         return command
@@ -189,6 +196,7 @@ def parser():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--output', required=True)
     p.add_argument('--warm-start')
+    p.add_argument('--accept-source-change', nargs='*', default=[])
     p.add_argument('--architectures', nargs='+', choices=list(CONFIGURATIONS), default=list(CONFIGURATIONS))
     p.add_argument('--seeds', type=int, nargs='+', default=[109310, 109311, 109312])
     p.add_argument('--pilot-steps', type=int, default=10240000)

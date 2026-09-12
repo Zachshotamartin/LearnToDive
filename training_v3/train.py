@@ -133,7 +133,8 @@ class Trainer:
     # ------------------------------------------------------------ persistence
     def resume(self, path):
         saved = torch.load(path, map_location='cpu', weights_only=False)
-        if saved['contract'] != self.contract:
+        amendments = self.source_amendments(saved['contract'])
+        if amendments is None:
             raise ValueError('Changed source or contract; exact resume refused')
         for key in RESUME_KEYS:
             if saved['config'][key] != getattr(self.args, key):
@@ -142,9 +143,34 @@ class Trainer:
         self.optimizer.load_state_dict(saved['optimizer'])
         self.env.load_state_dict(saved['environment'])
         self.state = copy.deepcopy(saved['training'])
+        if amendments:
+            # The change is explicit on the command line and permanent in the checkpoint.
+            self.state.setdefault('sourceAmendments', []).extend(amendments)
         torch.set_rng_state(saved['torchRNG'])
         np.random.set_state(saved['numpyRNG'])
         random.setstate(saved['pythonRNG'])
+
+    def source_amendments(self, saved_contract):
+        """Differences between the saved and current contract, or None when they are not all accepted.
+
+        Exact resume refuses any change to a learning file. A bug fix in a file
+        that is hashed but does not change the learning problem (for example the
+        evaluation loop's tick budget) can be accepted explicitly with
+        --accept-source-change, which records the old and new hashes.
+        """
+        if saved_contract == self.contract:
+            return []
+        saved_hashes = saved_contract.get('sourceHashes', {})
+        current_hashes = self.contract['sourceHashes']
+        others = {k: v for k, v in saved_contract.items() if k != 'sourceHashes'}
+        if others != {k: v for k, v in self.contract.items() if k != 'sourceHashes'} or set(saved_hashes) != set(current_hashes):
+            return None
+        changed = sorted(name for name in current_hashes if saved_hashes[name] != current_hashes[name])
+        accepted = set(self.args.accept_source_change or [])
+        if not changed or not set(changed) <= accepted:
+            return None
+        return [dict(file=name, before=saved_hashes[name], after=current_hashes[name], atSteps=self.state['steps'])
+                for name in changed]
 
     def persist(self, reason):
         state = self.state
@@ -353,6 +379,8 @@ def parser():
     p.add_argument('--output', required=True)
     p.add_argument('--resume')
     p.add_argument('--warm-start')
+    p.add_argument('--accept-source-change', nargs='*', default=[],
+                   help='Files whose hash may differ from the resumed checkpoint; recorded as an amendment')
     p.add_argument('--widths', type=int, nargs='+', default=[256, 256])
     p.add_argument('--rho', type=float, default=.6)
     integers = [('envs', 64), ('threads', 4), ('horizon', 160), ('epochs', 4), ('batch', 1024), ('steps', 2048000),
