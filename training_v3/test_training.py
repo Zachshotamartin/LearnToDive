@@ -13,7 +13,7 @@ from losses import ppo_terms
 from train import parser, train
 
 TOOLING = ['run_suite.py', 'audit_physics.py', 'check_browser_parity.py', 'extract_difficulty.py', 'checkpointing.py', 'probes.py']
-ESSENTIAL = ['engine.py', 'geometry.py', 'stance.py', 'water.py', 'judge.py', 'rules.py', 'policy.py', 'losses.py',
+ESSENTIAL = ['engine.py', 'geometry.py', 'stance.py', 'positions.py', 'water.py', 'judge.py', 'rules.py', 'policy.py', 'losses.py',
              'train.py', 'evaluation.py', 'environment.py', 'difficulty.json', 'diver.xml']
 
 

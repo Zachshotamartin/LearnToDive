@@ -11,7 +11,7 @@ def measurements():
                 maxLateral=0, firstContactAngle=0, entryAngle=0, ascent=.4, preparationBounces=0, positionQuality=1,
                 form=1, entryGeometryWorst=dict(footLineAngles=[0, 0], ankleGap=.12, crossedLegs=False,
                                                 handSeparation=.07, handHeightGap=0),
-                surfaceLateralSpeed=0, entryGeometryValid=True, entryLimbsValid=True)
+                surfaceLateralSpeed=0, entryGeometryValid=True, entryLimbsValid=True, departureLean=5, takeoffVerticalSpeed=2.5)
 
 
 class RulesTests(unittest.TestCase):
@@ -86,6 +86,20 @@ class JudgeTests(unittest.TestCase):
         score = judge(IDS['101C'], 'platform', 10, m)
         self.assertTrue(score['valid'])
         self.assertLessEqual(score['execution'], 2)
+
+    def test_takeoff_height_speed_and_lean_change_the_reward_at_equal_entry(self):
+        jump = measurements()
+        fall = measurements()
+        fall.update(ascent=0, takeoffVerticalSpeed=-1.5, departureLean=60)
+        jumped = judge(IDS['101C'], 'platform', 10, jump)
+        fell = judge(IDS['101C'], 'platform', 10, fall)
+        self.assertGreater(fell['deductions']['takeoff'], jumped['deductions']['takeoff'] + 2)
+        # A missing takeoff must cost at least as much as a thirty-degree entry error;
+        # before v12 it cost less than a fifth of one.
+        flat = measurements()
+        flat.update(entryAngle=30, firstContactAngle=30)
+        self.assertGreaterEqual(terminal_reward(jumped, jump) - terminal_reward(fell, fall),
+                                terminal_reward(jumped, jump) - terminal_reward(judge(IDS['101C'], 'platform', 10, flat), flat))
 
     def test_position_deduction_matches_rule_range(self):
         m = measurements()

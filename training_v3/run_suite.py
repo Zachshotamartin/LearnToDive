@@ -22,6 +22,9 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
 CONFIGURATIONS = {'96x96': [96, 96], '256x256': [256, 256], '256x256x128': [256, 256, 128]}
 TRIAL_ARGUMENTS = ['--envs', '64', '--threads', '4', '--evaluate-every', '200', '--archive-every', '100']
+# The continuation may only stop on a plateau after a quarter of a billion steps and
+# twenty-five evaluation windows (51M steps) without any category improving.
+CONTINUATION_ARGUMENTS = ['--minimum-steps', '256000000', '--patience', '25']
 FINISHED_PHASES = ('budget-complete-awaiting-review', 'plateau-awaiting-review')
 RANKING = ('points', 'execution', 'clean', 'valid', 'trainingReturn')
 ATTEMPTS = 3
@@ -49,7 +52,7 @@ class Suite:
             self.state = dict(config=vars(args), trials=[], publication='No automatic publication')
         if self.state['config'] != vars(args):
             raise ValueError('Resume with the same suite settings')
-        self.configurations = dict(CONFIGURATIONS)
+        self.configurations = {name: CONFIGURATIONS[name] for name in args.architectures}
         if args.warm_start:
             self.configurations['256x256-warm'] = [256, 256]
 
@@ -70,6 +73,8 @@ class Suite:
         checkpoint = folder / 'latest.pt'
         command = [sys.executable, str(HERE / 'train.py'), '--output', str(folder), '--widths', *map(str, widths),
                    '--steps', str(steps), '--seed', str(seed), *TRIAL_ARGUMENTS]
+        if name == 'continued':
+            command += CONTINUATION_ARGUMENTS
         if status.exists() and json.loads(status.read_text())['phase'] in FINISHED_PHASES:
             return None
         if checkpoint.exists():
@@ -184,6 +189,7 @@ def parser():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--output', required=True)
     p.add_argument('--warm-start')
+    p.add_argument('--architectures', nargs='+', choices=list(CONFIGURATIONS), default=list(CONFIGURATIONS))
     p.add_argument('--seeds', type=int, nargs='+', default=[109310, 109311, 109312])
     p.add_argument('--pilot-steps', type=int, default=10240000)
     p.add_argument('--total-steps', type=int, default=512000000)

@@ -13,11 +13,22 @@ def mean(rows, key):
     return float(np.mean([r[key] for r in rows])) if rows else None
 
 
+JUMP_SPEED = .5   # m/s of upward departure speed that counts as a jump rather than a fall
+
+
+def measured(rows, key):
+    return float(np.mean([r['measurements'][key] for r in rows])) if rows else None
+
+
 def group(rows):
     return dict(n=len(rows), points=mean(rows, 'points'), execution=mean(rows, 'execution'),
                 difficulty=mean(rows, 'difficulty'), clean=mean(rows, 'clean'), valid=mean(rows, 'valid'),
                 uniqueDives=len({r['declaration'] for r in rows}), entryAngle=mean(rows, 'entryAngle'),
-                trainingReturn=mean(rows, 'return'))
+                trainingReturn=mean(rows, 'return'),
+                # Takeoff and position diagnostics: whether it jumps, how high, how upright, how well shaped.
+                jumped=float(np.mean([r['measurements']['takeoffVerticalSpeed'] > JUMP_SPEED for r in rows])) if rows else None,
+                rise=measured(rows, 'ascent'), takeoffSpeed=measured(rows, 'takeoffVerticalSpeed'),
+                departureLean=measured(rows, 'departureLean'), positionQuality=measured(rows, 'positionQuality'))
 
 
 def summary(records):

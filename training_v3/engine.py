@@ -24,6 +24,7 @@ from geometry import (
     SHOULDER_GEOMS, THIGH_GEOMS, TRUNK_GEOMS, board_forces, decoded_action, entry_geometry, framed_angles, quat_up,
     stand_forces, tuck_geometry, wrap,
 )
+from positions import position_qualities
 from stance import SKILLS, STATE_SPEC, initial_state
 from water import body_water, immersion
 
@@ -40,7 +41,7 @@ RELEASE_AIR_TIME = .04
 ASSIST_IMPULSE = .1  # N s of non-foot board contact that invalidates a takeoff
 ASSIST_FORCE = 15    # N of non-foot board contact that invalidates a takeoff
 TARGET_RATE = np.array([14, 14, 14, 10, 10, 8, 8, 10, 4])  # rad/s servo target slew; legs must outrun a jump
-TRAINING_SOURCES = ('environment.py', 'engine.py', 'geometry.py', 'stance.py', 'water.py', 'rules.py', 'judge.py', 'evaluation.py',
+TRAINING_SOURCES = ('environment.py', 'engine.py', 'geometry.py', 'stance.py', 'positions.py', 'water.py', 'rules.py', 'judge.py', 'evaluation.py',
                     'policy.py', 'losses.py', 'train.py', 'difficulty.json', 'diver.xml')
 CONTROL_SPEC = 3904  # CTRL | XFRC_APPLIED | EQ_ACTIVE | MOCAP_POS | MOCAP_QUAT for MuJoCo 3.13
 ATHLETE = slice(1, 16)               # the fifteen athlete geoms in the model
@@ -313,7 +314,8 @@ class Arena:
         ], axis=1)
         losses[:, -1] *= head
         self.surface_group_loss[ids] = np.maximum(self.surface_group_loss[ids], losses)
-        self.entry_min_form[ids] = np.exp(-self.surface_group_loss[ids].sum(axis=1))
+        # A heavy-tailed mapping keeps a slope toward clean form even for a badly bent entry.
+        self.entry_min_form[ids] = 1 / (1 + self.surface_group_loss[ids].sum(axis=1))
         limbs = np.all((~thighs | (np.abs(hips) < .45)) & (~shins | (np.abs(knees) < .5))
                        & (~shoulders | ((np.abs(pitch) < .6) & (np.abs(roll) < .5)))
                        & (~forearms | (np.abs(elbows) < .5)), axis=1)
@@ -552,11 +554,7 @@ class Arena:
         hip, knee = joint[:, 0], joint[:, 1]
         omega = np.linalg.norm(sensors[:, ANGULAR_VELOCITY], axis=1)
         self.entry_omega = np.where(contacted, np.maximum(self.entry_omega, omega), self.entry_omega)
-        tuck = (np.exp(-((hip - 1.4) / .8) ** 2 - ((knee - 2) / .8) ** 2)
-                * np.exp(-(np.max(tuck_geometry(sensors)[0], axis=1) / .45) ** 2))
-        pike = np.exp(-((hip - 1.5) / .8) ** 2 - (knee / .35) ** 2)
-        straight = np.exp(-(hip / .35) ** 2 - (knee / .35) ** 2)
-        quality = np.stack([straight, pike, tuck, np.maximum.reduce([straight, pike, tuck])], axis=1)
+        quality = position_qualities(hip, knee, np.max(tuck_geometry(sensors)[0], axis=1))
         turns = self.goals[:, 0]
         progress = self.phase_theta / np.where(np.abs(turns) > 1e-6, turns * 2 * np.pi, 1)
         assess = self.released & ~contacted & (((progress > .15) & (progress < .8)) | (turns == 0))
@@ -581,6 +579,7 @@ class Arena:
         first_angle = float(np.degrees(np.arccos(np.clip(sign * quat_up(state[5:9][None])[0, 2], -1, 1))))
         worst = self.entry_worst_geometry[i]
         arm_reference = 3.05 if self.headfirst[i] else 0
+        lean = np.abs(np.abs(self.departure_pitch[i]) - np.pi) if self.armstand[i] else np.abs(self.departure_pitch[i])
         return dict(
             index=int(i), rotation=float(self.phase_theta[i] / (2 * np.pi)), twist=float(self.air_twist[i] / (2 * np.pi)),
             boardInvalid=bool(self.board_invalid[i]), water=bool(contacted),
@@ -596,4 +595,5 @@ class Arena:
             ascent=float(max(0, self.apex_com[i] - self.departure_com[i])), preparationBounces=int(self.preparation_bounces[i]),
             surfaceLateralSpeed=float(self.surface_lateral[i]), entryAngularSpeed=float(self.entry_omega[i]),
             maxLateral=float(self.max_lateral[i]), takeoffVerticalSpeed=float(self.takeoff_vertical_speed[i]),
+            departureLean=float(np.degrees(lean)),
             time=float(self.state[i, 0]))

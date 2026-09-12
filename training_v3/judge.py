@@ -18,7 +18,7 @@ import numpy as np
 
 from rules import DIVES, difficulty
 
-VERSION = 'self-declared-whole-entry-v11'
+VERSION = 'self-declared-takeoff-and-whole-entry-v12'
 FEET_FIRST_GEOMS = (12, 15)   # one-based sensor geom ids of the two feet
 ROTATION_TOLERANCE = .25      # somersaults; a quarter turn short is another dive
 TWIST_TOLERANCE = .25
@@ -27,6 +27,12 @@ CLEAN_ANGLE = 15
 CLEAN_FORM = .8
 UNSAFE_DISTANCE = .2          # metres from the board that cap the award at 2
 POINTS_MULTIPLIER = 3         # three judges' awards times the degree of difficulty
+RISE_TARGET = .3              # metres of centre-of-mass rise for a full-credit takeoff (rule 10.4.3, control and height)
+FREE_LEAN = 15                # degrees of body lean at departure before the takeoff loses control credit
+LEAN_RANGE = 45               # degrees beyond FREE_LEAN at which the lean deduction reaches one point
+TAKEOFF_SPEED_TARGET = 2.     # m/s of upward departure speed that earns full training credit
+RISE_WEIGHT = 1.              # training-reward weight of the missing rise
+SPEED_WEIGHT = .5             # training-reward weight of the missing departure speed
 
 
 def failures(d, apparatus, m, rotation_error, twist_error):
@@ -59,7 +65,9 @@ def deductions(d, m, angle):
     hands = (min(1, max(0, g['handSeparation'] - .08) * 5 + max(0, g['handHeightGap'] - .02) * 10)
              if d['headfirst'] else 0)
     return {
-        'takeoff': min(1.5, 1.5 * max(0, 1 - m['ascent'] / .3)) + min(2, m['preparationBounces']),
+        # Height, control (lean at departure) and hops (rules 10.4.3 and 8.6.5.2).
+        'takeoff': (min(1.5, 1.5 * max(0, 1 - m['ascent'] / RISE_TARGET)) + min(1, max(0, m['departureLean'] - FREE_LEAN) / LEAN_RANGE)
+                    + min(2, m['preparationBounces'])),
         'position': 2 * (1 - np.clip(m['positionQuality'], 0, 1)),
         'entryAlignment': min(6, angle / 10),
         'entryForm': min(2, 2 * (1 - np.clip(m['form'], 0, 1))),
@@ -109,9 +117,16 @@ def terminal_reward(score, m):
     official execution is already clipped to zero still receives gradient
     toward each fault; a completed declaration earns a bounded bonus. The
     reward is always <= 0 on a failed dive and extra spins never buy points.
+    The takeoff carries its own cost so that a jump is worth learning even
+    while it temporarily worsens the entry.
     """
     faults = score['deductions']
-    costs = (.25 * sum(faults.values()) + .03 * score['entryAngle'] + .8 * np.log1p(score['rotationError'])
-             + .8 * np.log1p(score['twistError']))
+    costs = .25 * sum(faults.values()) + .8 * np.log1p(score['rotationError']) + .8 * np.log1p(score['twistError'])
+    # The takeoff is the one phase every later phase depends on. Before v12 the entry
+    # angle could cost eleven times what a missing jump cost, so the learner settled
+    # on falling off the edge with a vertical entry; rise and departure speed are
+    # outcomes of a takeoff, not a prescribed motion.
+    costs += RISE_WEIGHT * max(0, 1 - m['ascent'] / RISE_TARGET)
+    costs += SPEED_WEIGHT * min(1.5, max(0, 1 - m['takeoffVerticalSpeed'] / TAKEOFF_SPEED_TARGET))
     costs += 1.5 * float(not m['fullEntryComplete']) + 2 * float(m['boardInvalid']) + 1.5 * float(not m['water'])
     return float(score['trainingValue'] + float(score['valid']) - costs)
