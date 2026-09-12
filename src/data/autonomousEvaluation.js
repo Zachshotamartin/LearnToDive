@@ -1,0 +1,1 @@
+export const EVALUATION={"steps": 45056000, "metrics": {"n": 144, "points": 2.044841170329509, "execution": 0.3851462192133903, "difficulty": 1.9124999999999999, "clean": 0.0, "valid": 0.20833333333333334, "uniqueDives": 10, "entryAngle": 24.27813030880716, "trainingReturn": -3.7115240614849614}};
