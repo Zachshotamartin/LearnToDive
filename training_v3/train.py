@@ -133,7 +133,7 @@ class Trainer:
     # ------------------------------------------------------------ persistence
     def resume(self, path):
         saved = torch.load(path, map_location='cpu', weights_only=False)
-        amendments = self.source_amendments(saved['contract'])
+        amendments = self.source_amendments(saved['contract'], saved['training']['steps'])
         if amendments is None:
             raise ValueError('Changed source or contract; exact resume refused')
         for key in RESUME_KEYS:
@@ -150,7 +150,7 @@ class Trainer:
         np.random.set_state(saved['numpyRNG'])
         random.setstate(saved['pythonRNG'])
 
-    def source_amendments(self, saved_contract):
+    def source_amendments(self, saved_contract, at_steps):
         """Differences between the saved and current contract, or None when they are not all accepted.
 
         Exact resume refuses any change to a learning file. A bug fix in a file
@@ -169,7 +169,7 @@ class Trainer:
         accepted = set(self.args.accept_source_change or [])
         if not changed or not set(changed) <= accepted:
             return None
-        return [dict(file=name, before=saved_hashes[name], after=current_hashes[name], atSteps=self.state['steps'])
+        return [dict(file=name, before=saved_hashes[name], after=current_hashes[name], atSteps=at_steps)
                 for name in changed]
 
     def persist(self, reason):
