@@ -1,7 +1,7 @@
 import { createScene } from "./scene.js";
 import { ASSETS } from "./data/autonomousAssets.js";
 import { EVALUATION } from "./data/autonomousEvaluation.js";
-import { availableDives, diveLabel } from "./data/diveChoices.js";
+import { diveLabel } from "./data/diveChoices.js";
 export const metadata = {
   id: "learn-to-dive",
   title: "Learn to Dive",
@@ -59,10 +59,13 @@ export function mountExperiment(element, options = {}) {
     autoTimer = 0,
     disposed = false,
     used = [],
+    catalog = [],
     round = 0;
   function refreshDives() {
     const previous = input('dive').value || 'auto';
-    const choices = availableDives(Number(input('category').value), input('apparatus').value, Number(input('height').value));
+    const condition = `${input('apparatus').value}:${input('height').value}`;
+    const choices = catalog.filter(d => d.group === Number(input('category').value) && d.conditions.includes(condition))
+      .sort((a, b) => a.turns - b.turns || a.twists - b.twists || a.code - b.code || a.position.localeCompare(b.position));
     input('dive').replaceChildren(new Option('Auto · model chooses', 'auto'),
       ...choices.map(d => new Option(diveLabel(d), d.id)));
     input('dive').value = choices.some(d => d.id === previous) ? previous : 'auto';
@@ -141,6 +144,12 @@ export function mountExperiment(element, options = {}) {
     request();
   }
   worker.onmessage = ({ data }) => {
+    if (disposed) return;
+    if (data.catalog) {
+      catalog = data.catalog;
+      refreshDives();
+      return;
+    }
     if (disposed || data.id !== id) return;
     if (data.error) {
       root.dataset.state = "error";

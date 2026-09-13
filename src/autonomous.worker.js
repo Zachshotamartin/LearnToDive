@@ -5,6 +5,7 @@ import {
   simulateAutonomous,
 } from "./core/autonomousPhysics.js";
 import { createAutonomousPolicy } from "./core/autonomousPolicy.js";
+import { DIVES } from './data/declarations.js';
 let init, engine, policies;
 async function read(url, json = false) {
   const r = await fetch(url);
@@ -38,6 +39,10 @@ self.onmessage = async ({ data }) => {
           pretrained: { actor: createAutonomousPolicy(p), steps: p.steps },
           untrained: { actor: createAutonomousPolicy(i), steps: 0 },
         };
+        // Reuse the worker's canonical rule table. Importing it into the page
+        // would duplicate the full table in the application JavaScript bundle.
+        self.postMessage({ catalog: DIVES.map(({ id, code, name, position, group, turns, twists, difficulty }) =>
+          ({ id, code, name, position, group, turns, twists, conditions: Object.keys(difficulty) })) });
       })();
     await init;
     const selected = policies[data.policy];
