@@ -1,0 +1,5294 @@
+{
+  "format": "diver-behavior-assessment-v1",
+  "checkpointSHA256": "4bd0f9f62e319de6f60592aa0ee442c296e7288be23903e54e95235140035dec",
+  "checkpointSteps": 95232000,
+  "sourceHashes": {
+    "environment.py": "4059e396891c48efed2b7d81634a6788b0e3be333438fdd4203cef08c4027ceb",
+    "engine.py": "e90e717c8e257dff9682d522c7f21a77e429363ff26910141da9e93d1ebc8ce8",
+    "geometry.py": "496f4777fcd0077861ab76ba47f05c8ddaaf00453e1645a39740db12735e6ba4",
+    "stance.py": "d8934601c8ac08217f468344a9cd385b444df08cdcdbe16ad75c675ea5591db4",
+    "positions.py": "b5a20eb5e50cfb5e9ffb1b3ec18ef7066b96232de9995cf03cc5c60028e7dcfa",
+    "water.py": "4d737393d42cda1580d3e0aaf51bee05fa4747f031978b5307c1813bfe5c74ca",
+    "rules.py": "1d08fdf3cf765e66ed21c2023d7ff6c3651eaa75ab67503ee34bd3327dd6235b",
+    "judge.py": "9c988e1ea0e49e6beeb1e477513cbe86206cfd9eeb348498a7d80f62f353b5ba",
+    "training_reward.py": "1f9a007adccddd92f84289c8ad7043eb529c246f3e201672172e07346f71b396",
+    "recovery_curriculum.py": "8c63fb9912cf47864bbdfe77339c9401b1a9c31ae6d62045f4c9b0fe7f3ef952",
+    "evaluation.py": "0a25da5f7c9ec58c71a96ab4e8de747afb83053dda3dbfaaa26cdefe8f37199f",
+    "model_selection.py": "cdf1c3dfccf3109d5786170716612c431ee077a61d34cb578f387e6ce14a7823",
+    "assessment_stats.py": "fe582e0441cf19858db88f85c6e28e081607d227b900d1f0f2c72dd972eb4b38",
+    "policy.py": "30f44695f6d5fc8297417988df66755ee5401ecd7772c462244403a899e82e29",
+    "losses.py": "5b5d7107f6900d42d8c111a3ac3187009aea9971d563531240478cde5b1562f6",
+    "train.py": "1d27a8be88022c5724ac4380c88bd8f31913b25bc098390d1b1a1b76d4d9b7a9",
+    "difficulty.json": "3b11ead17aa81e4e5c85d002a36699e275aa0dc5c7a74a5a2c98c94f3e668aff",
+    "diver.xml": "0d5393b0e59b28c1c8f0b44a090f1c0c38bcf4b4c0eb2c4a85121e45a6e4db9b"
+  },
+  "evaluations": [
+    {
+      "mode": "mean",
+      "evaluationVersion": 2,
+      "seed": 881101,
+      "cases": 4,
+      "deterministic": true,
+      "policySeed": 881118,
+      "perturbed": false,
+      "rewardMode": "v12",
+      "summary": {
+        "full": {
+          "n": 24,
+          "points": 0.0,
+          "execution": 0.0,
+          "difficulty": 1.9125000000000003,
+          "clean": 0.0,
+          "valid": 0.0,
+          "uniqueDives": 10,
+          "entryAngle": 102.11903946006198,
+          "trainingReturn": -6.017415211514982,
+          "jumped": 0.5833333333333334,
+          "rise": 0.19494941185626283,
+          "takeoffSpeed": 1.3931594763363988,
+          "departureLean": 24.05595253929084,
+          "positionQuality": 0.11006940952313593,
+          "completedRotation": 0.0,
+          "entryAngularSpeed": 5.904930619217963,
+          "postContactRotationDegrees": 62.81102420421754,
+          "entryAngleDeterioration": 5.569951185183755
+        },
+        "categories": {
+          "1": {
+            "n": 4,
+            "points": 0.0,
+            "execution": 0.0,
+            "difficulty": 1.4500000000000002,
+            "clean": 0.0,
+            "valid": 0.0,
+            "uniqueDives": 1,
+            "entryAngle": 117.60514267965306,
+            "trainingReturn": -5.904815324127057,
+            "jumped": 1.0,
+            "rise": 0.33814503472290725,
+            "takeoffSpeed": 2.5728502661979213,
+            "departureLean": 18.392449913657988,
+            "positionQuality": 0.0,
+            "completedRotation": 0.0,
+            "entryAngularSpeed": 6.231693313942888,
+            "postContactRotationDegrees": 63.958009694403216,
+            "entryAngleDeterioration": 2.6975530761748985
+          },
+          "2": {
+            "n": 4,
+            "points": 0.0,
+            "execution": 0.0,
+            "difficulty": 2.35,
+            "clean": 0.0,
+            "valid": 0.0,
+            "uniqueDives": 2,
+            "entryAngle": 87.04890024049678,
+            "trainingReturn": -5.878424269104624,
+            "jumped": 0.0,
+            "rise": 0.002405297360669356,
+            "takeoffSpeed": -0.19928076692126237,
+            "departureLean": 33.04907197966575,
+            "positionQuality": 0.15807268503714658,
+            "completedRotation": 0.0,
+            "entryAngularSpeed": 4.27033646159655,
+            "postContactRotationDegrees": 64.07529597416604,
+            "entryAngleDeterioration": 0.0
+          },
+          "3": {
+            "n": 5,
+            "points": 0.0,
+            "execution": 0.0,
+            "difficulty": 2.0200000000000005,
+            "clean": 0.0,
+            "valid": 0.0,
+            "uniqueDives": 2,
+            "entryAngle": 82.42871883347024,
+            "trainingReturn": -5.675189318561342,
+            "jumped": 1.0,
+            "rise": 0.3155184040135427,
+            "takeoffSpeed": 2.489336631333637,
+            "departureLean": 17.889153059584253,
+            "positionQuality": 0.20760206648996532,
+            "completedRotation": 0.0,
+            "entryAngularSpeed": 4.417577289327957,
+            "postContactRotationDegrees": 49.97020382518241,
+            "entryAngleDeterioration": 11.240842520226414
+          },
+          "4": {
+            "n": 5,
+            "points": 0.0,
+            "execution": 0.0,
+            "difficulty": 1.7400000000000002,
+            "clean": 0.0,
+            "valid": 0.0,
+            "uniqueDives": 2,
+            "entryAngle": 94.75834194550717,
+            "trainingReturn": -5.94922577461989,
+            "jumped": 0.0,
+            "rise": 0.0023208985182222364,
+            "takeoffSpeed": 0.0777676595314914,
+            "departureLean": 9.603591530645755,
+            "positionQuality": 0.0,
+            "completedRotation": 0.0,
+            "entryAngularSpeed": 6.752477416933731,
+            "postContactRotationDegrees": 69.01592324229628,
+            "entryAngleDeterioration": 9.41212894580128
+          },
+          "5": {
+            "n": 5,
+            "points": 0.0,
+            "execution": 0.0,
+            "difficulty": 1.98,
+            "clean": 0.0,
+            "valid": 0.0,
+            "uniqueDives": 2,
+            "entryAngle": 115.92273439063794,
+            "trainingReturn": -5.889986981497214,
+            "jumped": 1.0,
+            "rise": 0.3454776087114354,
+            "takeoffSpeed": 2.607106045795414,
+            "departureLean": 19.156200257589738,
+            "positionQuality": 0.1942729511913698,
+            "completedRotation": 0.0,
+            "entryAngularSpeed": 5.814131190571916,
+            "postContactRotationDegrees": 59.42577320169048,
+            "entryAngleDeterioration": 3.9247517619144134
+          },
+          "6": {
+            "n": 1,
+            "points": 0.0,
+            "execution": 0.0,
+            "difficulty": 2.0,
+            "clean": 0.0,
+            "valid": 0.0,
+            "uniqueDives": 1,
+            "entryAngle": 166.69179951281149,
+            "trainingReturn": -9.712996330040596,
+            "jumped": 0.0,
+            "rise": 0.0,
+            "takeoffSpeed": -1.929502248335772,
+            "departureLean": 138.33204913058648,
+            "positionQuality": 0.0,
+            "completedRotation": 0.0,
+            "entryAngularSpeed": 14.789286274905347,
+            "postContactRotationDegrees": 103.27185688109803,
+            "entryAngleDeterioration": 0.0
+          }
+        },
+        "practiceEpisodes": 0
+      },
+      "episodes": [
+        {
+          "declaration": "101A",
+          "category": 1,
+          "difficulty": 1.6,
+          "execution": 0.0,
+          "points": 0.0,
+          "trainingValue": 0.0,
+          "valid": false,
+          "clean": false,
+          "deductions": {
+            "takeoff": 0.7846903988029676,
+            "position": 2.0,
+            "entryAlignment": 5.976664400031729,
+            "entryForm": 1.8898889976938635,
+            "feet": 0.1798969515189641,
+            "legs": 0.0,
+            "hands": 1.0,
+            "lateralEntry": 0.33712610549958405,
+            "distance": 0.0
+          },
+          "failures": [
+            "invalid takeoff or platform contact",
+            "declared somersault count not completed",
+            "feet entered before head or hands"
+          ],
+          "rotationError": 1.1355163949049603,
+          "twistError": 0.019062291825945953,
+          "entryAngle": 59.76664400031729,
+          "recognition": {
+            "somersaults": -0.5,
+            "twists": 0.0
+          },
+          "automatedJudge": true,
+          "splashIsProxy": true,
+          "judgeVersion": "self-declared-takeoff-and-whole-entry-v12",
+          "trainingRewardComponents": {
+            "total": -5.703179015920468,
+            "alignmentCost": 1.4941661000079323,
+            "takeoffCost": 0.23521180518974955,
+            "rotationCost": 0.6069667908674732,
+            "twistCost": 0.015106306177210546,
+            "positionCost": 0.5
+          },
+          "measurements": {
+            "index": 0,
+            "rotation": -0.6355163949049601,
+            "twist": -0.019062291825945953,
+            "boardInvalid": true,
+            "water": true,
+            "fullEntryComplete": true,
+            "firstGeometry": 12,
+            "x": 3.45827776919556,
+            "firstContactAngle": 48.9764316956177,
+            "entryAngle": 59.76664400031729,
+            "form": 0.05505550115306819,
+            "entryGeometryValid": false,
+            "entryLimbsValid": false,
+            "entryGeometryWorst": {
+              "footLineAngles": [
+                7.998994336476341,
+                8.095362818353385
+              ],
+              "handAxisAngles": [
+                16.433118713192513,
+                18.60555104794844
+              ],
+              "handSeparation": 0.4931104854201932,
+              "handHeightGap": 0.07188417447126838,
+              "kneeGap": 0.1682905027090731,
+              "ankleGap": 0.12860684344489856,
+              "toeGap": 0.11195079218895858,
+              "crossedLegs": false
+            },
+            "entryArmPositionValid": false,
+            "positionQualities": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "ascent": 0.2882882383532977,
+            "preparationBounces": 0,
+            "surfaceLateralSpeed": 1.0113783164987522,
+            "entryAngularSpeed": 4.368048426212596,
+            "maxLateral": 0.10623350804608976,
+            "takeoffVerticalSpeed": 2.364420424859498,
+            "departureLean": 47.67592157562553,
+            "time": 3.3059999999998575,
+            "positionQuality": 0.0
+          },
+          "practice": false,
+          "height": 10.0,
+          "apparatus": "platform",
+          "routinePoints": 0.0,
+          "routineFinished": false,
+          "auxiliaryPractice": false,
+          "index": 0,
+          "return": -5.947770267222779,
+          "postContactRotationDegrees": 16.640355792086023
+        },
+        {
+          "declaration": "5311A",
+          "category": 5,
+          "difficulty": 1.9,
+          "execution": 0.0,
+          "points": 0.0,
+          "trainingValue": 0.0,
+          "valid": false,
+          "clean": false,
+          "deductions": {
+            "takeoff": 1.0,
+            "position": 1.5787069372286855,
+            "entryAlignment": 6.0,
+            "entryForm": 1.9223012583879893,
+            "feet": 0.4904675930780522,
+            "legs": 0.07024248741536496,
+            "hands": 1.0,
+            "lateralEntry": 0.6271786192307649,
+            "distance": 0.0
+          },
+          "failures": [
+            "invalid takeoff or platform contact",
+            "declared somersault count not completed",
+            "declared twist count not completed",
+            "feet entered before head or hands",
+            "double bounce"
+          ],
+          "rotationError": 0.3864197335709826,
+          "twistError": 0.3674044996787829,
+          "entryAngle": 138.7841993112314,
+          "recognition": {
+            "somersaults": 0.0,
+            "twists": 0.0
+          },
+          "automatedJudge": true,
+          "splashIsProxy": true,
+          "judgeVersion": "self-declared-takeoff-and-whole-entry-v12",
+          "trainingRewardComponents": {
+            "total": -5.68393551197131,
+            "alignmentCost": 1.5,
+            "takeoffCost": 0.25,
+            "rotationCost": 0.26137975439665573,
+            "twistCost": 0.2503315337394402,
+            "positionCost": 0.3946767343071714
+          },
+          "measurements": {
+            "index": 1,
+            "rotation": -0.11358026642901742,
+            "twist": -0.13259550032121709,
+            "boardInvalid": true,
+            "water": true,
+            "fullEntryComplete": true,
+            "firstGeometry": 15,
+            "x": 0.9350776540152053,
+            "firstContactAngle": 138.53804128859463,
+            "entryAngle": 138.7841993112314,
+            "form": 0.03884937080600531,
+            "entryGeometryValid": false,
+            "entryLimbsValid": false,
+            "entryGeometryWorst": {
+              "footLineAngles": [
+                22.07104168851235,
+                21.975095263123364
+              ],
+              "handAxisAngles": [
+                172.36117019514498,
+                86.65038387722598
+              ],
+              "handSeparation": 0.8403392477598042,
+              "handHeightGap": 0.7576863856149529,
+              "kneeGap": 0.16613110721790625,
+              "ankleGap": 0.144048497483073,
+              "toeGap": 0.13196108302528348,
+              "crossedLegs": false
+            },
+            "entryArmPositionValid": false,
+            "positionQualities": [
+              0.21064653138565723,
+              0.23702214291714047,
+              0.1501334400575766,
+              0.2412471867565193
+            ],
+            "ascent": 0.32387398280223517,
+            "preparationBounces": 1,
+            "surfaceLateralSpeed": 1.8815358576922947,
+            "entryAngularSpeed": 6.855242558374481,
+            "maxLateral": 0.1381607391534234,
+            "takeoffVerticalSpeed": 2.5423936782934815,
+            "departureLean": 8.694138110086222,
+            "time": 3.599999999999825,
+            "positionQuality": 0.21064653138565723
+          },
+          "practice": false,
+          "height": 1.0,
+          "apparatus": "springboard",
+          "routinePoints": 0.0,
+          "routineFinished": false,
+          "auxiliaryPractice": false,
+          "index": 1,
+          "return": -5.930427402096029,
+          "postContactRotationDegrees": 81.69810091100213
+        },
+        {
+          "declaration": "302A",
+          "category": 3,
+          "difficulty": 1.8,
+          "execution": 0.0,
+          "points": 0.0,
+          "trainingValue": 0.0,
+          "valid": false,
+          "clean": false,
+          "deductions": {
+            "takeoff": 0.0,
+            "position": 1.5731844851887598,
+            "entryAlignment": 6.0,
+            "entryForm": 1.7487411370129369,
+            "feet": 0.7565558443206901,
+            "legs": 0.0271220750611402,
+            "hands": 0.0,
+            "lateralEntry": 0.32381006725734185,
+            "distance": 0.0
+          },
+          "failures": [
+            "invalid takeoff or platform contact",
+            "declared somersault count not completed"
+          ],
+          "rotationError": 0.8522799930471107,
+          "twistError": 0.020261230907670697,
+          "entryAngle": 70.8020381768606,
+          "recognition": {
+            "somersaults": 0.0,
+            "twists": 0.0
+          },
+          "automatedJudge": true,
+          "splashIsProxy": true,
+          "judgeVersion": "self-declared-takeoff-and-whole-entry-v12",
+          "trainingRewardComponents": {
+            "total": -5.116534211959394,
+            "alignmentCost": 1.5,
+            "takeoffCost": 0.0,
+            "rotationCost": 0.49313384715801867,
+            "twistCost": 0.01604696259115768,
+            "positionCost": 0.39329612129718994
+          },
+          "measurements": {
+            "index": 2,
+            "rotation": -0.1477200069528893,
+            "twist": -0.020261230907670697,
+            "boardInvalid": true,
+            "water": true,
+            "fullEntryComplete": true,
+            "firstGeometry": 15,
+            "x": 0.9817727953577811,
+            "firstContactAngle": 61.33472867818495,
+            "entryAngle": 70.8020381768606,
+            "form": 0.12562943149353156,
+            "entryGeometryValid": false,
+            "entryLimbsValid": false,
+            "entryGeometryWorst": {
+              "footLineAngles": [
+                34.045012994431055,
+                33.917984983747466
+              ],
+              "handAxisAngles": [
+                161.86004489595106,
+                104.90642804583557
+              ],
+              "handSeparation": 0.9158070587423007,
+              "handHeightGap": 0.7485836115415083,
+              "kneeGap": 0.16460214564185954,
+              "ankleGap": 0.13542441501222804,
+              "toeGap": 0.11511792023933935,
+              "crossedLegs": false
+            },
+            "entryArmPositionValid": false,
+            "positionQualities": [
+              0.21340775740562007,
+              0.25949062296035796,
+              0.1510402085580322,
+              0.25949062296035796
+            ],
+            "ascent": 0.358284901786349,
+            "preparationBounces": 0,
+            "surfaceLateralSpeed": 0.9714302017720255,
+            "entryAngularSpeed": 5.797798696751935,
+            "maxLateral": 0.5994648494687127,
+            "takeoffVerticalSpeed": 2.6629763703831495,
+            "departureLean": 12.436945490609501,
+            "time": 3.6779999999998165,
+            "positionQuality": 0.21340775740562007
+          },
+          "practice": false,
+          "height": 1.0,
+          "apparatus": "springboard",
+          "routinePoints": 0.0,
+          "routineFinished": false,
+          "auxiliaryPractice": false,
+          "index": 2,
+          "return": -5.374020274554709,
+          "postContactRotationDegrees": 65.3171936083623
+        },
+        {
+          "declaration": "401A",
+          "category": 4,
+          "difficulty": 1.8,
+          "execution": 0.0,
+          "points": 0.0,
+          "trainingValue": 0.0,
+          "valid": false,
+          "clean": false,
+          "deductions": {
+            "takeoff": 1.5,
+            "position": 2.0,
+            "entryAlignment": 6.0,
+            "entryForm": 1.9513735843309217,
+            "feet": 1.0,
+            "legs": 0.274019859263043,
+            "hands": 1.0,
+            "lateralEntry": 0.5227423447982215,
+            "distance": 0.0
+          },
+          "failures": [
+            "invalid takeoff or platform contact",
+            "declared somersault count not completed"
+          ],
+          "rotationError": 0.7259229686734304,
+          "twistError": 0.02148375157707097,
+          "entryAngle": 98.48708805907758,
+          "recognition": {
+            "somersaults": 0.0,
+            "twists": 0.0
+          },
+          "automatedJudge": true,
+          "splashIsProxy": true,
+          "judgeVersion": "self-declared-takeoff-and-whole-entry-v12",
+          "trainingRewardComponents": {
+            "total": -7.630290408526354,
+            "alignmentCost": 1.5,
+            "takeoffCost": 1.9896419090997544,
+            "rotationCost": 0.4366095693569966,
+            "twistCost": 0.017004982971556466,
+            "positionCost": 0.5
+          },
+          "measurements": {
+            "index": 3,
+            "rotation": 0.22592296867343045,
+            "twist": 0.02148375157707097,
+            "boardInvalid": true,
+            "water": true,
+            "fullEntryComplete": true,
+            "firstGeometry": 1,
+            "x": 1.3769257149273715,
+            "firstContactAngle": 98.48708805907758,
+            "entryAngle": 98.48708805907758,
+            "form": 0.024313207834539212,
+            "entryGeometryValid": false,
+            "entryLimbsValid": false,
+            "entryGeometryWorst": {
+              "footLineAngles": [
+                86.0694438866346,
+                86.05373749552247
+              ],
+              "handAxisAngles": [
+                123.61038189685823,
+                167.24364484270882
+              ],
+              "handSeparation": 0.6965977807631857,
+              "handHeightGap": 0.04107347126410743,
+              "kneeGap": 0.16909651917169577,
+              "ankleGap": 0.1848039718526086,
+              "toeGap": 0.17862764107254647,
+              "crossedLegs": false
+            },
+            "entryArmPositionValid": false,
+            "positionQualities": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "ascent": 0.0,
+            "preparationBounces": 0,
+            "surfaceLateralSpeed": 1.5682270343946643,
+            "entryAngularSpeed": 5.296712192393218,
+            "maxLateral": 0.2023493353132652,
+            "takeoffVerticalSpeed": -0.45856763639901793,
+            "departureLean": 13.93628861695068,
+            "time": 3.819999999999801,
+            "positionQuality": 0.0
+          },
+          "practice": false,
+          "height": 1.0,
+          "apparatus": "springboard",
+          "routinePoints": 0.0,
+          "routineFinished": false,
+          "auxiliaryPractice": false,
+          "index": 3,
+          "return": -7.884144088174253,
+          "postContactRotationDegrees": 92.82410671960459
+        },
+        {
+          "declaration": "401A",
+          "category": 4,
+          "difficulty": 1.7,
+          "execution": 0.0,
+          "points": 0.0,
+          "trainingValue": 0.0,
+          "valid": false,
+          "clean": false,
+          "deductions": {
+            "takeoff": 1.4595435979182656,
+            "position": 2.0,
+            "entryAlignment": 6.0,
+            "entryForm": 1.9148117496127437,
+            "feet": 0.16498594439760375,
+            "legs": 0.3033928620109566,
+            "hands": 1.0,
+            "lateralEntry": 0.7418027625207589,
+            "distance": 0.0
+          },
+          "failures": [
+            "declared somersault count not completed",
+            "feet entered before head or hands"
+          ],
+          "rotationError": 1.6042828176129265,
+          "twistError": 0.10783665653726868,
+          "entryAngle": 140.69741615477648,
+          "recognition": {
+            "somersaults": -1.0,
+            "twists": 0.0
+          },
+          "automatedJudge": true,
+          "splashIsProxy": true,
+          "judgeVersion": "self-declared-takeoff-and-whole-entry-v12",
+          "trainingRewardComponents": {
+            "total": -5.617337431819454,
+            "alignmentCost": 1.5,
+            "takeoffCost": 1.7384359158457143,
+            "rotationCost": 0.7657258618905088,
+            "twistCost": 0.08192732444771524,
+            "positionCost": 0.5
+          },
+          "measurements": {
+            "index": 0,
+            "rotation": 1.1042828176129265,
+            "twist": 0.10783665653726868,
+            "boardInvalid": false,
+            "water": true,
+            "fullEntryComplete": true,
+            "firstGeometry": 12,
+            "x": 3.3959269701096764,
+            "firstContactAngle": 140.69741615477648,
+            "entryAngle": 140.69741615477648,
+            "form": 0.0425941251936282,
+            "entryGeometryValid": false,
+            "entryLimbsValid": false,
+            "entryGeometryWorst": {
+              "footLineAngles": [
+                7.270133877983221,
+                7.4243674978921685
+              ],
+              "handAxisAngles": [
+                140.25857107333877,
+                104.26592698936318
+              ],
+              "handSeparation": 0.2970649436600882,
+              "handHeightGap": 0.1623678607071266,
+              "kneeGap": 0.1558123870937253,
+              "ankleGap": 0.19067857240219133,
+              "toeGap": 0.19078919636903574,
+              "crossedLegs": false
+            },
+            "entryArmPositionValid": false,
+            "positionQualities": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "ascent": 0.00809128041634688,
+            "preparationBounces": 0,
+            "surfaceLateralSpeed": 2.225408287562277,
+            "entryAngularSpeed": 14.680171702545882,
+            "maxLateral": 0.21815112833771366,
+            "takeoffVerticalSpeed": 0.39791619565078307,
+            "departureLean": 4.163720508441552,
+            "time": 3.155999999999874,
+            "positionQuality": 0.0
+          },
+          "practice": false,
+          "height": 10.0,
+          "apparatus": "platform",
+          "routinePoints": 0.0,
+          "routineFinished": false,
+          "auxiliaryPractice": false,
+          "index": 0,
+          "return": -5.661617641505472,
+          "postContactRotationDegrees": 72.72134285215306
+        },
+        {
+          "declaration": "401A",
+          "category": 4,
+          "difficulty": 1.8,
+          "execution": 0.0,
+          "points": 0.0,
+          "trainingValue": 0.0,
+          "valid": false,
+          "clean": false,
+          "deductions": {
+            "takeoff": 1.4930834117033547,
+            "position": 2.0,
+            "entryAlignment": 5.410033073189727,
+            "entryForm": 1.9422952071716004,
+            "feet": 1.0,
+            "legs": 0.08773647538983159,
+            "hands": 1.0,
+            "lateralEntry": 0.3206347500011362,
+            "distance": 0.0
+          },
+          "failures": [
+            "declared somersault count not completed"
+          ],
+          "rotationError": 0.8517163685546351,
+          "twistError": 0.024618941119970976,
+          "entryAngle": 54.100330731897266,
+          "recognition": {
+            "somersaults": -0.5,
+            "twists": 0.0
+          },
+          "automatedJudge": true,
+          "splashIsProxy": true,
+          "judgeVersion": "self-declared-takeoff-and-whole-entry-v12",
+          "trainingRewardComponents": {
+            "total": -5.279366226130456,
+            "alignmentCost": 1.3525082682974316,
+            "takeoffCost": 1.8268443461126689,
+            "rotationCost": 0.49289038061353985,
+            "twistCost": 0.019456622966173565,
+            "positionCost": 0.5
+          },
+          "measurements": {
+            "index": 2,
+            "rotation": 0.35171636855463506,
+            "twist": 0.024618941119970976,
+            "boardInvalid": false,
+            "water": true,
+            "fullEntryComplete": true,
+            "firstGeometry": 3,
+            "x": 1.4656393213336392,
+            "firstContactAngle": 54.100330731897266,
+            "entryAngle": 54.100330731897266,
+            "form": 0.02885239641419975,
+            "entryGeometryValid": false,
+            "entryLimbsValid": false,
+            "entryGeometryWorst": {
+              "footLineAngles": [
+                60.423082958979556,
+                58.29867146600546
+              ],
+              "handAxisAngles": [
+                81.9526984536019,
+                149.8022126776913
+              ],
+              "handSeparation": 0.8553010598923366,
+              "handHeightGap": 0.3798272655367453,
+              "kneeGap": 0.1706428887109101,
+              "ankleGap": 0.14754729507796632,
+              "toeGap": 0.1283068140323646,
+              "crossedLegs": false
+            },
+            "entryArmPositionValid": false,
+            "positionQualities": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "ascent": 0.0013833176593290863,
+            "preparationBounces": 0,
+            "surfaceLateralSpeed": 0.9619042500034087,
+            "entryAngularSpeed": 5.436041525105368,
+            "maxLateral": 0.1936530669453639,
+            "takeoffVerticalSpeed": 0.16726179179495845,
+            "departureLean": 12.738825145424167,
+            "time": 3.01199999999989,
+            "positionQuality": 0.0
+          },
+          "practice": false,
+          "height": 1.0,
+          "apparatus": "springboard",
+          "routinePoints": 0.0,
+          "routineFinished": false,
+          "auxiliaryPractice": false,
+          "index": 2,
+          "return": -5.320341519547242,
+          "postContactRotationDegrees": 60.108097811583455
+        },
+        {
+          "declaration": "5312A",
+          "category": 5,
+          "difficulty": 2.1,
+          "execution": 0.0,
+          "points": 0.0,
+          "trainingValue": 0.0,
+          "valid": false,
+          "clean": false,
+          "deductions": {
+            "takeoff": 0.0,
+            "position": 1.5896685765289054,
+            "entryAlignment": 6.0,
+            "entryForm": 1.9238782707848876,
+            "feet": 0.7444970731441324,
+            "legs": 0.01596349586191731,
+            "hands": 1.0,
+            "lateralEntry": 0.5163097447251959,
+            "distance": 0.0
+          },
+          "failures": [
+            "invalid takeoff or platform contact",
+            "declared somersault count not completed",
+            "declared twist count not completed",
+            "feet entered before head or hands"
+          ],
+          "rotationError": 0.32225898911868184,
+          "twistError": 0.900470265258783,
+          "entryAngle": 110.39648751552429,
+          "recognition": {
+            "somersaults": 0.0,
+            "twists": 0.0
+          },
+          "automatedJudge": true,
+          "splashIsProxy": true,
+          "judgeVersion": "self-declared-takeoff-and-whole-entry-v12",
+          "trainingRewardComponents": {
+            "total": -5.684733684556792,
+            "alignmentCost": 1.5,
+            "takeoffCost": 0.0,
+            "rotationCost": 0.22347330343291347,
+            "twistCost": 0.513681090862619,
+            "positionCost": 0.39741714413222634
+          },
+          "measurements": {
+            "index": 1,
+            "rotation": -0.17774101088131816,
+            "twist": -0.09952973474121694,
+            "boardInvalid": true,
+            "water": true,
+            "fullEntryComplete": true,
+            "firstGeometry": 15,
+            "x": 0.989394879445049,
+            "firstContactAngle": 109.2169978734105,
+            "entryAngle": 110.39648751552429,
+            "form": 0.038060864607556234,
+            "entryGeometryValid": false,
+            "entryLimbsValid": false,
+            "entryGeometryWorst": {
+              "footLineAngles": [
+                29.28108228410364,
+                33.50236829148596
+              ],
+              "handAxisAngles": [
+                115.00746585525332,
+                108.01334634944857
+              ],
+              "handSeparation": 0.8055404370902047,
+              "handHeightGap": 0.740994868785382,
+              "kneeGap": 0.1616459381120381,
+              "ankleGap": 0.13319269917238347,
+              "toeGap": 0.11284077618039474,
+              "crossedLegs": false
+            },
+            "entryArmPositionValid": false,
+            "positionQualities": [
+              0.2051657117355473,
+              0.24791329038681986,
+              0.14678472180650906,
+              0.2508521191233448
+            ],
+            "ascent": 0.3586235618752319,
+            "preparationBounces": 0,
+            "surfaceLateralSpeed": 1.5489292341755876,
+            "entryAngularSpeed": 5.013028398707188,
+            "maxLateral": 0.6608874507954884,
+            "takeoffVerticalSpeed": 2.6665807047123016,
+            "departureLean": 13.552256264178318,
+            "time": 3.483999999999838,
+            "positionQuality": 0.2051657117355473
+          },
+          "practice": false,
+          "height": 1.0,
+          "apparatus": "springboard",
+          "routinePoints": 0.0,
+          "routineFinished": false,
+          "auxiliaryPractice": false,
+          "index": 1,
+          "return": -5.93241710946063,
+          "postContactRotationDegrees": 49.57670042033223
+        },
+        {
+          "declaration": "302A",
+          "category": 3,
+          "difficulty": 1.8,
+          "execution": 0.0,
+          "points": 0.0,
+          "trainingValue": 0.0,
+          "valid": false,
+          "clean": false,
+          "deductions": {
+            "takeoff": 1.0,
+            "position": 1.5338172276320627,
+            "entryAlignment": 3.307633441488897,
+            "entryForm": 1.7812771904430544,
+            "feet": 1.0,
+            "legs": 0.14455075776118376,
+            "hands": 0.0,
+            "lateralEntry": 0.3341339348360622,
+            "distance": 0.0
+          },
+          "failures": [
+            "invalid takeoff or platform contact",
+            "declared somersault count not completed",
+            "double bounce"
+          ],
+          "rotationError": 0.9868393095908303,
+          "twistError": 0.019093721323235856,
+          "entryAngle": 33.07633441488897,
+          "recognition": {
+            "somersaults": 0.0,
+            "twists": 0.0
+          },
+          "automatedJudge": true,
+          "splashIsProxy": true,
+          "judgeVersion": "self-declared-takeoff-and-whole-entry-v12",
+          "trainingRewardComponents": {
+            "total": -4.8397201886532315,
+            "alignmentCost": 0.8269083603722243,
+            "takeoffCost": 0.25,
+            "rotationCost": 0.5492360715473972,
+            "twistCost": 0.015130979065519096,
+            "positionCost": 0.3834543069080157
+          },
+          "measurements": {
+            "index": 3,
+            "rotation": -0.013160690409169623,
+            "twist": -0.019093721323235856,
+            "boardInvalid": true,
+            "water": true,
+            "fullEntryComplete": true,
+            "firstGeometry": 15,
+            "x": 1.3772960813633273,
+            "firstContactAngle": 12.26675296251617,
+            "entryAngle": 33.07633441488897,
+            "form": 0.10936140477847275,
+            "entryGeometryValid": false,
+            "entryLimbsValid": false,
+            "entryGeometryWorst": {
+              "footLineAngles": [
+                48.735738842122544,
+                49.109260047253684
+              ],
+              "handAxisAngles": [
+                95.81578270349921,
+                63.98976382733023
+              ],
+              "handSeparation": 0.7654876153529607,
+              "handHeightGap": 0.5875714893403736,
+              "kneeGap": 0.17162882999462453,
+              "ankleGap": 0.15891015155223676,
+              "toeGap": 0.14484505060266348,
+              "crossedLegs": false
+            },
+            "entryArmPositionValid": false,
+            "positionQualities": [
+              0.23309138618396863,
+              0.22314864855992128,
+              0.0877275853979089,
+              0.23439840112243093
+            ],
+            "ascent": 0.373456745629311,
+            "preparationBounces": 1,
+            "surfaceLateralSpeed": 1.0024018045081866,
+            "entryAngularSpeed": 2.8806586434472052,
+            "maxLateral": 0.1964221726106225,
+            "takeoffVerticalSpeed": 2.711142709695036,
+            "departureLean": 1.8222956088573603,
+            "time": 3.5499999999998306,
+            "positionQuality": 0.23309138618396863
+          },
+          "practice": false,
+          "height": 1.0,
+          "apparatus": "springboard",
+          "routinePoints": 0.0,
+          "routineFinished": false,
+          "auxiliaryPractice": false,
+          "index": 3,
+          "return": -5.095598497047831,
+          "postContactRotationDegrees": 34.225958615162895
+        },
+        {
+          "declaration": "302A",
+          "category": 3,
+          "difficulty": 2.0,
+          "execution": 0.0,
+          "points": 0.0,
+          "trainingValue": 0.0,
+          "valid": false,
+          "clean": false,
+          "deductions": {
+            "takeoff": 0.8499680193748855,
+            "position": 1.6444076388991016,
+            "entryAlignment": 6.0,
+            "entryForm": 1.8890812617006163,
+            "feet": 0.2424221160279073,
+            "legs": 0.001440879353023783,
+            "hands": 0.0,
+            "lateralEntry": 0.30784656585157794,
+            "distance": 0.0
+          },
+          "failures": [
+            "invalid takeoff or platform contact",
+            "declared somersault count not completed",
+            "feet-first dive did not enter feet first"
+          ],
+          "rotationError": 0.4372964149751536,
+          "twistError": 0.03375443865950373,
+          "entryAngle": 155.8199456459661,
+          "recognition": {
+            "somersaults": 0.5,
+            "twists": 0.0
+          },
+          "automatedJudge": true,
+          "splashIsProxy": true,
+          "judgeVersion": "self-declared-takeoff-and-whole-entry-v12",
+          "trainingRewardComponents": {
+            "total": -5.133638684482549,
+            "alignmentCost": 1.5,
+            "takeoffCost": 0.2955701727151196,
+            "rotationCost": 0.2902110874356644,
+            "twistCost": 0.026557808873708785,
+            "positionCost": 0.4111019097247754
+          },
+          "measurements": {
+            "index": 0,
+            "rotation": -0.5627035850248464,
+            "twist": -0.03375443865950373,
+            "boardInvalid": true,
+            "water": true,
+            "fullEntryComplete": true,
+            "firstGeometry": 6,
+            "x": 3.6169294695174217,
+            "firstContactAngle": 155.8199456459661,
+            "entryAngle": 155.8199456459661,
+            "form": 0.05545936914969189,
+            "entryGeometryValid": true,
+            "entryLimbsValid": false,
+            "entryGeometryWorst": {
+              "footLineAngles": [
+                10.908995221255829,
+                10.777652631628332
+              ],
+              "handAxisAngles": [
+                29.272053359107744,
+                30.093197304047084
+              ],
+              "handSeparation": 0.5602431893140891,
+              "handHeightGap": 0.11423641752862146,
+              "kneeGap": 0.1653115545434742,
+              "ankleGap": 0.13028817587060476,
+              "toeGap": 0.11530559104091764,
+              "crossedLegs": false
+            },
+            "entryArmPositionValid": false,
+            "positionQualities": [
+              0.17779618055044918,
+              0.3495367526627046,
+              0.1282442034818142,
+              0.35034642547912503
+            ],
+            "ascent": 0.2750765496385805,
+            "preparationBounces": 0,
+            "surfaceLateralSpeed": 0.9235396975547339,
+            "entryAngularSpeed": 3.5068194483682356,
+            "maxLateral": 0.24773611139832424,
+            "takeoffVerticalSpeed": 2.310163933731934,
+            "departureLean": 47.64078454055047,
+            "time": 3.399999999999847,
+            "positionQuality": 0.17779618055044918
+          },
+          "practice": false,
+          "height": 10.0,
+          "apparatus": "platform",
+          "routinePoints": 0.0,
+          "routineFinished": false,
+          "auxiliaryPractice": false,
+          "index": 0,
+          "return": -5.398303342742565,
+          "postContactRotationDegrees": 9.863420706361763
+        },
+        {
+          "declaration": "303A",
+          "category": 3,
+          "difficulty": 2.7,
+          "execution": 0.0,
+          "points": 0.0,
+          "trainingValue": 0.0,
+          "valid": false,
+          "clean": false,
+          "deductions": {
+            "takeoff": 1.2825394315734158,
+            "position": 1.620107784388844,
+            "entryAlignment": 6.0,
+            "entryForm": 1.9455064920197833,
+            "feet": 0.7902479980256923,
+            "legs": 0.39536467931372915,
+            "hands": 1.0,
+            "lateralEntry": 0.5449020815896428,
+            "distance": 0.0
+          },
+          "failures": [
+            "invalid takeoff or platform contact",
+            "declared somersault count not completed",
+            "declared twist count not completed",
+            "double bounce",
+            "wrong rotation plane"
+          ],
+          "rotationError": 1.1438422222925406,
+          "twistError": 0.44601533783012925,
+          "entryAngle": 73.58065359900165,
+          "recognition": {
+            "somersaults": 0.5,
+            "twists": 0.5
+          },
+          "automatedJudge": true,
+          "splashIsProxy": true,
+          "judgeVersion": "self-declared-takeoff-and-whole-entry-v12",
+          "trainingRewardComponents": {
+            "total": -6.457909917436408,
+            "alignmentCost": 1.5,
+            "takeoffCost": 0.4787485538762875,
+            "rotationCost": 0.6100797201216197,
+            "twistCost": 0.2950493846040772,
+            "positionCost": 0.405026946097211
+          },
+          "measurements": {
+            "index": 2,
+            "rotation": -0.35615777770745943,
+            "twist": 0.44601533783012925,
+            "boardInvalid": true,
+            "water": true,
+            "fullEntryComplete": true,
+            "firstGeometry": 6,
+            "x": 0.723023887367299,
+            "firstContactAngle": 71.93295648941914,
+            "entryAngle": 73.58065359900165,
+            "form": 0.02724675399010837,
+            "entryGeometryValid": false,
+            "entryLimbsValid": false,
+            "entryGeometryWorst": {
+              "footLineAngles": [
+                33.267102781934184,
+                35.56115991115615
+              ],
+              "handAxisAngles": [
+                55.83160193009275,
+                80.47905974904407
+              ],
+              "handSeparation": 0.9820977033742578,
+              "handHeightGap": 0.9707237358397542,
+              "kneeGap": 0.19629660526505566,
+              "ankleGap": 0.20907293586274583,
+              "toeGap": 0.20957475280794655,
+              "crossedLegs": false
+            },
+            "entryArmPositionValid": false,
+            "positionQualities": [
+              0.189946107805578,
+              0.1967015459744455,
+              0.1707898272681368,
+              0.232684678051277
+            ],
+            "ascent": 0.2525658912051199,
+            "preparationBounces": 1,
+            "surfaceLateralSpeed": 1.6347062447689285,
+            "entryAngularSpeed": 3.580464376742025,
+            "maxLateral": 0.9028032662803309,
+            "takeoffVerticalSpeed": 2.2482175579965853,
+            "departureLean": 17.041599941955695,
+            "time": 3.6079999999998242,
+            "positionQuality": 0.189946107805578
+          },
+          "practice": false,
+          "height": 1.0,
+          "apparatus": "springboard",
+          "routinePoints": 0.0,
+          "routineFinished": false,
+          "auxiliaryPractice": false,
+          "index": 2,
+          "return": -6.706867726463315,
+          "postContactRotationDegrees": 56.911166676644875
+        },
+        {
+          "declaration": "402C",
+          "category": 4,
+          "difficulty": 1.6,
+          "execution": 0.0,
+          "points": 0.0,
+          "trainingValue": 0.0,
+          "valid": false,
+          "clean": false,
+          "deductions": {
+            "takeoff": 1.4910650267052585,
+            "position": 2.0,
+            "entryAlignment": 6.0,
+            "entryForm": 1.8848135160019015,
+            "feet": 1.0,
+            "legs": 0.29500314299273245,
+            "hands": 0.0,
+            "lateralEntry": 0.27985345591526856,
+            "distance": 0.0
+          },
+          "failures": [
+            "declared somersault count not completed",
+            "feet-first dive did not enter feet first"
+          ],
+          "rotationError": 1.2022918280249315,
+          "twistError": 0.006407949984335182,
+          "entryAngle": 119.90451425767486,
+          "recognition": {
+            "somersaults": 0.0,
+            "twists": 0.0
+          },
+          "automatedJudge": true,
+          "splashIsProxy": true,
+          "judgeVersion": "self-declared-takeoff-and-whole-entry-v12",
+          "trainingRewardComponents": {
+            "total": -5.319732354295621,
+            "alignmentCost": 1.5,
+            "takeoffCost": 1.8181059739666607,
+            "rotationCost": 0.6315988465128182,
+            "twistCost": 0.0051100050886677744,
+            "positionCost": 0.5
+          },
+          "measurements": {
+            "index": 3,
+            "rotation": 0.2022918280249315,
+            "twist": 0.006407949984335182,
+            "boardInvalid": false,
+            "water": true,
+            "fullEntryComplete": true,
+            "firstGeometry": 1,
+            "x": 1.5016004725881396,
+            "firstContactAngle": 72.84386952866846,
+            "entryAngle": 119.90451425767486,
+            "form": 0.0575932419990492,
+            "entryGeometryValid": false,
+            "entryLimbsValid": false,
+            "entryGeometryWorst": {
+              "footLineAngles": [
+                66.04844166728664,
+                65.9999056816159
+              ],
+              "handAxisAngles": [
+                141.4084272241467,
+                135.74908598310623
+              ],
+              "handSeparation": 0.8851415203495158,
+              "handHeightGap": 0.45771154491684307,
+              "kneeGap": 0.19463435053830802,
+              "ankleGap": 0.1890006285985465,
+              "toeGap": 0.18284330411058153,
+              "crossedLegs": false
+            },
+            "entryArmPositionValid": false,
+            "positionQualities": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "ascent": 0.001786994658948271,
+            "preparationBounces": 0,
+            "surfaceLateralSpeed": 0.8395603677458057,
+            "entryAngularSpeed": 3.708509419688517,
+            "maxLateral": 0.0517840510299803,
+            "takeoffVerticalSpeed": 0.19481453538597246,
+            "departureLean": 6.110585915420114,
+            "time": 3.01199999999989,
+            "positionQuality": 0.0
+          },
+          "practice": false,
+          "height": 1.0,
+          "apparatus": "springboard",
+          "routinePoints": 0.0,
+          "routineFinished": false,
+          "auxiliaryPractice": false,
+          "index": 3,
+          "return": -5.381736653206417,
+          "postContactRotationDegrees": 53.99425830654454
+        },
+        {
+          "declaration": "203A",
+          "category": 2,
+          "difficulty": 2.5,
+          "execution": 0.0,
+          "points": 0.0,
+          "trainingValue": 0.0,
+          "valid": false,
+          "clean": false,
+          "deductions": {
+            "takeoff": 2.1862721153977684,
+            "position": 1.7525488528647386,
+            "entryAlignment": 5.867700240285691,
+            "entryForm": 1.9262830789521086,
+            "feet": 0.9509202968884761,
+            "legs": 0.058380548273212346,
+            "hands": 1.0,
+            "lateralEntry": 0.8713784514840418,
+            "distance": 0.0
+          },
+          "failures": [
+            "declared somersault count not completed",
+            "entry did not complete"
+          ],
+          "rotationError": 1.162983959686784,
+          "twistError": 0.013731008202923202,
+          "entryAngle": 58.67700240285691,
+          "recognition": {
+            "somersaults": 0.5,
+            "twists": 0.0
+          },
+          "automatedJudge": true,
+          "splashIsProxy": true,
+          "judgeVersion": "self-declared-takeoff-and-whole-entry-v12",
+          "trainingRewardComponents": {
+            "total": -7.478477448534532,
+            "alignmentCost": 1.4669250600714228,
+            "takeoffCost": 2.2435735227535685,
+            "rotationCost": 0.6171909849377389,
+            "twistCost": 0.010910073656157003,
+            "positionCost": 0.43813721321618465
+          },
+          "measurements": {
+            "index": 1,
+            "rotation": 0.337016040313216,
+            "twist": -0.013731008202923202,
+            "boardInvalid": false,
+            "water": true,
+            "fullEntryComplete": false,
+            "firstGeometry": 3,
+            "x": 1.5931951597108387,
+            "firstContactAngle": 58.67700240285691,
+            "entryAngle": 58.67700240285691,
+            "form": 0.03685846052394572,
+            "entryGeometryValid": false,
+            "entryLimbsValid": false,
+            "entryGeometryWorst": {
+              "footLineAngles": [
+                42.78799250681367,
+                42.791413359981426
+              ],
+              "handAxisAngles": [
+                66.24687967865012,
+                111.96120601292712
+              ],
+              "handSeparation": 0.7671015941568952,
+              "handHeightGap": 0.5781140128078062,
+              "kneeGap": 0.1662949197489688,
+              "ankleGap": 0.14167610965464247,
+              "toeGap": 0.12454888657309418,
+              "crossedLegs": false
+            },
+            "entryArmPositionValid": false,
+            "positionQualities": [
+              0.12372557356763068,
+              0.22856153716377245,
+              0.16973516590785176,
+              0.22856153716377245
+            ],
+            "ascent": 0.0,
+            "preparationBounces": 0,
+            "surfaceLateralSpeed": 2.6141353544521255,
+            "entryAngularSpeed": 6.4846459419512055,
+            "maxLateral": 0.03754256869464397,
+            "takeoffVerticalSpeed": -0.7880219756165059,
+            "departureLean": 45.882245192899575,
+            "time": 3.653999999999819,
+            "positionQuality": 0.12372557356763068
+          },
+          "practice": false,
+          "height": 1.0,
+          "apparatus": "springboard",
+          "routinePoints": 0.0,
+          "routineFinished": false,
+          "auxiliaryPractice": false,
+          "index": 1,
+          "return": -7.518227818942705,
+          "postContactRotationDegrees": 136.60773259690237
+        },
+        {
+          "declaration": "202A",
+          "category": 2,
+          "difficulty": 1.9,
+          "execution": 0.0,
+          "points": 0.0,
+          "trainingValue": 0.0,
+          "valid": false,
+          "clean": false,
+          "deductions": {
+            "takeoff": 1.6599944105946443,
+            "position": 1.654234481328427,
+            "entryAlignment": 6.0,
+            "entryForm": 1.8442313140698543,
+            "feet": 0.15360983135504933,
+            "legs": 0.0,
+            "hands": 0.0,
+            "lateralEntry": 0.21444283016538793,
+            "distance": 0.0
+          },
+          "failures": [
+            "declared somersault count not completed",
+            "feet-first dive did not enter feet first"
+          ],
+          "rotationError": 0.2864979123315823,
+          "twistError": 0.03857002716202838,
+          "entryAngle": 103.13003516202905,
+          "recognition": {
+            "somersaults": 0.5,
+            "twists": 0.0
+          },
+          "automatedJudge": true,
+          "splashIsProxy": true,
+          "judgeVersion": "self-declared-takeoff-and-whole-entry-v12",
+          "trainingRewardComponents": {
+            "total": -4.546575178237699,
+            "alignmentCost": 1.5,
+            "takeoffCost": 1.8481307455163638,
+            "rotationCost": 0.20153898399033865,
+            "twistCost": 0.030275834501316524,
+            "positionCost": 0.4135586203321068
+          },
+          "measurements": {
+            "index": 0,
+            "rotation": 0.7135020876684177,
+            "twist": 0.03857002716202838,
+            "boardInvalid": false,
+            "water": true,
+            "fullEntryComplete": true,
+            "firstGeometry": 9,
+            "x": 3.818994508989343,
+            "firstContactAngle": 103.13003516202905,
+            "entryAngle": 103.13003516202905,
+            "form": 0.07788434296507286,
+            "entryGeometryValid": true,
+            "entryLimbsValid": false,
+            "entryGeometryWorst": {
+              "footLineAngles": [
+                6.91244241097722,
+                6.875658679530749
+              ],
+              "handAxisAngles": [
+                81.21941898896789,
+                30.155755937984864
+              ],
+              "handSeparation": 0.5352740252141488,
+              "handHeightGap": 0.42207248092766037,
+              "kneeGap": 0.15554076463744632,
+              "ankleGap": 0.12833932892419084,
+              "toeGap": 0.11513347690246353,
+              "crossedLegs": false
+            },
+            "entryArmPositionValid": false,
+            "positionQualities": [
+              0.17288275933578642,
+              0.2832423264649939,
+              0.13516870750021523,
+              0.2832423264649939
+            ],
+            "ascent": 0.002639809441977614,
+            "preparationBounces": 0,
+            "surfaceLateralSpeed": 0.6433284904961638,
+            "entryAngularSpeed": 4.009357781642569,
+            "maxLateral": 0.12779384739339017,
+            "takeoffVerticalSpeed": 0.23227396930282132,
+            "departureLean": 22.793705601203957,
+            "time": 3.2399999999998648,
+            "positionQuality": 0.17288275933578642
+          },
+          "practice": false,
+          "height": 10.0,
+          "apparatus": "platform",
+          "routinePoints": 0.0,
+          "routineFinished": false,
+          "auxiliaryPractice": false,
+          "index": 0,
+          "return": -4.579238416308456,
+          "postContactRotationDegrees": 12.85411415810345
+        },
+        {
+          "declaration": "203A",
+          "category": 2,
+          "difficulty": 2.5,
+          "execution": 0.0,
+          "points": 0.0,
+          "trainingValue": 0.0,
+          "valid": false,
+          "clean": false,
+          "deductions": {
+            "takeoff": 2.0961232218408408,
+            "position": 1.6459913508774897,
+            "entryAlignment": 6.0,
+            "entryForm": 1.9354155623404197,
+            "feet": 1.0,
+            "legs": 0.15932708892332767,
+            "hands": 1.0,
+            "lateralEntry": 0.27527046884596235,
+            "distance": 0.0
+          },
+          "failures": [
+            "declared somersault count not completed"
+          ],
+          "rotationError": 1.268483621199937,
+          "twistError": 0.01946305034496669,
+          "entryAngle": 96.61646148215084,
+          "recognition": {
+            "somersaults": 0.0,
+            "twists": 0.0
+          },
+          "automatedJudge": true,
+          "splashIsProxy": true,
+          "judgeVersion": "self-declared-takeoff-and-whole-entry-v12",
+          "trainingRewardComponents": {
+            "total": -5.852955540035082,
+            "alignmentCost": 1.5,
+            "takeoffCost": 2.178244288326801,
+            "rotationCost": 0.6552892799955202,
+            "twistCost": 0.015420853965962086,
+            "positionCost": 0.41149783771937243
+          },
+          "measurements": {
+            "index": 3,
+            "rotation": 0.231516378800063,
+            "twist": 0.01946305034496669,
+            "boardInvalid": false,
+            "water": true,
+            "fullEntryComplete": true,
+            "firstGeometry": 1,
+            "x": 1.607489064489696,
+            "firstContactAngle": 96.61646148215084,
+            "entryAngle": 96.61646148215084,
+            "form": 0.03229221882979017,
+            "entryGeometryValid": false,
+            "entryLimbsValid": false,
+            "entryGeometryWorst": {
+              "footLineAngles": [
+                68.97393531771087,
+                68.97901648728738
+              ],
+              "handAxisAngles": [
+                124.9334968247274,
+                139.65433148659
+              ],
+              "handSeparation": 0.5663816622312794,
+              "handHeightGap": 0.15997383692539358,
+              "kneeGap": 0.16085995869649375,
+              "ankleGap": 0.16186541778466554,
+              "toeGap": 0.14327792681385668,
+              "crossedLegs": false
+            },
+            "entryArmPositionValid": false,
+            "positionQualities": [
+              0.17700432456125514,
+              0.2704381694554629,
+              0.14723156441029286,
+              0.2704381694554629
+            ],
+            "ascent": 0.0,
+            "preparationBounces": 0,
+            "surfaceLateralSpeed": 0.825811406537887,
+            "entryAngularSpeed": 2.710235091442337,
+            "maxLateral": 0.15495767058256582,
+            "takeoffVerticalSpeed": -0.6168539314663615,
+            "departureLean": 41.82554498283783,
+            "time": 3.235999999999865,
+            "positionQuality": 0.17700432456125514
+          },
+          "practice": false,
+          "height": 1.0,
+          "apparatus": "springboard",
+          "routinePoints": 0.0,
+          "routineFinished": false,
+          "auxiliaryPractice": false,
+          "index": 3,
+          "return": -5.9039783430225725,
+          "postContactRotationDegrees": 32.62184166590864
+        },
+        {
+          "declaration": "5311A",
+          "category": 5,
+          "difficulty": 1.9,
+          "execution": 0.0,
+          "points": 0.0,
+          "trainingValue": 0.0,
+          "valid": false,
+          "clean": false,
+          "deductions": {
+            "takeoff": 1.0,
+            "position": 1.609068045741868,
+            "entryAlignment": 6.0,
+            "entryForm": 1.9298572124523603,
+            "feet": 0.8192547115482429,
+            "legs": 0.059684667485769144,
+            "hands": 1.0,
+            "lateralEntry": 0.2564414520474667,
+            "distance": 0.0
+          },
+          "failures": [
+            "invalid takeoff or platform contact",
+            "declared somersault count not completed",
+            "declared twist count not completed",
+            "feet entered before head or hands",
+            "double bounce"
+          ],
+          "rotationError": 0.37767786598755476,
+          "twistError": 0.4703316026661887,
+          "entryAngle": 135.74979230738887,
+          "recognition": {
+            "somersaults": 0.0,
+            "twists": 0.0
+          },
+          "automatedJudge": true,
+          "splashIsProxy": true,
+          "judgeVersion": "self-declared-takeoff-and-whole-entry-v12",
+          "trainingRewardComponents": {
+            "total": -5.733286387454684,
+            "alignmentCost": 1.5,
+            "takeoffCost": 0.25,
+            "rotationCost": 0.2563195008187027,
+            "twistCost": 0.30839036431705485,
+            "positionCost": 0.402267011435467
+          },
+          "measurements": {
+            "index": 2,
+            "rotation": -0.12232213401244522,
+            "twist": -0.029668397333811325,
+            "boardInvalid": true,
+            "water": true,
+            "fullEntryComplete": true,
+            "firstGeometry": 15,
+            "x": 1.0467298947241448,
+            "firstContactAngle": 135.7330361226286,
+            "entryAngle": 135.74979230738887,
+            "form": 0.03507139377381987,
+            "entryGeometryValid": false,
+            "entryLimbsValid": false,
+            "entryGeometryWorst": {
+              "footLineAngles": [
+                36.866462019670934,
+                36.4252300182128
+              ],
+              "handAxisAngles": [
+                168.26646203834912,
+                93.00983457251918
+              ],
+              "handSeparation": 0.8955423475156463,
+              "handHeightGap": 0.4966724756399542,
+              "kneeGap": 0.15650730412956046,
+              "ankleGap": 0.14193693349715383,
+              "toeGap": 0.11503042192243058,
+              "crossedLegs": false
+            },
+            "entryArmPositionValid": false,
+            "positionQualities": [
+              0.19546597712906597,
+              0.23260513542479758,
+              0.16712022736899163,
+              0.2362937531001677
+            ],
+            "ascent": 0.3488598306967581,
+            "preparationBounces": 1,
+            "surfaceLateralSpeed": 0.7693243561424001,
+            "entryAngularSpeed": 6.392346136723744,
+            "maxLateral": 0.09996818314249589,
+            "takeoffVerticalSpeed": 2.624074704365916,
+            "departureLean": 11.30055163055823,
+            "time": 3.627999999999822,
+            "positionQuality": 0.19546597712906597
+          },
+          "practice": false,
+          "height": 1.0,
+          "apparatus": "springboard",
+          "routinePoints": 0.0,
+          "routineFinished": false,
+          "auxiliaryPractice": false,
+          "index": 2,
+          "return": -5.980134856275072,
+          "postContactRotationDegrees": 70.37531724540479
+        },
+        {
+          "declaration": "302A",
+          "category": 3,
+          "difficulty": 1.8,
+          "execution": 0.0,
+          "points": 0.0,
+          "trainingValue": 0.0,
+          "valid": false,
+          "clean": false,
+          "deductions": {
+            "takeoff": 1.0,
+            "position": 1.5524621989915786,
+            "entryAlignment": 6.0,
+            "entryForm": 1.6339636792741294,
+            "feet": 0.7718659005520022,
+            "legs": 0.21074027654167604,
+            "hands": 0.0,
+            "lateralEntry": 0.5687385426434791,
+            "distance": 0.0
+          },
+          "failures": [
+            "invalid takeoff or platform contact",
+            "declared somersault count not completed",
+            "double bounce"
+          ],
+          "rotationError": 0.8516244952956176,
+          "twistError": 0.155819878128758,
+          "entryAngle": 78.86462233063389,
+          "recognition": {
+            "somersaults": 0.0,
+            "twists": 0.0
+          },
+          "automatedJudge": true,
+          "splashIsProxy": true,
+          "judgeVersion": "self-declared-takeoff-and-whole-entry-v12",
+          "trainingRewardComponents": {
+            "total": -5.54314129165158,
+            "alignmentCost": 1.5,
+            "takeoffCost": 0.25,
+            "rotationCost": 0.4928506874770282,
+            "twistCost": 0.11584795467383467,
+            "positionCost": 0.38811554974789464
+          },
+          "measurements": {
+            "index": 1,
+            "rotation": -0.14837550470438246,
+            "twist": -0.155819878128758,
+            "boardInvalid": true,
+            "water": true,
+            "fullEntryComplete": true,
+            "firstGeometry": 15,
+            "x": 1.027696000301075,
+            "firstContactAngle": 54.58499779013278,
+            "entryAngle": 78.86462233063389,
+            "form": 0.18301816036293522,
+            "entryGeometryValid": false,
+            "entryLimbsValid": false,
+            "entryGeometryWorst": {
+              "footLineAngles": [
+                33.336100082050685,
+                34.7339655248401
+              ],
+              "handAxisAngles": [
+                137.6211787115975,
+                71.62881336199331
+              ],
+              "handSeparation": 0.8108750459621984,
+              "handHeightGap": 0.8032769269671584,
+              "kneeGap": 0.18419526329898242,
+              "ankleGap": 0.1721480553083352,
+              "toeGap": 0.16301302307933385,
+              "crossedLegs": false
+            },
+            "entryArmPositionValid": false,
+            "positionQualities": [
+              0.22376890050421072,
+              0.23661091705056353,
+              0.12341599968390492,
+              0.24465996379797594
+            ],
+            "ascent": 0.31820793180835333,
+            "preparationBounces": 1,
+            "surfaceLateralSpeed": 1.7062156279304372,
+            "entryAngularSpeed": 6.322145281330381,
+            "maxLateral": 0.25304498560356503,
+            "takeoffVerticalSpeed": 2.514182584861479,
+            "departureLean": 10.504139715948236,
+            "time": 3.7939999999998038,
+            "positionQuality": 0.22376890050421072
+          },
+          "practice": false,
+          "height": 1.0,
+          "apparatus": "springboard",
+          "routinePoints": 0.0,
+          "routineFinished": false,
+          "auxiliaryPractice": false,
+          "index": 1,
+          "return": -5.801156751998292,
+          "postContactRotationDegrees": 83.53327951938023
+        },
+        {
+          "declaration": "5311A",
+          "category": 5,
+          "difficulty": 2.1,
+          "execution": 0.0,
+          "points": 0.0,
+          "trainingValue": 0.0,
+          "valid": false,
+          "clean": false,
+          "deductions": {
+            "takeoff": 0.767094773429385,
+            "position": 1.6939008959325759,
+            "entryAlignment": 6.0,
+            "entryForm": 1.895120912977977,
+            "feet": 0.26248107238000057,
+            "legs": 0.0,
+            "hands": 1.0,
+            "lateralEntry": 0.6449468958104002,
+            "distance": 0.0
+          },
+          "failures": [
+            "invalid takeoff or platform contact",
+            "declared twist count not completed",
+            "feet entered before head or hands"
+          ],
+          "rotationError": 0.14628474296788208,
+          "twistError": 0.49431273889396893,
+          "entryAngle": 66.24780137124264,
+          "recognition": {
+            "somersaults": 0.5,
+            "twists": 0.0
+          },
+          "automatedJudge": true,
+          "splashIsProxy": true,
+          "judgeVersion": "self-declared-takeoff-and-whole-entry-v12",
+          "trainingRewardComponents": {
+            "total": -5.496440096802793,
+            "alignmentCost": 1.5,
+            "takeoffCost": 0.19177369335734626,
+            "rotationCost": 0.10922084339435359,
+            "twistCost": 0.32133311577585416,
+            "positionCost": 0.42347522398314397
+          },
+          "measurements": {
+            "index": 0,
+            "rotation": -0.6462847429678821,
+            "twist": 0.0056872611060310675,
+            "boardInvalid": true,
+            "water": true,
+            "fullEntryComplete": true,
+            "firstGeometry": 15,
+            "x": 2.8441763599880585,
+            "firstContactAngle": 54.10246166645962,
+            "entryAngle": 66.24780137124264,
+            "form": 0.052439543511011544,
+            "entryGeometryValid": false,
+            "entryLimbsValid": false,
+            "entryGeometryWorst": {
+              "footLineAngles": [
+                11.76623539676535,
+                11.811648257100027
+              ],
+              "handAxisAngles": [
+                44.97934879487284,
+                21.561771860478665
+              ],
+              "handSeparation": 0.8358374235967271,
+              "handHeightGap": 0.03715433268856572,
+              "kneeGap": 0.16910787255637624,
+              "ankleGap": 0.12906859742781626,
+              "toeGap": 0.11194681910712033,
+              "crossedLegs": false
+            },
+            "entryArmPositionValid": false,
+            "positionQualities": [
+              0.1530495520337121,
+              0.23057987665657664,
+              0.17431127033368238,
+              0.230612468796426
+            ],
+            "ascent": 0.3063703770775732,
+            "preparationBounces": 0,
+            "surfaceLateralSpeed": 1.9348406874312007,
+            "entryAngularSpeed": 5.4899468188961285,
+            "maxLateral": 0.3053705536455128,
+            "takeoffVerticalSpeed": 2.432579100672095,
+            "departureLean": 49.519264804322326,
+            "time": 3.411999999999846,
+            "positionQuality": 0.1530495520337121
+          },
+          "practice": false,
+          "height": 10.0,
+          "apparatus": "platform",
+          "routinePoints": 0.0,
+          "routineFinished": false,
+          "auxiliaryPractice": false,
+          "index": 0,
+          "return": -5.790957522125154,
+          "postContactRotationDegrees": 20.940432718315403
+        },
+        {
+          "declaration": "203A",
+          "category": 2,
+          "difficulty": 2.5,
+          "execution": 0.0,
+          "points": 0.0,
+          "trainingValue": 0.0,
+          "valid": false,
+          "clean": false,
+          "deductions": {
+            "takeoff": 1.6138662587014259,
+            "position": 1.682643834632172,
+            "entryAlignment": 6.0,
+            "entryForm": 1.9361727767940058,
+            "feet": 1.0,
+            "legs": 0.23281937304122452,
+            "hands": 1.0,
+            "lateralEntry": 0.18515648015554997,
+            "distance": 0.0
+          },
+          "failures": [
+            "declared somersault count not completed"
+          ],
+          "rotationError": 1.2493666225739948,
+          "twistError": 0.009192780363985222,
+          "entryAngle": 89.77210191495031,
+          "recognition": {
+            "somersaults": 0.5,
+            "twists": 0.0
+          },
+          "automatedJudge": true,
+          "splashIsProxy": true,
+          "judgeVersion": "self-declared-takeoff-and-whole-entry-v12",
+          "trainingRewardComponents": {
+            "total": -5.451363264196388,
+            "alignmentCost": 1.5,
+            "takeoffCost": 1.786325580482608,
+            "rotationCost": 0.6485189404073908,
+            "twistCost": 0.007320627150651272,
+            "positionCost": 0.420660958658043
+          },
+          "measurements": {
+            "index": 2,
+            "rotation": 0.2506333774260053,
+            "twist": 0.009192780363985222,
+            "boardInvalid": false,
+            "water": true,
+            "fullEntryComplete": true,
+            "firstGeometry": 1,
+            "x": 1.7892160694623978,
+            "firstContactAngle": 89.77210191495031,
+            "entryAngle": 89.77210191495031,
+            "form": 0.03191361160299708,
+            "entryGeometryValid": false,
+            "entryLimbsValid": false,
+            "entryGeometryWorst": {
+              "footLineAngles": [
+                54.8477424631407,
+                54.87627640825071
+              ],
+              "handAxisAngles": [
+                110.4678845135208,
+                140.81616565236433
+              ],
+              "handSeparation": 0.5177297727048938,
+              "handHeightGap": 0.23085576678983377,
+              "kneeGap": 0.17213402429919705,
+              "ankleGap": 0.1765638746082449,
+              "toeGap": 0.16675985278239747,
+              "crossedLegs": false
+            },
+            "entryArmPositionValid": false,
+            "positionQualities": [
+              0.15867808268391406,
+              0.23193824394966256,
+              0.16089046215634803,
+              0.23193824394966256
+            ],
+            "ascent": 0.006981380000699811,
+            "preparationBounces": 0,
+            "surfaceLateralSpeed": 0.5554694404666499,
+            "entryAngularSpeed": 3.8771070313500875,
+            "maxLateral": 0.032138552885907244,
+            "takeoffVerticalSpeed": 0.3754788700949966,
+            "departureLean": 21.694792141721624,
+            "time": 2.957999999999896,
+            "positionQuality": 0.15867808268391406
+          },
+          "practice": false,
+          "height": 1.0,
+          "apparatus": "springboard",
+          "routinePoints": 0.0,
+          "routineFinished": false,
+          "auxiliaryPractice": false,
+          "index": 2,
+          "return": -5.512252498144761,
+          "postContactRotationDegrees": 74.2174954757497
+        },
+        {
+          "declaration": "5311A",
+          "category": 5,
+          "difficulty": 1.9,
+          "execution": 0.0,
+          "points": 0.0,
+          "trainingValue": 0.0,
+          "valid": false,
+          "clean": false,
+          "deductions": {
+            "takeoff": 0.0,
+            "position": 1.585926032654267,
+            "entryAlignment": 6.0,
+            "entryForm": 1.9216404610086009,
+            "feet": 0.7657310683674636,
+            "legs": 0.5797566305044682,
+            "hands": 1.0,
+            "lateralEntry": 0.27451475191739566,
+            "distance": 0.0
+          },
+          "failures": [
+            "invalid takeoff or platform contact",
+            "declared somersault count not completed",
+            "declared twist count not completed",
+            "feet entered before head or hands"
+          ],
+          "rotationError": 0.34718389517090786,
+          "twistError": 0.43229583623962164,
+          "entryAngle": 128.43539144780257,
+          "recognition": {
+            "somersaults": 0.0,
+            "twists": 0.0
+          },
+          "automatedJudge": true,
+          "splashIsProxy": true,
+          "judgeVersion": "self-declared-takeoff-and-whole-entry-v12",
+          "trainingRewardComponents": {
+            "total": -5.557728273626587,
+            "alignmentCost": 1.5,
+            "takeoffCost": 0.0,
+            "rotationCost": 0.23841312810987447,
+            "twistCost": 0.2874229094036634,
+            "positionCost": 0.39648150816356675
+          },
+          "measurements": {
+            "index": 3,
+            "rotation": -0.15281610482909214,
+            "twist": -0.06770416376037838,
+            "boardInvalid": true,
+            "water": true,
+            "fullEntryComplete": true,
+            "firstGeometry": 15,
+            "x": 1.1469349743585262,
+            "firstContactAngle": 122.39937619252436,
+            "entryAngle": 128.43539144780257,
+            "form": 0.039179769495699616,
+            "entryGeometryValid": false,
+            "entryLimbsValid": false,
+            "entryGeometryWorst": {
+              "footLineAngles": [
+                31.98407003698805,
+                34.45789807653586
+              ],
+              "handAxisAngles": [
+                161.6830255510741,
+                106.0122940895441
+              ],
+              "handSeparation": 0.731318717144988,
+              "handHeightGap": 0.5516374175920978,
+              "kneeGap": 0.22673325771649452,
+              "ankleGap": 0.24595132610089365,
+              "toeGap": 0.26037186479354024,
+              "crossedLegs": false
+            },
+            "entryArmPositionValid": false,
+            "positionQualities": [
+              0.20703698367286652,
+              0.2683673294394359,
+              0.1694808956751865,
+              0.2695269381633142
+            ],
+            "ascent": 0.38966029110537875,
+            "preparationBounces": 0,
+            "surfaceLateralSpeed": 0.823544255752187,
+            "entryAngularSpeed": 5.320092040158036,
+            "maxLateral": 0.35598701966118795,
+            "takeoffVerticalSpeed": 2.769902040933275,
+            "departureLean": 12.7147904788036,
+            "time": 3.5579999999998297,
+            "positionQuality": 0.20703698367286652
+          },
+          "practice": false,
+          "height": 1.0,
+          "apparatus": "springboard",
+          "routinePoints": 0.0,
+          "routineFinished": false,
+          "auxiliaryPractice": false,
+          "index": 3,
+          "return": -5.815998017529182,
+          "postContactRotationDegrees": 74.53831471339784
+        },
+        {
+          "declaration": "401A",
+          "category": 4,
+          "difficulty": 1.8,
+          "execution": 0.0,
+          "points": 0.0,
+          "trainingValue": 0.0,
+          "valid": false,
+          "clean": false,
+          "deductions": {
+            "takeoff": 1.4982855007175653,
+            "position": 2.0,
+            "entryAlignment": 6.0,
+            "entryForm": 1.9409343778503243,
+            "feet": 1.0,
+            "legs": 0.1822084296171246,
+            "hands": 1.0,
+            "lateralEntry": 0.3093725314448062,
+            "distance": 0.0
+          },
+          "failures": [
+            "declared somersault count not completed"
+          ],
+          "rotationError": 0.8318123179412072,
+          "twistError": 0.01669587722593334,
+          "entryAngle": 60.60236052410969,
+          "recognition": {
+            "somersaults": -0.5,
+            "twists": 0.0
+          },
+          "automatedJudge": true,
+          "splashIsProxy": true,
+          "judgeVersion": "self-declared-takeoff-and-whole-entry-v12",
+          "trainingRewardComponents": {
+            "total": -5.457194935740756,
+            "alignmentCost": 1.5,
+            "takeoffCost": 1.851575022851578,
+            "rotationCost": 0.4842446515722329,
+            "twistCost": 0.013246426588882077,
+            "positionCost": 0.5
+          },
+          "measurements": {
+            "index": 1,
+            "rotation": 0.33181231794120725,
+            "twist": -0.01669587722593334,
+            "boardInvalid": false,
+            "water": true,
+            "fullEntryComplete": true,
+            "firstGeometry": 3,
+            "x": 1.6029521718640931,
+            "firstContactAngle": 60.60236052410969,
+            "entryAngle": 60.60236052410969,
+            "form": 0.029532811074837812,
+            "entryGeometryValid": false,
+            "entryLimbsValid": false,
+            "entryGeometryWorst": {
+              "footLineAngles": [
+                67.96166234267226,
+                67.9515871848963
+              ],
+              "handAxisAngles": [
+                74.4680055583639,
+                134.29737056912572
+              ],
+              "handSeparation": 0.7475490232776038,
+              "handHeightGap": 0.42598915257858994,
+              "kneeGap": 0.16657330855144067,
+              "ankleGap": 0.16644168592342493,
+              "toeGap": 0.15486416299284536,
+              "crossedLegs": false
+            },
+            "entryArmPositionValid": false,
+            "positionQualities": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "ascent": 0.00034289985648694454,
+            "preparationBounces": 0,
+            "surfaceLateralSpeed": 0.9281175943344185,
+            "entryAngularSpeed": 4.640952244935668,
+            "maxLateral": 0.10041056911721147,
+            "takeoffVerticalSpeed": 0.08741341122476093,
+            "departureLean": 11.068537466992263,
+            "time": 3.01199999999989,
+            "positionQuality": 0.0
+          },
+          "practice": false,
+          "height": 1.0,
+          "apparatus": "springboard",
+          "routinePoints": 0.0,
+          "routineFinished": false,
+          "auxiliaryPractice": false,
+          "index": 1,
+          "return": -5.498288970666067,
+          "postContactRotationDegrees": 65.4318105215957
+        },
+        {
+          "declaration": "612A",
+          "category": 6,
+          "difficulty": 2.0,
+          "execution": 0.0,
+          "points": 0.0,
+          "trainingValue": 0.0,
+          "valid": false,
+          "clean": false,
+          "deductions": {
+            "takeoff": 2.5,
+            "position": 2.0,
+            "entryAlignment": 6.0,
+            "entryForm": 1.9623308538017572,
+            "feet": 0.4686608338083027,
+            "legs": 0.631786102933638,
+            "hands": 1.0,
+            "lateralEntry": 1.0,
+            "distance": 2.0
+          },
+          "failures": [
+            "invalid takeoff or platform contact",
+            "declared somersault count not completed",
+            "declared twist count not completed",
+            "wrong rotation plane"
+          ],
+          "rotationError": 2.495799774519468,
+          "twistError": 0.524836325970694,
+          "entryAngle": 166.69179951281149,
+          "recognition": {
+            "somersaults": -1.5,
+            "twists": 0.5
+          },
+          "automatedJudge": true,
+          "splashIsProxy": true,
+          "judgeVersion": "self-declared-takeoff-and-whole-entry-v12",
+          "trainingRewardComponents": {
+            "total": -9.479453856024325,
+            "alignmentCost": 1.5,
+            "takeoffCost": 2.375,
+            "rotationCost": 1.0012497467347499,
+            "twistCost": 0.33750966165365087,
+            "positionCost": 0.5
+          },
+          "measurements": {
+            "index": 0,
+            "rotation": -1.4957997745194682,
+            "twist": -0.524836325970694,
+            "boardInvalid": true,
+            "water": true,
+            "fullEntryComplete": true,
+            "firstGeometry": 10,
+            "x": -0.22048978531450816,
+            "firstContactAngle": 166.69179951281149,
+            "entryAngle": 166.69179951281149,
+            "form": 0.018834573099121437,
+            "entryGeometryValid": false,
+            "entryLimbsValid": false,
+            "entryGeometryWorst": {
+              "footLineAngles": [
+                15.376426479057818,
+                21.08973752137362
+              ],
+              "handAxisAngles": [
+                69.50698409496412,
+                108.55168214736594
+              ],
+              "handSeparation": 1.1471268412287776,
+              "handHeightGap": 1.0775409732798753,
+              "kneeGap": 0.3818426597446364,
+              "ankleGap": 0.2563572205867276,
+              "toeGap": 0.2623012166974835,
+              "crossedLegs": false
+            },
+            "entryArmPositionValid": false,
+            "positionQualities": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "ascent": 0.0,
+            "preparationBounces": 0,
+            "surfaceLateralSpeed": 5.69276531337023,
+            "entryAngularSpeed": 14.789286274905347,
+            "maxLateral": 0.9903906700636282,
+            "takeoffVerticalSpeed": -1.929502248335772,
+            "departureLean": 138.33204913058648,
+            "time": 2.681999999999926,
+            "positionQuality": 0.0
+          },
+          "practice": false,
+          "height": 10.0,
+          "apparatus": "platform",
+          "routinePoints": 0.0,
+          "routineFinished": true,
+          "auxiliaryPractice": false,
+          "index": 0,
+          "return": -9.712996330040596,
+          "postContactRotationDegrees": 103.27185688109803
+        },
+        {
+          "declaration": "101A",
+          "category": 1,
+          "difficulty": 1.4,
+          "execution": 0.0,
+          "points": 0.0,
+          "trainingValue": 0.0,
+          "valid": false,
+          "clean": false,
+          "deductions": {
+            "takeoff": 1.0,
+            "position": 2.0,
+            "entryAlignment": 6.0,
+            "entryForm": 1.9279044902335003,
+            "feet": 1.0,
+            "legs": 0.02424195694347292,
+            "hands": 1.0,
+            "lateralEntry": 0.5827416870543566,
+            "distance": 0.0
+          },
+          "failures": [
+            "invalid takeoff or platform contact",
+            "declared somersault count not completed",
+            "feet entered before head or hands",
+            "double bounce"
+          ],
+          "rotationError": 0.5168757078162906,
+          "twistError": 0.032696083057996664,
+          "entryAngle": 157.75969546675773,
+          "recognition": {
+            "somersaults": 0.0,
+            "twists": 0.0
+          },
+          "automatedJudge": true,
+          "splashIsProxy": true,
+          "judgeVersion": "self-declared-takeoff-and-whole-entry-v12",
+          "trainingRewardComponents": {
+            "total": -5.742782595878541,
+            "alignmentCost": 1.5,
+            "takeoffCost": 0.25,
+            "rotationCost": 0.33332221130126594,
+            "twistCost": 0.025738351019442874,
+            "positionCost": 0.5
+          },
+          "measurements": {
+            "index": 2,
+            "rotation": -0.016875707816290553,
+            "twist": -0.032696083057996664,
+            "boardInvalid": true,
+            "water": true,
+            "fullEntryComplete": true,
+            "firstGeometry": 15,
+            "x": 1.0137991809209916,
+            "firstContactAngle": 157.75969546675773,
+            "entryAngle": 157.75969546675773,
+            "form": 0.036047754883249856,
+            "entryGeometryValid": false,
+            "entryLimbsValid": false,
+            "entryGeometryWorst": {
+              "footLineAngles": [
+                46.559547921912014,
+                46.66699176610975
+              ],
+              "handAxisAngles": [
+                153.86039941430764,
+                54.66543194199701
+              ],
+              "handSeparation": 0.8939391660243879,
+              "handHeightGap": 0.6624464256129956,
+              "kneeGap": 0.16159921979387096,
+              "ankleGap": 0.1348483913886946,
+              "toeGap": 0.11492966299153383,
+              "crossedLegs": false
+            },
+            "entryArmPositionValid": false,
+            "positionQualities": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "ascent": 0.3733426979877524,
+            "preparationBounces": 1,
+            "surfaceLateralSpeed": 1.7482250611630696,
+            "entryAngularSpeed": 7.126024644353058,
+            "maxLateral": 0.36544647226878385,
+            "takeoffVerticalSpeed": 2.7090188794953405,
+            "departureLean": 7.547942258304216,
+            "time": 3.517999999999834,
+            "positionQuality": 0.0
+          },
+          "practice": false,
+          "height": 1.0,
+          "apparatus": "springboard",
+          "routinePoints": 0.0,
+          "routineFinished": true,
+          "auxiliaryPractice": false,
+          "index": 2,
+          "return": -5.998241191642592,
+          "postContactRotationDegrees": 89.74683747665901
+        },
+        {
+          "declaration": "101A",
+          "category": 1,
+          "difficulty": 1.4,
+          "execution": 0.0,
+          "points": 0.0,
+          "trainingValue": 0.0,
+          "valid": false,
+          "clean": false,
+          "deductions": {
+            "takeoff": 0.016378231827775026,
+            "position": 2.0,
+            "entryAlignment": 6.0,
+            "entryForm": 1.9410255278439423,
+            "feet": 0.9235612952880446,
+            "legs": 0.05408053669442511,
+            "hands": 1.0,
+            "lateralEntry": 0.7011497289612252,
+            "distance": 0.0
+          },
+          "failures": [
+            "invalid takeoff or platform contact",
+            "declared somersault count not completed"
+          ],
+          "rotationError": 0.6591631893111707,
+          "twistError": 0.09161440270679942,
+          "entryAngle": 117.66064025001978,
+          "recognition": {
+            "somersaults": 0.0,
+            "twists": 0.0
+          },
+          "automatedJudge": true,
+          "splashIsProxy": true,
+          "judgeVersion": "self-declared-takeoff-and-whole-entry-v12",
+          "trainingRewardComponents": {
+            "total": -5.634225691218868,
+            "alignmentCost": 1.5,
+            "takeoffCost": 0.004094557956943756,
+            "rotationCost": 0.40505069795304804,
+            "twistCost": 0.07012616311196666,
+            "positionCost": 0.5
+          },
+          "measurements": {
+            "index": 3,
+            "rotation": -0.15916318931117063,
+            "twist": -0.09161440270679942,
+            "boardInvalid": true,
+            "water": true,
+            "fullEntryComplete": true,
+            "firstGeometry": 1,
+            "x": 0.8612914162717865,
+            "firstContactAngle": 117.66064025001978,
+            "entryAngle": 117.66064025001978,
+            "form": 0.029487236078028885,
+            "entryGeometryValid": false,
+            "entryLimbsValid": false,
+            "entryGeometryWorst": {
+              "footLineAngles": [
+                41.56025828796201,
+                37.73283204490287
+              ],
+              "handAxisAngles": [
+                146.1069739225861,
+                95.71794634941698
+              ],
+              "handSeparation": 0.9226785546324232,
+              "handHeightGap": 0.7977089481170208,
+              "kneeGap": 0.16502565078161333,
+              "ankleGap": 0.14081610733888503,
+              "toeGap": 0.12372250311175767,
+              "crossedLegs": false
+            },
+            "entryArmPositionValid": false,
+            "positionQualities": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "ascent": 0.33384981354102444,
+            "preparationBounces": 0,
+            "surfaceLateralSpeed": 2.1034491868836755,
+            "entryAngularSpeed": 6.3647991112794156,
+            "maxLateral": 0.5119900274073895,
+            "takeoffVerticalSpeed": 2.562833906331937,
+            "departureLean": 15.737020432249876,
+            "time": 3.419999999999845,
+            "positionQuality": 0.0
+          },
+          "practice": false,
+          "height": 1.0,
+          "apparatus": "springboard",
+          "routinePoints": 0.0,
+          "routineFinished": true,
+          "auxiliaryPractice": false,
+          "index": 3,
+          "return": -5.89770810837274,
+          "postContactRotationDegrees": 64.98679950976673
+        },
+        {
+          "declaration": "101A",
+          "category": 1,
+          "difficulty": 1.4,
+          "execution": 0.0,
+          "points": 0.0,
+          "trainingValue": 0.0,
+          "valid": false,
+          "clean": false,
+          "deductions": {
+            "takeoff": 0.0,
+            "position": 2.0,
+            "entryAlignment": 6.0,
+            "entryForm": 1.9178824093216567,
+            "feet": 0.864708426581974,
+            "legs": 0.0690569377464556,
+            "hands": 1.0,
+            "lateralEntry": 0.4943051842093502,
+            "distance": 0.0
+          },
+          "failures": [
+            "invalid takeoff or platform contact",
+            "declared somersault count not completed",
+            "feet entered before head or hands"
+          ],
+          "rotationError": 0.5494468149573745,
+          "twistError": 0.11203327256028789,
+          "entryAngle": 135.23359100151742,
+          "recognition": {
+            "somersaults": 0.0,
+            "twists": 0.0
+          },
+          "automatedJudge": true,
+          "splashIsProxy": true,
+          "judgeVersion": "self-declared-takeoff-and-whole-entry-v12",
+          "trainingRewardComponents": {
+            "total": -5.521758711786075,
+            "alignmentCost": 1.5,
+            "takeoffCost": 0.0,
+            "rotationCost": 0.3503183789228789,
+            "twistCost": 0.08495209339833666,
+            "positionCost": 0.5
+          },
+          "measurements": {
+            "index": 1,
+            "rotation": -0.04944681495737444,
+            "twist": -0.11203327256028789,
+            "boardInvalid": true,
+            "water": true,
+            "fullEntryComplete": true,
+            "firstGeometry": 15,
+            "x": 1.2564606602212518,
+            "firstContactAngle": 135.23359100151742,
+            "entryAngle": 135.23359100151742,
+            "form": 0.04105879533917165,
+            "entryGeometryValid": false,
+            "entryLimbsValid": false,
+            "entryGeometryWorst": {
+              "footLineAngles": [
+                36.60390728702986,
+                38.91187919618883
+              ],
+              "handAxisAngles": [
+                114.68930739097152,
+                47.093449757611495
+              ],
+              "handSeparation": 0.7895360899763078,
+              "handHeightGap": 0.6640836650884892,
+              "kneeGap": 0.16747816482533795,
+              "ankleGap": 0.14381138754929113,
+              "toeGap": 0.12771359194174353,
+              "crossedLegs": false
+            },
+            "entryArmPositionValid": false,
+            "positionQualities": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "ascent": 0.3570993890095543,
+            "preparationBounces": 0,
+            "surfaceLateralSpeed": 1.4829155526280506,
+            "entryAngularSpeed": 7.067901073926478,
+            "maxLateral": 0.6663003912995258,
+            "takeoffVerticalSpeed": 2.65512785410491,
+            "departureLean": 2.608915388452329,
+            "time": 3.519999999999834,
+            "positionQuality": 0.0
+          },
+          "practice": false,
+          "height": 1.0,
+          "apparatus": "springboard",
+          "routinePoints": 0.0,
+          "routineFinished": true,
+          "auxiliaryPractice": false,
+          "index": 1,
+          "return": -5.775541729270117,
+          "postContactRotationDegrees": 84.45804599910112
+        }
+      ]
+    },
+    {
+      "mode": "sample",
+      "evaluationVersion": 2,
+      "seed": 881101,
+      "cases": 4,
+      "deterministic": false,
+      "policySeed": 881118,
+      "perturbed": false,
+      "rewardMode": "v12",
+      "summary": {
+        "full": {
+          "n": 24,
+          "points": 0.0,
+          "execution": 0.0,
+          "difficulty": 1.875,
+          "clean": 0.0,
+          "valid": 0.0,
+          "uniqueDives": 11,
+          "entryAngle": 102.41105318459644,
+          "trainingReturn": -6.653104176785495,
+          "jumped": 0.5416666666666666,
+          "rise": 0.12202964675057042,
+          "takeoffSpeed": 0.7172917945246914,
+          "departureLean": 24.466252752831156,
+          "positionQuality": 0.11981169210483854,
+          "completedRotation": 0.041666666666666664,
+          "entryAngularSpeed": 6.419559639751107,
+          "postContactRotationDegrees": 73.94987372605321,
+          "entryAngleDeterioration": 11.357318598031704
+        },
+        "categories": {
+          "1": {
+            "n": 4,
+            "points": 0.0,
+            "execution": 0.0,
+            "difficulty": 1.4500000000000002,
+            "clean": 0.0,
+            "valid": 0.0,
+            "uniqueDives": 1,
+            "entryAngle": 128.89725527037345,
+            "trainingReturn": -6.9310789959132535,
+            "jumped": 0.5,
+            "rise": 0.14497490510659522,
+            "takeoffSpeed": 0.5416856149587491,
+            "departureLean": 27.30825490988195,
+            "positionQuality": 0.038788300236021735,
+            "completedRotation": 0.0,
+            "entryAngularSpeed": 6.233232809879485,
+            "postContactRotationDegrees": 69.71784674076801,
+            "entryAngleDeterioration": 9.837600004915473
+          },
+          "2": {
+            "n": 4,
+            "points": 0.0,
+            "execution": 0.0,
+            "difficulty": 2.1500000000000004,
+            "clean": 0.0,
+            "valid": 0.0,
+            "uniqueDives": 2,
+            "entryAngle": 113.32668558683444,
+            "trainingReturn": -6.061916977228833,
+            "jumped": 0.25,
+            "rise": 0.005794636297763167,
+            "takeoffSpeed": -0.665073403454291,
+            "departureLean": 25.892860527647244,
+            "positionQuality": 0.1410252970138813,
+            "completedRotation": 0.0,
+            "entryAngularSpeed": 5.535651997881696,
+            "postContactRotationDegrees": 76.67932835215387,
+            "entryAngleDeterioration": 9.5341939479653
+          },
+          "3": {
+            "n": 5,
+            "points": 0.0,
+            "execution": 0.0,
+            "difficulty": 2.0200000000000005,
+            "clean": 0.0,
+            "valid": 0.0,
+            "uniqueDives": 2,
+            "entryAngle": 66.78565704734498,
+            "trainingReturn": -5.8892659202618685,
+            "jumped": 1.0,
+            "rise": 0.21612778744303238,
+            "takeoffSpeed": 2.059175814009869,
+            "departureLean": 11.049692377083302,
+            "positionQuality": 0.21278445462726442,
+            "completedRotation": 0.2,
+            "entryAngularSpeed": 6.9072859398669495,
+            "postContactRotationDegrees": 61.20454831960957,
+            "entryAngleDeterioration": 11.740582712792905
+          },
+          "4": {
+            "n": 5,
+            "points": 0.0,
+            "execution": 0.0,
+            "difficulty": 1.7400000000000002,
+            "clean": 0.0,
+            "valid": 0.0,
+            "uniqueDives": 2,
+            "entryAngle": 87.3872963680473,
+            "trainingReturn": -7.341627318860764,
+            "jumped": 0.0,
+            "rise": 0.0012875534711981774,
+            "takeoffSpeed": -0.2973064877524882,
+            "departureLean": 7.884378343011444,
+            "positionQuality": 0.03343375491058286,
+            "completedRotation": 0.0,
+            "entryAngularSpeed": 5.640597729864936,
+            "postContactRotationDegrees": 93.96243294583684,
+            "entryAngleDeterioration": 22.80232277801677
+          },
+          "5": {
+            "n": 5,
+            "points": 0.0,
+            "execution": 0.0,
+            "difficulty": 1.9600000000000002,
+            "clean": 0.0,
+            "valid": 0.0,
+            "uniqueDives": 3,
+            "entryAngle": 113.61566001476221,
+            "trainingReturn": -6.541605743409855,
+            "jumped": 1.0,
+            "rise": 0.2477113303650207,
+            "takeoffSpeed": 2.2008793774014843,
+            "departureLean": 21.05867819385532,
+            "positionQuality": 0.16035108049512545,
+            "completedRotation": 0.0,
+            "entryAngularSpeed": 5.554348214356077,
+            "postContactRotationDegrees": 63.72078923840295,
+            "entryAngleDeterioration": 4.474788617437883
+          },
+          "6": {
+            "n": 1,
+            "points": 0.0,
+            "execution": 0.0,
+            "difficulty": 2.0,
+            "clean": 0.0,
+            "valid": 0.0,
+            "uniqueDives": 1,
+            "entryAngle": 150.02644585071036,
+            "trainingReturn": -8.84002143762109,
+            "jumped": 0.0,
+            "rise": 0.0,
+            "takeoffSpeed": -2.105189295719566,
+            "departureLean": 174.42185974808072,
+            "positionQuality": 0.12337977135164924,
+            "completedRotation": 0.0,
+            "entryAngularSpeed": 16.482732702542023,
+            "postContactRotationDegrees": 94.76941653434251,
+            "entryAngleDeterioration": 0.0
+          }
+        },
+        "practiceEpisodes": 0
+      },
+      "episodes": [
+        {
+          "declaration": "101A",
+          "category": 1,
+          "difficulty": 1.6,
+          "execution": 0.0,
+          "points": 0.0,
+          "trainingValue": 0.0,
+          "valid": false,
+          "clean": false,
+          "deductions": {
+            "takeoff": 0.8176786479562104,
+            "position": 2.0,
+            "entryAlignment": 4.052798158169216,
+            "entryForm": 1.8884101317834217,
+            "feet": 0.20987274973299874,
+            "legs": 0.022274418734873624,
+            "hands": 1.0,
+            "lateralEntry": 0.35194642576243984,
+            "distance": 0.0
+          },
+          "failures": [
+            "invalid takeoff or platform contact",
+            "declared somersault count not completed"
+          ],
+          "rotationError": 1.0927940841703405,
+          "twistError": 0.009751840243109015,
+          "entryAngle": 40.52798158169215,
+          "recognition": {
+            "somersaults": -0.5,
+            "twists": 0.0
+          },
+          "automatedJudge": true,
+          "splashIsProxy": true,
+          "judgeVersion": "self-declared-takeoff-and-whole-entry-v12",
+          "trainingRewardComponents": {
+            "total": -5.323129429713404,
+            "alignmentCost": 1.013199539542304,
+            "takeoffCost": 0.3432402359020733,
+            "rotationCost": 0.5908000444186228,
+            "twistCost": 0.0077636783469697025,
+            "positionCost": 0.5
+          },
+          "measurements": {
+            "index": 0,
+            "rotation": -0.5927940841703405,
+            "twist": -0.009751840243109015,
+            "boardInvalid": true,
+            "water": true,
+            "fullEntryComplete": true,
+            "firstGeometry": 6,
+            "x": 2.900261069833298,
+            "firstContactAngle": 33.94274581631466,
+            "entryAngle": 40.52798158169215,
+            "form": 0.05579493410828918,
+            "entryGeometryValid": false,
+            "entryLimbsValid": false,
+            "entryGeometryWorst": {
+              "footLineAngles": [
+                9.201526971336252,
+                9.444273737984943
+              ],
+              "handAxisAngles": [
+                38.44729630701008,
+                45.668407492608296
+              ],
+              "handSeparation": 0.5095120612846596,
+              "handHeightGap": 0.1605609946902682,
+              "kneeGap": 0.1683640603611466,
+              "ankleGap": 0.13445488374697473,
+              "toeGap": 0.12049201618534901,
+              "crossedLegs": false
+            },
+            "entryArmPositionValid": false,
+            "positionQualities": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "ascent": 0.2583538278260938,
+            "preparationBounces": 0,
+            "surfaceLateralSpeed": 1.0558392772873195,
+            "entryAngularSpeed": 2.3889398701673583,
+            "maxLateral": 0.3157697940599876,
+            "takeoffVerticalSpeed": 2.230722714888872,
+            "departureLean": 42.425150418900564,
+            "time": 3.4139999999998456,
+            "positionQuality": 0.0
+          },
+          "practice": false,
+          "height": 10.0,
+          "apparatus": "platform",
+          "routinePoints": 0.0,
+          "routineFinished": false,
+          "auxiliaryPractice": false,
+          "index": 0,
+          "return": -5.594816187885044,
+          "postContactRotationDegrees": 7.598984019376627
+        },
+        {
+          "declaration": "302A",
+          "category": 3,
+          "difficulty": 1.8,
+          "execution": 0.0,
+          "points": 0.0,
+          "trainingValue": 0.0,
+          "valid": false,
+          "clean": false,
+          "deductions": {
+            "takeoff": 0.40671640118081165,
+            "position": 1.5617829220996746,
+            "entryAlignment": 3.428069146355265,
+            "entryForm": 1.7547234465133075,
+            "feet": 0.5327624796756465,
+            "legs": 0.6198990528301063,
+            "hands": 0.0,
+            "lateralEntry": 0.7276883554390629,
+            "distance": 0.0
+          },
+          "failures": [
+            "invalid takeoff or platform contact",
+            "declared somersault count not completed"
+          ],
+          "rotationError": 0.9564307123156532,
+          "twistError": 0.035174418582691935,
+          "entryAngle": 34.28069146355265,
+          "recognition": {
+            "somersaults": 0.0,
+            "twists": 0.0
+          },
+          "automatedJudge": true,
+          "splashIsProxy": true,
+          "judgeVersion": "self-declared-takeoff-and-whole-entry-v12",
+          "trainingRewardComponents": {
+            "total": -5.09360806314257,
+            "alignmentCost": 0.8570172865888163,
+            "takeoffCost": 0.3728233677490773,
+            "rotationCost": 0.5368973983539307,
+            "twistCost": 0.0276559463112965,
+            "positionCost": 0.39044573052491865
+          },
+          "measurements": {
+            "index": 2,
+            "rotation": -0.043569287684346814,
+            "twist": -0.035174418582691935,
+            "boardInvalid": true,
+            "water": true,
+            "fullEntryComplete": true,
+            "firstGeometry": 15,
+            "x": 0.8128094579633812,
+            "firstContactAngle": 15.744901122617383,
+            "entryAngle": 34.28069146355265,
+            "form": 0.12263827674334626,
+            "entryGeometryValid": false,
+            "entryLimbsValid": false,
+            "entryGeometryWorst": {
+              "footLineAngles": [
+                23.97431158540409,
+                23.52869434056299
+              ],
+              "handAxisAngles": [
+                70.64619942226061,
+                63.27705330012987
+              ],
+              "handSeparation": 0.6218137656470726,
+              "handHeightGap": 0.09651215738853525,
+              "kneeGap": 0.205231503729966,
+              "ankleGap": 0.25397981056602126,
+              "toeGap": 0.2914006857116575,
+              "crossedLegs": false
+            },
+            "entryArmPositionValid": true,
+            "positionQualities": [
+              0.21910853895016266,
+              0.21753886256454655,
+              0.11494426192631481,
+              0.22309233831999997
+            ],
+            "ascent": 0.21865671976383766,
+            "preparationBounces": 0,
+            "surfaceLateralSpeed": 2.1830650663171887,
+            "entryAngularSpeed": 9.237118439223835,
+            "maxLateral": 0.2676388451140468,
+            "takeoffVerticalSpeed": 2.0913933504996787,
+            "departureLean": 5.406939437066254,
+            "time": 3.6159999999998234,
+            "positionQuality": 0.21910853895016266
+          },
+          "practice": false,
+          "height": 1.0,
+          "apparatus": "springboard",
+          "routinePoints": 0.0,
+          "routineFinished": false,
+          "auxiliaryPractice": false,
+          "index": 2,
+          "return": -5.329909180854429,
+          "postContactRotationDegrees": 96.9163529213366
+        },
+        {
+          "declaration": "5311A",
+          "category": 5,
+          "difficulty": 1.9,
+          "execution": 0.0,
+          "points": 0.0,
+          "trainingValue": 0.0,
+          "valid": false,
+          "clean": false,
+          "deductions": {
+            "takeoff": 1.2257423432197647,
+            "position": 1.5290212928160085,
+            "entryAlignment": 6.0,
+            "entryForm": 1.9254868576890978,
+            "feet": 0.8951576076329494,
+            "legs": 0.5207292419265798,
+            "hands": 1.0,
+            "lateralEntry": 0.42711368927645266,
+            "distance": 0.0
+          },
+          "failures": [
+            "invalid takeoff or platform contact",
+            "declared somersault count not completed",
+            "declared twist count not completed",
+            "feet entered before head or hands",
+            "double bounce"
+          ],
+          "rotationError": 0.3602375181904658,
+          "twistError": 0.4919882499923482,
+          "entryAngle": 131.7835050734864,
+          "recognition": {
+            "somersaults": 0.0,
+            "twists": 0.0
+          },
+          "automatedJudge": true,
+          "splashIsProxy": true,
+          "judgeVersion": "self-declared-takeoff-and-whole-entry-v12",
+          "trainingRewardComponents": {
+            "total": -6.097522818930267,
+            "alignmentCost": 1.5,
+            "takeoffCost": 0.45693048128478436,
+            "rotationCost": 0.24612746418196363,
+            "twistCost": 0.3200877011282474,
+            "positionCost": 0.38225532320400213
+          },
+          "measurements": {
+            "index": 1,
+            "rotation": -0.13976248180953418,
+            "twist": 0.008011750007651799,
+            "boardInvalid": true,
+            "water": true,
+            "fullEntryComplete": true,
+            "firstGeometry": 12,
+            "x": 0.962361986965734,
+            "firstContactAngle": 128.73933478196602,
+            "entryAngle": 131.7835050734864,
+            "form": 0.03725657115545114,
+            "entryGeometryValid": false,
+            "entryLimbsValid": false,
+            "entryGeometryWorst": {
+              "footLineAngles": [
+                40.282092343482724,
+                40.15998728298565
+              ],
+              "handAxisAngles": [
+                168.78884035454575,
+                88.66214741031763
+              ],
+              "handSeparation": 0.8863870879006985,
+              "handHeightGap": 0.5139210186163514,
+              "kneeGap": 0.23144671556521143,
+              "ankleGap": 0.23414584838531596,
+              "toeGap": 0.2374240461610751,
+              "crossedLegs": false
+            },
+            "entryArmPositionValid": false,
+            "positionQualities": [
+              0.23548935359199571,
+              0.24640283206509414,
+              0.13778546882761283,
+              0.25745752802841365
+            ],
+            "ascent": 0.25485153135604705,
+            "preparationBounces": 1,
+            "surfaceLateralSpeed": 1.281341067829358,
+            "entryAngularSpeed": 5.606281265541287,
+            "maxLateral": 0.1991779895842379,
+            "takeoffVerticalSpeed": 2.2617761008918915,
+            "departureLean": 8.10190463025489,
+            "time": 3.8219999999998007,
+            "positionQuality": 0.23548935359199571
+          },
+          "practice": false,
+          "height": 1.0,
+          "apparatus": "springboard",
+          "routinePoints": 0.0,
+          "routineFinished": false,
+          "auxiliaryPractice": false,
+          "index": 1,
+          "return": -6.365825337516753,
+          "postContactRotationDegrees": 73.82168436516417
+        },
+        {
+          "declaration": "401A",
+          "category": 4,
+          "difficulty": 1.8,
+          "execution": 0.0,
+          "points": 0.0,
+          "trainingValue": 0.0,
+          "valid": false,
+          "clean": false,
+          "deductions": {
+            "takeoff": 1.6600913558439916,
+            "position": 2.0,
+            "entryAlignment": 6.0,
+            "entryForm": 1.9401152557591947,
+            "feet": 1.0,
+            "legs": 0.5206876932714843,
+            "hands": 1.0,
+            "lateralEntry": 0.4545978401642589,
+            "distance": 0.0
+          },
+          "failures": [
+            "declared somersault count not completed",
+            "entry did not complete"
+          ],
+          "rotationError": 0.8017849389073712,
+          "twistError": 0.05433752137510923,
+          "entryAngle": 72.3072517329255,
+          "recognition": {
+            "somersaults": -0.5,
+            "twists": 0.0
+          },
+          "automatedJudge": true,
+          "splashIsProxy": true,
+          "judgeVersion": "self-declared-takeoff-and-whole-entry-v12",
+          "trainingRewardComponents": {
+            "total": -7.285084413959706,
+            "alignmentCost": 1.5,
+            "takeoffCost": 2.0428818693402144,
+            "rotationCost": 0.47102224502839896,
+            "twistCost": 0.04233010229235811,
+            "positionCost": 0.5
+          },
+          "measurements": {
+            "index": 3,
+            "rotation": 0.3017849389073712,
+            "twist": 0.05433752137510923,
+            "boardInvalid": false,
+            "water": true,
+            "fullEntryComplete": false,
+            "firstGeometry": 3,
+            "x": 1.2134298193652462,
+            "firstContactAngle": 72.3072517329255,
+            "entryAngle": 72.3072517329255,
+            "form": 0.0299423721204026,
+            "entryGeometryValid": false,
+            "entryLimbsValid": false,
+            "entryGeometryWorst": {
+              "footLineAngles": [
+                92.23008234931129,
+                92.28632600026835
+              ],
+              "handAxisAngles": [
+                82.10963885495835,
+                130.79148256873887
+              ],
+              "handSeparation": 0.5664423424733939,
+              "handHeightGap": 0.2976550499393851,
+              "kneeGap": 0.16904953664491346,
+              "ankleGap": 0.23413753865429687,
+              "toeGap": 0.240382151908988,
+              "crossedLegs": false
+            },
+            "entryArmPositionValid": false,
+            "positionQualities": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "ascent": 0.0,
+            "preparationBounces": 0,
+            "surfaceLateralSpeed": 1.3637935204927767,
+            "entryAngularSpeed": 5.622503393284317,
+            "maxLateral": 0.3344460710763589,
+            "takeoffVerticalSpeed": -0.5114361215168665,
+            "departureLean": 22.204111012979617,
+            "time": 3.9979999999997813,
+            "positionQuality": 0.0
+          },
+          "practice": false,
+          "height": 1.0,
+          "apparatus": "springboard",
+          "routinePoints": 0.0,
+          "routineFinished": false,
+          "auxiliaryPractice": false,
+          "index": 3,
+          "return": -7.355335577847882,
+          "postContactRotationDegrees": 148.89893774468328
+        },
+        {
+          "declaration": "401A",
+          "category": 4,
+          "difficulty": 1.7,
+          "execution": 0.0,
+          "points": 0.0,
+          "trainingValue": 0.0,
+          "valid": false,
+          "clean": false,
+          "deductions": {
+            "takeoff": 2.5,
+            "position": 1.6656624508941713,
+            "entryAlignment": 6.0,
+            "entryForm": 1.8296352930450892,
+            "feet": 0.39121595985293095,
+            "legs": 0.17711023657923042,
+            "hands": 1.0,
+            "lateralEntry": 1.0,
+            "distance": 0.0
+          },
+          "failures": [
+            "invalid takeoff or platform contact",
+            "declared somersault count not completed"
+          ],
+          "rotationError": 1.103114539260225,
+          "twistError": 0.0192153253857485,
+          "entryAngle": 85.16232754377498,
+          "recognition": {
+            "somersaults": -0.5,
+            "twists": 0.0
+          },
+          "automatedJudge": true,
+          "splashIsProxy": true,
+          "judgeVersion": "self-declared-takeoff-and-whole-entry-v12",
+          "trainingRewardComponents": {
+            "total": -7.749996578500623,
+            "alignmentCost": 1.5,
+            "takeoffCost": 2.124128671535969,
+            "rotationCost": 0.5947354879484579,
+            "twistCost": 0.015226433923341177,
+            "positionCost": 0.4164156127235428
+          },
+          "measurements": {
+            "index": 0,
+            "rotation": 0.6031145392602252,
+            "twist": -0.0192153253857485,
+            "boardInvalid": true,
+            "water": true,
+            "fullEntryComplete": true,
+            "firstGeometry": 9,
+            "x": 2.513058028978182,
+            "firstContactAngle": 37.31571617943694,
+            "entryAngle": 85.16232754377498,
+            "form": 0.08518235347745541,
+            "entryGeometryValid": false,
+            "entryLimbsValid": false,
+            "entryGeometryWorst": {
+              "footLineAngles": [
+                12.498871201724874,
+                17.604718193381892
+              ],
+              "handAxisAngles": [
+                38.92065464560939,
+                27.317453467104468
+              ],
+              "handSeparation": 0.40748724816094284,
+              "handHeightGap": 0.07773591691163695,
+              "kneeGap": 0.16120625764723095,
+              "ankleGap": 0.1654220473158461,
+              "toeGap": 0.16099238978105332,
+              "crossedLegs": false
+            },
+            "entryArmPositionValid": false,
+            "positionQualities": [
+              0.16716877455291432,
+              0.32931818733712465,
+              0.10980495885260938,
+              0.32931818733712465
+            ],
+            "ascent": 0.0,
+            "preparationBounces": 1,
+            "surfaceLateralSpeed": 3.372638238082674,
+            "entryAngularSpeed": 9.070360809008225,
+            "maxLateral": 0.23870926848423762,
+            "takeoffVerticalSpeed": 0.003485313856124935,
+            "departureLean": 1.8329489457544308,
+            "time": 3.3139999999998566,
+            "positionQuality": 0.16716877455291432
+          },
+          "practice": false,
+          "height": 10.0,
+          "apparatus": "platform",
+          "routinePoints": 0.0,
+          "routineFinished": false,
+          "auxiliaryPractice": false,
+          "index": 0,
+          "return": -8.02041157156009,
+          "postContactRotationDegrees": 55.069534918922166
+        },
+        {
+          "declaration": "401A",
+          "category": 4,
+          "difficulty": 1.8,
+          "execution": 0.0,
+          "points": 0.0,
+          "trainingValue": 0.0,
+          "valid": false,
+          "clean": false,
+          "deductions": {
+            "takeoff": 1.4678111632200457,
+            "position": 2.0,
+            "entryAlignment": 6.0,
+            "entryForm": 1.9516602743125375,
+            "feet": 1.0,
+            "legs": 0.3299306694057494,
+            "hands": 1.0,
+            "lateralEntry": 0.672060135668462,
+            "distance": 0.0
+          },
+          "failures": [
+            "invalid takeoff or platform contact",
+            "declared somersault count not completed"
+          ],
+          "rotationError": 0.8075456514082722,
+          "twistError": 0.0429230817386802,
+          "entryAngle": 69.32241671265565,
+          "recognition": {
+            "somersaults": -0.5,
+            "twists": 0.0
+          },
+          "automatedJudge": true,
+          "splashIsProxy": true,
+          "judgeVersion": "self-declared-takeoff-and-whole-entry-v12",
+          "trainingRewardComponents": {
+            "total": -7.499626317055671,
+            "alignmentCost": 1.5,
+            "takeoffCost": 1.7540156611658657,
+            "rotationCost": 0.47357594511140055,
+            "twistCost": 0.033621940931717574,
+            "positionCost": 0.5
+          },
+          "measurements": {
+            "index": 2,
+            "rotation": 0.3075456514082722,
+            "twist": -0.0429230817386802,
+            "boardInvalid": true,
+            "water": true,
+            "fullEntryComplete": true,
+            "firstGeometry": 3,
+            "x": 1.5576551364508138,
+            "firstContactAngle": 69.32241671265565,
+            "entryAngle": 69.32241671265565,
+            "form": 0.02416986284373128,
+            "entryGeometryValid": false,
+            "entryLimbsValid": false,
+            "entryGeometryWorst": {
+              "footLineAngles": [
+                61.088664213350796,
+                61.148599439424615
+              ],
+              "handAxisAngles": [
+                88.02774884891839,
+                175.54339753370104
+              ],
+              "handSeparation": 0.8820620000960918,
+              "handHeightGap": 0.2832914526835454,
+              "kneeGap": 0.17440534250698447,
+              "ankleGap": 0.19598613388114988,
+              "toeGap": 0.19192404874973754,
+              "crossedLegs": false
+            },
+            "entryArmPositionValid": false,
+            "positionQualities": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "ascent": 0.0064377673559908866,
+            "preparationBounces": 0,
+            "surfaceLateralSpeed": 2.016180407005386,
+            "entryAngularSpeed": 4.422485493582252,
+            "maxLateral": 0.09209454531282853,
+            "takeoffVerticalSpeed": 0.36591162047670417,
+            "departureLean": 0.28396657801647074,
+            "time": 3.365999999999851,
+            "positionQuality": 0.0
+          },
+          "practice": false,
+          "height": 1.0,
+          "apparatus": "springboard",
+          "routinePoints": 0.0,
+          "routineFinished": false,
+          "auxiliaryPractice": false,
+          "index": 2,
+          "return": -7.737212108909716,
+          "postContactRotationDegrees": 101.10597681467425
+        },
+        {
+          "declaration": "5312A",
+          "category": 5,
+          "difficulty": 2.1,
+          "execution": 0.0,
+          "points": 0.0,
+          "trainingValue": 0.0,
+          "valid": false,
+          "clean": false,
+          "deductions": {
+            "takeoff": 0.2606695728720806,
+            "position": 1.616442648286122,
+            "entryAlignment": 6.0,
+            "entryForm": 1.9058363030853136,
+            "feet": 1.0,
+            "legs": 0.19547195089623076,
+            "hands": 1.0,
+            "lateralEntry": 1.0,
+            "distance": 1.1286692403148195
+          },
+          "failures": [
+            "invalid takeoff or platform contact",
+            "declared twist count not completed"
+          ],
+          "rotationError": 0.22339283448433822,
+          "twistError": 0.7436284253145755,
+          "entryAngle": 86.48250969717877,
+          "recognition": {
+            "somersaults": 0.5,
+            "twists": 0.5
+          },
+          "automatedJudge": true,
+          "splashIsProxy": true,
+          "judgeVersion": "self-declared-takeoff-and-whole-entry-v12",
+          "trainingRewardComponents": {
+            "total": -6.132849432596339,
+            "alignmentCost": 1.5,
+            "takeoffCost": 0.06516739321802015,
+            "rotationCost": 0.16130240860688752,
+            "twistCost": 0.44477459512581063,
+            "positionCost": 0.4041106620715305
+          },
+          "measurements": {
+            "index": 1,
+            "rotation": -0.2766071655156618,
+            "twist": -0.2563715746854245,
+            "boardInvalid": true,
+            "water": true,
+            "fullEntryComplete": true,
+            "firstGeometry": 9,
+            "x": 0.3178326899212951,
+            "firstContactAngle": 82.16017149716336,
+            "entryAngle": 86.48250969717877,
+            "form": 0.047081848457343194,
+            "entryGeometryValid": false,
+            "entryLimbsValid": false,
+            "entryGeometryWorst": {
+              "footLineAngles": [
+                68.03945846916041,
+                28.928006140404847
+              ],
+              "handAxisAngles": [
+                63.333739398858015,
+                60.85204093447954
+              ],
+              "handSeparation": 0.7857211477943863,
+              "handHeightGap": 0.6496233026658212,
+              "kneeGap": 0.18485512669236795,
+              "ankleGap": 0.16909439017924616,
+              "toeGap": 0.1598007997268441,
+              "crossedLegs": false
+            },
+            "entryArmPositionValid": false,
+            "positionQualities": [
+              0.19177867585693897,
+              0.2280037065328652,
+              0.12870116724525452,
+              0.23674221101196366
+            ],
+            "ascent": 0.32571661951190295,
+            "preparationBounces": 0,
+            "surfaceLateralSpeed": 3.5850637813729804,
+            "entryAngularSpeed": 6.674927726446157,
+            "maxLateral": 0.6230980993907911,
+            "takeoffVerticalSpeed": 2.54134121509941,
+            "departureLean": 26.730130779243627,
+            "time": 3.3799999999998493,
+            "positionQuality": 0.19177867585693897
+          },
+          "practice": false,
+          "height": 1.0,
+          "apparatus": "springboard",
+          "routinePoints": 0.0,
+          "routineFinished": false,
+          "auxiliaryPractice": false,
+          "index": 1,
+          "return": -6.389652333087724,
+          "postContactRotationDegrees": 47.21906505588502
+        },
+        {
+          "declaration": "302A",
+          "category": 3,
+          "difficulty": 1.8,
+          "execution": 0.0,
+          "points": 0.0,
+          "trainingValue": 0.0,
+          "valid": false,
+          "clean": false,
+          "deductions": {
+            "takeoff": 2.6737579784350554,
+            "position": 1.5376304750682634,
+            "entryAlignment": 2.9528722864599604,
+            "entryForm": 1.8055003685685644,
+            "feet": 0.7609424801138739,
+            "legs": 0.25571034241286106,
+            "hands": 0.0,
+            "lateralEntry": 0.5756278127497868,
+            "distance": 0.0
+          },
+          "failures": [
+            "invalid takeoff or platform contact",
+            "declared somersault count not completed",
+            "double bounce"
+          ],
+          "rotationError": 0.9527866185737938,
+          "twistError": 0.03557757944614874,
+          "entryAngle": 29.528722864599604,
+          "recognition": {
+            "somersaults": 0.0,
+            "twists": 0.0
+          },
+          "automatedJudge": true,
+          "splashIsProxy": true,
+          "judgeVersion": "self-declared-takeoff-and-whole-entry-v12",
+          "trainingRewardComponents": {
+            "total": -5.697909718872865,
+            "alignmentCost": 0.7382180716149901,
+            "takeoffCost": 1.162465412342892,
+            "rotationCost": 0.5354059101141386,
+            "twistCost": 0.027967455072507547,
+            "positionCost": 0.38440761876706586
+          },
+          "measurements": {
+            "index": 3,
+            "rotation": -0.047213381426206215,
+            "twist": 0.03557757944614874,
+            "boardInvalid": true,
+            "water": true,
+            "fullEntryComplete": true,
+            "firstGeometry": 12,
+            "x": 0.7270122960971918,
+            "firstContactAngle": 17.80858496855187,
+            "entryAngle": 29.528722864599604,
+            "form": 0.0972498157157178,
+            "entryGeometryValid": false,
+            "entryLimbsValid": false,
+            "entryGeometryWorst": {
+              "footLineAngles": [
+                34.242411605124325,
+                34.238408580802364
+              ],
+              "handAxisAngles": [
+                142.53863652304346,
+                62.157770371821584
+              ],
+              "handSeparation": 0.8494595209600443,
+              "handHeightGap": 0.679364960234434,
+              "kneeGap": 0.1758900222160682,
+              "ankleGap": 0.18114206848257222,
+              "toeGap": 0.17493413098250718,
+              "crossedLegs": false
+            },
+            "entryArmPositionValid": false,
+            "positionQualities": [
+              0.23118476246586828,
+              0.21361558507422443,
+              0.09292818944297893,
+              0.2313209488629247
+            ],
+            "ascent": 0.16524840431298893,
+            "preparationBounces": 3,
+            "surfaceLateralSpeed": 1.7268834382493605,
+            "entryAngularSpeed": 5.429417846277792,
+            "maxLateral": 0.21875676967491103,
+            "takeoffVerticalSpeed": 1.8205842715569693,
+            "departureLean": 2.1970242120152896,
+            "time": 3.4899999999998372,
+            "positionQuality": 0.23118476246586828
+          },
+          "practice": false,
+          "height": 1.0,
+          "apparatus": "springboard",
+          "routinePoints": 0.0,
+          "routineFinished": false,
+          "auxiliaryPractice": false,
+          "index": 3,
+          "return": -5.945341936434033,
+          "postContactRotationDegrees": 74.17716083770159
+        },
+        {
+          "declaration": "302A",
+          "category": 3,
+          "difficulty": 2.0,
+          "execution": 0.0,
+          "points": 0.0,
+          "trainingValue": 0.0,
+          "valid": false,
+          "clean": false,
+          "deductions": {
+            "takeoff": 0.6960652873067446,
+            "position": 1.661655983285343,
+            "entryAlignment": 6.0,
+            "entryForm": 1.8787733607648949,
+            "feet": 0.341000743902374,
+            "legs": 0.004957317491604829,
+            "hands": 0.0,
+            "lateralEntry": 1.0,
+            "distance": 0.0
+          },
+          "failures": [
+            "invalid takeoff or platform contact"
+          ],
+          "rotationError": 0.22849887069095076,
+          "twistError": 0.06476039261260479,
+          "entryAngle": 83.40892520552426,
+          "recognition": {
+            "somersaults": 1.0,
+            "twists": 0.0
+          },
+          "automatedJudge": true,
+          "splashIsProxy": true,
+          "judgeVersion": "self-declared-takeoff-and-whole-entry-v12",
+          "trainingRewardComponents": {
+            "total": -5.381481245904595,
+            "alignmentCost": 1.5,
+            "takeoffCost": 0.44505016725821367,
+            "rotationCost": 0.16463439497615112,
+            "twistCost": 0.05019983230917574,
+            "positionCost": 0.41541399582133576
+          },
+          "measurements": {
+            "index": 0,
+            "rotation": -0.7715011293090492,
+            "twist": -0.06476039261260479,
+            "boardInvalid": true,
+            "water": true,
+            "fullEntryComplete": true,
+            "firstGeometry": 12,
+            "x": 3.709918048840519,
+            "firstContactAngle": 82.45302480356456,
+            "entryAngle": 83.40892520552426,
+            "form": 0.06061331961755256,
+            "entryGeometryValid": true,
+            "entryLimbsValid": false,
+            "entryGeometryWorst": {
+              "footLineAngles": [
+                15.190011811187665,
+                15.34503347560683
+              ],
+              "handAxisAngles": [
+                40.930807341887075,
+                72.78507420382454
+              ],
+              "handSeparation": 0.4982445119919621,
+              "handHeightGap": 0.25819169246100415,
+              "kneeGap": 0.16419121366062248,
+              "ankleGap": 0.13099146349832097,
+              "toeGap": 0.11477404983672446,
+              "crossedLegs": false
+            },
+            "entryArmPositionValid": false,
+            "positionQualities": [
+              0.16917200835732846,
+              0.3438118449981939,
+              0.14112125668844325,
+              0.3440001863672602
+            ],
+            "ascent": 0.21868984637054173,
+            "preparationBounces": 0,
+            "surfaceLateralSpeed": 3.722534895362327,
+            "entryAngularSpeed": 7.330217821874122,
+            "maxLateral": 0.22151597170904597,
+            "takeoffVerticalSpeed": 2.060463003274328,
+            "departureLean": 28.0281533621754,
+            "time": 3.4519999999998414,
+            "positionQuality": 0.16917200835732846
+          },
+          "practice": false,
+          "height": 10.0,
+          "apparatus": "platform",
+          "routinePoints": 0.0,
+          "routineFinished": false,
+          "auxiliaryPractice": false,
+          "index": 0,
+          "return": -5.648543508167677,
+          "postContactRotationDegrees": 23.149905144309265
+        },
+        {
+          "declaration": "203A",
+          "category": 2,
+          "difficulty": 2.5,
+          "execution": 0.0,
+          "points": 0.0,
+          "trainingValue": 0.0,
+          "valid": false,
+          "clean": false,
+          "deductions": {
+            "takeoff": 2.000572808805312,
+            "position": 1.732068113541206,
+            "entryAlignment": 6.0,
+            "entryForm": 1.9251007072850206,
+            "feet": 1.0,
+            "legs": 0.26640010508120193,
+            "hands": 1.0,
+            "lateralEntry": 0.5651416320863462,
+            "distance": 0.0
+          },
+          "failures": [
+            "declared somersault count not completed"
+          ],
+          "rotationError": 1.2103450927734214,
+          "twistError": 0.018620471437873216,
+          "entryAngle": 76.20272203164946,
+          "recognition": {
+            "somersaults": 0.5,
+            "twists": 0.0
+          },
+          "automatedJudge": true,
+          "splashIsProxy": true,
+          "judgeVersion": "self-declared-takeoff-and-whole-entry-v12",
+          "trainingRewardComponents": {
+            "total": -5.820530438166502,
+            "alignmentCost": 1.5,
+            "takeoffCost": 2.049074489224736,
+            "rotationCost": 0.6345189231325103,
+            "twistCost": 0.014759386310811846,
+            "positionCost": 0.4330170283853015
+          },
+          "measurements": {
+            "index": 1,
+            "rotation": 0.28965490722657866,
+            "twist": 0.018620471437873216,
+            "boardInvalid": false,
+            "water": true,
+            "fullEntryComplete": true,
+            "firstGeometry": 2,
+            "x": 1.5118347513272148,
+            "firstContactAngle": 76.20272203164946,
+            "entryAngle": 76.20272203164946,
+            "form": 0.03744964635748975,
+            "entryGeometryValid": false,
+            "entryLimbsValid": false,
+            "entryGeometryWorst": {
+              "footLineAngles": [
+                44.52470895937859,
+                56.666646197922844
+              ],
+              "handAxisAngles": [
+                92.53302302118223,
+                124.10512752310441
+              ],
+              "handSeparation": 0.3943490662545353,
+              "handHeightGap": 0.28285239780773874,
+              "kneeGap": 0.18902612890318507,
+              "ankleGap": 0.18328002101624039,
+              "toeGap": 0.16387071260105046,
+              "crossedLegs": false
+            },
+            "entryArmPositionValid": false,
+            "positionQualities": [
+              0.133965943229397,
+              0.22169355834141222,
+              0.15489643545421125,
+              0.22169355834141222
+            ],
+            "ascent": 0.0,
+            "preparationBounces": 0,
+            "surfaceLateralSpeed": 1.6954248962590386,
+            "entryAngularSpeed": 4.0829390870472855,
+            "maxLateral": 0.2542274940711131,
+            "takeoffVerticalSpeed": -0.19572514809363095,
+            "departureLean": 37.52577639623904,
+            "time": 3.181999999999871,
+            "positionQuality": 0.133965943229397
+          },
+          "practice": false,
+          "height": 1.0,
+          "apparatus": "springboard",
+          "routinePoints": 0.0,
+          "routineFinished": false,
+          "auxiliaryPractice": false,
+          "index": 1,
+          "return": -5.855028814644129,
+          "postContactRotationDegrees": 100.16837129026135
+        },
+        {
+          "declaration": "303A",
+          "category": 3,
+          "difficulty": 2.7,
+          "execution": 0.0,
+          "points": 0.0,
+          "trainingValue": 0.0,
+          "valid": false,
+          "clean": false,
+          "deductions": {
+            "takeoff": 1.007377235354106,
+            "position": 1.5678097476887394,
+            "entryAlignment": 6.0,
+            "entryForm": 1.9284593642854948,
+            "feet": 1.0,
+            "legs": 0.15641927388660493,
+            "hands": 1.0,
+            "lateralEntry": 0.45736227618605857,
+            "distance": 0.0
+          },
+          "failures": [
+            "invalid takeoff or platform contact",
+            "declared somersault count not completed",
+            "feet entered before head or hands",
+            "double bounce"
+          ],
+          "rotationError": 1.3582464974407593,
+          "twistError": 0.15783989565064013,
+          "entryAngle": 114.56147775874777,
+          "recognition": {
+            "somersaults": 0.0,
+            "twists": 0.0
+          },
+          "automatedJudge": true,
+          "splashIsProxy": true,
+          "judgeVersion": "self-declared-takeoff-and-whole-entry-v12",
+          "trainingRewardComponents": {
+            "total": -6.087854686079513,
+            "alignmentCost": 1.5,
+            "takeoffCost": 0.2567624657412638,
+            "rotationCost": 0.6863346666480883,
+            "twistCost": 0.11724488817843673,
+            "positionCost": 0.39195243692218484
+          },
+          "measurements": {
+            "index": 2,
+            "rotation": -0.1417535025592407,
+            "twist": -0.15783989565064013,
+            "boardInvalid": true,
+            "water": true,
+            "fullEntryComplete": true,
+            "firstGeometry": 15,
+            "x": 0.9667660974907828,
+            "firstContactAngle": 114.56133699179871,
+            "entryAngle": 114.56147775874777,
+            "form": 0.035770317857252584,
+            "entryGeometryValid": false,
+            "entryLimbsValid": false,
+            "entryGeometryWorst": {
+              "footLineAngles": [
+                49.250627201841084,
+                54.393018908478304
+              ],
+              "handAxisAngles": [
+                84.41100511746913,
+                76.93741060330933
+              ],
+              "handSeparation": 0.8252754786195836,
+              "handHeightGap": 0.6058882528886051,
+              "kneeGap": 0.1584300329816178,
+              "ankleGap": 0.161283854777321,
+              "toeGap": 0.14898425005182536,
+              "crossedLegs": false
+            },
+            "entryArmPositionValid": false,
+            "positionQualities": [
+              0.21609512615563026,
+              0.20419646425995697,
+              0.09554276687627099,
+              0.21609512615563026
+            ],
+            "ascent": 0.2985245529291788,
+            "preparationBounces": 1,
+            "surfaceLateralSpeed": 1.3720868285581758,
+            "entryAngularSpeed": 4.636776204398752,
+            "maxLateral": 0.7504325320991363,
+            "takeoffVerticalSpeed": 2.426519482458902,
+            "departureLean": 9.346620201994494,
+            "time": 3.511999999999835,
+            "positionQuality": 0.21609512615563026
+          },
+          "practice": false,
+          "height": 1.0,
+          "apparatus": "springboard",
+          "routinePoints": 0.0,
+          "routineFinished": false,
+          "auxiliaryPractice": false,
+          "index": 2,
+          "return": -6.357727563279923,
+          "postContactRotationDegrees": 35.75679199975212
+        },
+        {
+          "declaration": "402C",
+          "category": 4,
+          "difficulty": 1.6,
+          "execution": 0.0,
+          "points": 0.0,
+          "trainingValue": 0.0,
+          "valid": false,
+          "clean": false,
+          "deductions": {
+            "takeoff": 1.5,
+            "position": 2.0,
+            "entryAlignment": 6.0,
+            "entryForm": 1.9074388993683193,
+            "feet": 1.0,
+            "legs": 0.21183318591314282,
+            "hands": 0.0,
+            "lateralEntry": 0.46653336848735766,
+            "distance": 0.0
+          },
+          "failures": [
+            "invalid takeoff or platform contact",
+            "declared somersault count not completed",
+            "feet-first dive did not enter feet first"
+          ],
+          "rotationError": 1.1522181391979516,
+          "twistError": 0.021947927252593178,
+          "entryAngle": 121.84841588454536,
+          "recognition": {
+            "somersaults": 0.0,
+            "twists": 0.0
+          },
+          "automatedJudge": true,
+          "splashIsProxy": true,
+          "judgeVersion": "self-declared-takeoff-and-whole-entry-v12",
+          "trainingRewardComponents": {
+            "total": -7.622547587930663,
+            "alignmentCost": 1.5,
+            "takeoffCost": 2.0955285911792862,
+            "rotationCost": 0.6131992023685418,
+            "twistCost": 0.017368430940629183,
+            "positionCost": 0.5
+          },
+          "measurements": {
+            "index": 3,
+            "rotation": 0.15221813919795163,
+            "twist": -0.021947927252593178,
+            "boardInvalid": true,
+            "water": true,
+            "fullEntryComplete": true,
+            "firstGeometry": 1,
+            "x": 1.3804532435792818,
+            "firstContactAngle": 55.68341335879954,
+            "entryAngle": 121.84841588454536,
+            "form": 0.0462805503158403,
+            "entryGeometryValid": false,
+            "entryLimbsValid": false,
+            "entryGeometryWorst": {
+              "footLineAngles": [
+                71.45432885624118,
+                70.97105592778298
+              ],
+              "handAxisAngles": [
+                142.46359455433821,
+                162.07941427214035
+              ],
+              "handSeparation": 0.6650592697204797,
+              "handHeightGap": 0.18015275409328813,
+              "kneeGap": 0.18422084466299313,
+              "ankleGap": 0.17236663718262857,
+              "toeGap": 0.16210465672448893,
+              "crossedLegs": false
+            },
+            "entryArmPositionValid": false,
+            "positionQualities": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "ascent": 0.0,
+            "preparationBounces": 0,
+            "surfaceLateralSpeed": 1.399600105462073,
+            "entryAngularSpeed": 4.147706143309207,
+            "maxLateral": 0.20865476665050173,
+            "takeoffVerticalSpeed": -0.8821143647171455,
+            "departureLean": 7.2921125624942125,
+            "time": 3.175999999999872,
+            "positionQuality": 0.0
+          },
+          "practice": false,
+          "height": 1.0,
+          "apparatus": "springboard",
+          "routinePoints": 0.0,
+          "routineFinished": false,
+          "auxiliaryPractice": false,
+          "index": 3,
+          "return": -7.884009775961658,
+          "postContactRotationDegrees": 70.66765232254122
+        },
+        {
+          "declaration": "202A",
+          "category": 2,
+          "difficulty": 1.9,
+          "execution": 0.0,
+          "points": 0.0,
+          "trainingValue": 0.0,
+          "valid": false,
+          "clean": false,
+          "deductions": {
+            "takeoff": 3.0104267631724095,
+            "position": 1.6829407471641384,
+            "entryAlignment": 6.0,
+            "entryForm": 1.8796199059423662,
+            "feet": 0.5439287719645342,
+            "legs": 0.20815925358033727,
+            "hands": 0.0,
+            "lateralEntry": 0.47231068289280403,
+            "distance": 0.0
+          },
+          "failures": [
+            "invalid takeoff or platform contact",
+            "declared somersault count not completed",
+            "feet-first dive did not enter feet first"
+          ],
+          "rotationError": 0.374574408748925,
+          "twistError": 0.04083645873663925,
+          "entryAngle": 134.8225536331851,
+          "recognition": {
+            "somersaults": 0.5,
+            "twists": 0.0
+          },
+          "automatedJudge": true,
+          "splashIsProxy": true,
+          "judgeVersion": "self-declared-takeoff-and-whole-entry-v12",
+          "trainingRewardComponents": {
+            "total": -7.485881602724397,
+            "alignmentCost": 1.5,
+            "takeoffCost": 2.5026066907931024,
+            "rotationCost": 0.2545153298377427,
+            "twistCost": 0.03201974170750627,
+            "positionCost": 0.4207351867910346
+          },
+          "measurements": {
+            "index": 0,
+            "rotation": 0.625425591251075,
+            "twist": 0.04083645873663925,
+            "boardInvalid": true,
+            "water": true,
+            "fullEntryComplete": true,
+            "firstGeometry": 9,
+            "x": 2.402636394571713,
+            "firstContactAngle": 134.8225536331851,
+            "entryAngle": 134.8225536331851,
+            "form": 0.060190047028816966,
+            "entryGeometryValid": false,
+            "entryLimbsValid": false,
+            "entryGeometryWorst": {
+              "footLineAngles": [
+                24.37150075150088,
+                24.476794738404035
+              ],
+              "handAxisAngles": [
+                48.835721159438265,
+                6.797899333853015
+              ],
+              "handSeparation": 0.5422626336860471,
+              "handHeightGap": 0.1572366341370106,
+              "kneeGap": 0.1516993645968366,
+              "ankleGap": 0.17163185071606746,
+              "toeGap": 0.1705955439883112,
+              "crossedLegs": false
+            },
+            "entryArmPositionValid": false,
+            "positionQualities": [
+              0.15852962641793078,
+              0.2256026245191138,
+              0.16173025197871407,
+              0.22575786112824148
+            ],
+            "ascent": 0.0,
+            "preparationBounces": 1,
+            "surfaceLateralSpeed": 1.416932048678412,
+            "entryAngularSpeed": 9.321029475088109,
+            "maxLateral": 0.18442291566600585,
+            "takeoffVerticalSpeed": -3.3811819984364804,
+            "departureLean": 37.96920434275842,
+            "time": 3.1239999999998775,
+            "positionQuality": 0.15852962641793078
+          },
+          "practice": false,
+          "height": 10.0,
+          "apparatus": "platform",
+          "routinePoints": 0.0,
+          "routineFinished": false,
+          "auxiliaryPractice": false,
+          "index": 0,
+          "return": -7.742432682356139,
+          "postContactRotationDegrees": 35.10689204515006
+        },
+        {
+          "declaration": "202A",
+          "category": 2,
+          "difficulty": 1.7,
+          "execution": 0.0,
+          "points": 0.0,
+          "trainingValue": 0.0,
+          "valid": false,
+          "clean": false,
+          "deductions": {
+            "takeoff": 1.6495059373511503,
+            "position": 1.7543037287404823,
+            "entryAlignment": 6.0,
+            "entryForm": 1.907026190901766,
+            "feet": 1.0,
+            "legs": 0.3329971679170439,
+            "hands": 0.0,
+            "lateralEntry": 0.4640943289546941,
+            "distance": 0.0
+          },
+          "failures": [
+            "declared somersault count not completed",
+            "feet-first dive did not enter feet first"
+          ],
+          "rotationError": 0.6326914861392441,
+          "twistError": 0.06757881793295298,
+          "entryAngle": 170.31506473560188,
+          "recognition": {
+            "somersaults": 0.5,
+            "twists": 0.0
+          },
+          "automatedJudge": true,
+          "splashIsProxy": true,
+          "judgeVersion": "self-declared-takeoff-and-whole-entry-v12",
+          "trainingRewardComponents": {
+            "total": -5.007305869006652,
+            "alignmentCost": 1.5,
+            "takeoffCost": 1.6982019796214685,
+            "rotationCost": 0.3921838972372737,
+            "twistCost": 0.0523146380194139,
+            "positionCost": 0.4385759321851206
+          },
+          "measurements": {
+            "index": 3,
+            "rotation": 0.36730851386075586,
+            "twist": -0.06757881793295298,
+            "boardInvalid": false,
+            "water": true,
+            "fullEntryComplete": true,
+            "firstGeometry": 3,
+            "x": 1.5411823480020468,
+            "firstContactAngle": 132.17828894374068,
+            "entryAngle": 170.31506473560188,
+            "form": 0.04648690454911694,
+            "entryGeometryValid": false,
+            "entryLimbsValid": false,
+            "entryGeometryWorst": {
+              "footLineAngles": [
+                73.09632170705679,
+                73.07867501502164
+              ],
+              "handAxisAngles": [
+                84.21946801218283,
+                118.88012825562429
+              ],
+              "handSeparation": 0.6999949579421074,
+              "handHeightGap": 0.352404581558035,
+              "kneeGap": 0.18673160209842748,
+              "ankleGap": 0.19659943358340878,
+              "toeGap": 0.1932092694291408,
+              "crossedLegs": false
+            },
+            "entryArmPositionValid": false,
+            "positionQualities": [
+              0.12284813562975881,
+              0.18249440377846385,
+              0.2065575085731521,
+              0.2065575085731521
+            ],
+            "ascent": 0.018542152187839056,
+            "preparationBounces": 0,
+            "surfaceLateralSpeed": 1.3922829868640823,
+            "entryAngularSpeed": 4.160070593349917,
+            "maxLateral": 0.12649814881512514,
+            "takeoffVerticalSpeed": 0.6094693230274223,
+            "departureLean": 25.899751423065553,
+            "time": 3.1499999999998747,
+            "positionQuality": 0.12284813562975881
+          },
+          "practice": false,
+          "height": 1.0,
+          "apparatus": "springboard",
+          "routinePoints": 0.0,
+          "routineFinished": false,
+          "auxiliaryPractice": false,
+          "index": 3,
+          "return": -5.0780094529427515,
+          "postContactRotationDegrees": 77.11624240918047
+        },
+        {
+          "declaration": "302A",
+          "category": 3,
+          "difficulty": 1.8,
+          "execution": 0.0,
+          "points": 0.0,
+          "trainingValue": 0.0,
+          "valid": false,
+          "clean": false,
+          "deductions": {
+            "takeoff": 0.6024029308069259,
+            "position": 1.5432763255853352,
+            "entryAlignment": 6.0,
+            "entryForm": 1.7436333277742568,
+            "feet": 1.0,
+            "legs": 0.4953177800559704,
+            "hands": 0.0,
+            "lateralEntry": 0.46950136732437714,
+            "distance": 0.0
+          },
+          "failures": [
+            "invalid takeoff or platform contact",
+            "declared somersault count not completed"
+          ],
+          "rotationError": 0.8830184814657771,
+          "twistError": 0.002877833302045438,
+          "entryAngle": 72.14846794430072,
+          "recognition": {
+            "somersaults": 0.0,
+            "twists": 0.0
+          },
+          "automatedJudge": true,
+          "splashIsProxy": true,
+          "judgeVersion": "self-declared-takeoff-and-whole-entry-v12",
+          "trainingRewardComponents": {
+            "total": -5.899504958032347,
+            "alignmentCost": 1.5,
+            "takeoffCost": 0.5779729460081487,
+            "rotationCost": 0.506300851625336,
+            "twistCost": 0.002298960213876904,
+            "positionCost": 0.3858190813963338
+          },
+          "measurements": {
+            "index": 1,
+            "rotation": -0.1169815185342229,
+            "twist": -0.002877833302045438,
+            "boardInvalid": true,
+            "water": true,
+            "fullEntryComplete": true,
+            "firstGeometry": 15,
+            "x": 0.8582586873771225,
+            "firstContactAngle": 44.65752378622795,
+            "entryAngle": 72.14846794430072,
+            "form": 0.12818333611287155,
+            "entryGeometryValid": false,
+            "entryLimbsValid": false,
+            "entryGeometryWorst": {
+              "footLineAngles": [
+                53.155931830143196,
+                53.04503094250735
+              ],
+              "handAxisAngles": [
+                170.42765182522814,
+                91.10117040094397
+              ],
+              "handSeparation": 0.8153372333134002,
+              "handHeightGap": 0.6948429015516422,
+              "kneeGap": 0.22142695703651055,
+              "ankleGap": 0.22906355601119407,
+              "toeGap": 0.23386398775125256,
+              "crossedLegs": false
+            },
+            "entryArmPositionValid": true,
+            "positionQualities": [
+              0.22836183720733244,
+              0.2282544867782037,
+              0.11846430287987222,
+              0.2357384822898626
+            ],
+            "ascent": 0.1795194138386148,
+            "preparationBounces": 0,
+            "surfaceLateralSpeed": 1.4085041019731315,
+            "entryAngularSpeed": 7.902899387560245,
+            "maxLateral": 0.28382158838319854,
+            "takeoffVerticalSpeed": 1.8969189622594667,
+            "departureLean": 10.269724672165077,
+            "time": 3.9319999999997886,
+            "positionQuality": 0.22836183720733244
+          },
+          "practice": false,
+          "height": 1.0,
+          "apparatus": "springboard",
+          "routinePoints": 0.0,
+          "routineFinished": false,
+          "auxiliaryPractice": false,
+          "index": 1,
+          "return": -6.164807412573282,
+          "postContactRotationDegrees": 76.02253069494829
+        },
+        {
+          "declaration": "5311A",
+          "category": 5,
+          "difficulty": 1.9,
+          "execution": 0.0,
+          "points": 0.0,
+          "trainingValue": 0.0,
+          "valid": false,
+          "clean": false,
+          "deductions": {
+            "takeoff": 1.3071452934762606,
+            "position": 1.6164806332628587,
+            "entryAlignment": 6.0,
+            "entryForm": 1.9403690525642998,
+            "feet": 0.8342746270540198,
+            "legs": 0.24062110485397747,
+            "hands": 1.0,
+            "lateralEntry": 0.5892081177049634,
+            "distance": 0.0
+          },
+          "failures": [
+            "invalid takeoff or platform contact",
+            "declared somersault count not completed",
+            "declared twist count not completed",
+            "feet entered before head or hands",
+            "double bounce"
+          ],
+          "rotationError": 0.3583832460034983,
+          "twistError": 0.3684358050151759,
+          "entryAngle": 130.35341368659527,
+          "recognition": {
+            "somersaults": 0.0,
+            "twists": 0.0
+          },
+          "automatedJudge": true,
+          "splashIsProxy": true,
+          "judgeVersion": "self-declared-takeoff-and-whole-entry-v12",
+          "trainingRewardComponents": {
+            "total": -6.082759070020155,
+            "alignmentCost": 1.5,
+            "takeoffCost": 0.5315498523532389,
+            "rotationCost": 0.2450361622989312,
+            "twistCost": 0.25093467150795573,
+            "positionCost": 0.4041201583157147
+          },
+          "measurements": {
+            "index": 2,
+            "rotation": -0.1416167539965017,
+            "twist": -0.13156419498482405,
+            "boardInvalid": true,
+            "water": true,
+            "fullEntryComplete": true,
+            "firstGeometry": 15,
+            "x": 0.7803183090342977,
+            "firstContactAngle": 128.9200710346303,
+            "entryAngle": 130.35341368659527,
+            "form": 0.029815473717850142,
+            "entryGeometryValid": false,
+            "entryLimbsValid": false,
+            "entryGeometryWorst": {
+              "footLineAngles": [
+                37.54235821743089,
+                37.334550510122945
+              ],
+              "handAxisAngles": [
+                165.22164334396052,
+                91.8220338874788
+              ],
+              "handSeparation": 0.956114108483904,
+              "handHeightGap": 0.6032320684610224,
+              "kneeGap": 0.1763755220537664,
+              "ankleGap": 0.1781242209707955,
+              "toeGap": 0.17152270464675493,
+              "crossedLegs": false
+            },
+            "entryArmPositionValid": false,
+            "positionQualities": [
+              0.1917596833685707,
+              0.2169524568853948,
+              0.15071398644368783,
+              0.22469184846977525
+            ],
+            "ascent": 0.23857094130474787,
+            "preparationBounces": 1,
+            "surfaceLateralSpeed": 1.7676243531148903,
+            "entryAngularSpeed": 4.9389906443178315,
+            "maxLateral": 0.2548493966457034,
+            "takeoffVerticalSpeed": 2.183508448795907,
+            "departureLean": 14.98287044426038,
+            "time": 3.8339999999997993,
+            "positionQuality": 0.1917596833685707
+          },
+          "practice": false,
+          "height": 1.0,
+          "apparatus": "springboard",
+          "routinePoints": 0.0,
+          "routineFinished": false,
+          "auxiliaryPractice": false,
+          "index": 2,
+          "return": -6.336470796637514,
+          "postContactRotationDegrees": 83.49400924155964
+        },
+        {
+          "declaration": "5111A",
+          "category": 5,
+          "difficulty": 2.0,
+          "execution": 0.0,
+          "points": 0.0,
+          "trainingValue": 0.0,
+          "valid": false,
+          "clean": false,
+          "deductions": {
+            "takeoff": 0.7247547661676063,
+            "position": 2.0,
+            "entryAlignment": 6.0,
+            "entryForm": 1.8946378174645861,
+            "feet": 0.16704444193303886,
+            "legs": 0.3223278025846553,
+            "hands": 1.0,
+            "lateralEntry": 0.5126836548641197,
+            "distance": 0.0
+          },
+          "failures": [
+            "invalid takeoff or platform contact",
+            "declared somersault count not completed",
+            "declared twist count not completed",
+            "feet entered before head or hands"
+          ],
+          "rotationError": 1.1523510477354648,
+          "twistError": 0.4919614801996547,
+          "entryAngle": 67.69188253465974,
+          "recognition": {
+            "somersaults": -0.5,
+            "twists": 0.0
+          },
+          "automatedJudge": true,
+          "splashIsProxy": true,
+          "judgeVersion": "self-declared-takeoff-and-whole-entry-v12",
+          "trainingRewardComponents": {
+            "total": -6.252509740360537,
+            "alignmentCost": 1.5,
+            "takeoffCost": 0.34501435982513073,
+            "rotationCost": 0.6132486042136172,
+            "twistCost": 0.3200733471101896,
+            "positionCost": 0.5
+          },
+          "measurements": {
+            "index": 0,
+            "rotation": -0.6523510477354648,
+            "twist": 0.008038519800345322,
+            "boardInvalid": true,
+            "water": true,
+            "fullEntryComplete": true,
+            "firstGeometry": 15,
+            "x": 3.5575924272807593,
+            "firstContactAngle": 55.43667730131466,
+            "entryAngle": 67.69188253465974,
+            "form": 0.05268109126770698,
+            "entryGeometryValid": false,
+            "entryLimbsValid": false,
+            "entryGeometryWorst": {
+              "footLineAngles": [
+                7.4803208539221595,
+                7.516999886986748
+              ],
+              "handAxisAngles": [
+                39.81331915018886,
+                14.668148557261834
+              ],
+              "handSeparation": 0.48486244350439217,
+              "handHeightGap": 0.01031133339086665,
+              "kneeGap": 0.2009012558067576,
+              "ankleGap": 0.19446556051693106,
+              "toeGap": 0.19161399415973845,
+              "crossedLegs": false
+            },
+            "entryArmPositionValid": false,
+            "positionQualities": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "ascent": 0.25085229951503124,
+            "preparationBounces": 0,
+            "surfaceLateralSpeed": 1.538050964592359,
+            "entryAngularSpeed": 4.369181622154856,
+            "maxLateral": 0.2086099849921223,
+            "takeoffVerticalSpeed": 2.2013161818463933,
+            "departureLean": 36.55573186842431,
+            "time": 3.499999999999836,
+            "positionQuality": 0.0
+          },
+          "practice": false,
+          "height": 10.0,
+          "apparatus": "platform",
+          "routinePoints": 0.0,
+          "routineFinished": false,
+          "auxiliaryPractice": false,
+          "index": 0,
+          "return": -6.537730654008101,
+          "postContactRotationDegrees": 19.730868069045446
+        },
+        {
+          "declaration": "5311A",
+          "category": 5,
+          "difficulty": 1.9,
+          "execution": 0.0,
+          "points": 0.0,
+          "trainingValue": 0.0,
+          "valid": false,
+          "clean": false,
+          "deductions": {
+            "takeoff": 2.7443459936929817,
+            "position": 1.6345446206837564,
+            "entryAlignment": 6.0,
+            "entryForm": 1.9214337567550612,
+            "feet": 1.0,
+            "legs": 0.11849805519403817,
+            "hands": 1.0,
+            "lateralEntry": 0.4037186558896168,
+            "distance": 0.0
+          },
+          "failures": [
+            "invalid takeoff or platform contact",
+            "declared somersault count not completed",
+            "declared twist count not completed",
+            "feet entered before head or hands",
+            "double bounce"
+          ],
+          "rotationError": 0.4272461282163218,
+          "twistError": 0.4750980294382709,
+          "entryAngle": 151.76698908189098,
+          "recognition": {
+            "somersaults": 0.0,
+            "twists": 0.0
+          },
+          "automatedJudge": true,
+          "splashIsProxy": true,
+          "judgeVersion": "self-declared-takeoff-and-whole-entry-v12",
+          "trainingRewardComponents": {
+            "total": -6.785214336058626,
+            "alignmentCost": 1.5,
+            "takeoffCost": 1.1700885628718756,
+            "rotationCost": 0.284597442480541,
+            "twistCost": 0.310979558575591,
+            "positionCost": 0.4086361551709391
+          },
+          "measurements": {
+            "index": 3,
+            "rotation": -0.07275387178367818,
+            "twist": -0.02490197056172912,
+            "boardInvalid": true,
+            "water": true,
+            "fullEntryComplete": true,
+            "firstGeometry": 15,
+            "x": 1.2080811321110079,
+            "firstContactAngle": 150.4481023715474,
+            "entryAngle": 151.76698908189098,
+            "form": 0.039283121622469344,
+            "entryGeometryValid": false,
+            "entryLimbsValid": false,
+            "entryGeometryWorst": {
+              "footLineAngles": [
+                46.650578779392276,
+                46.770897484207765
+              ],
+              "handAxisAngles": [
+                144.14493784210165,
+                92.02912063664209
+              ],
+              "handSeparation": 0.6907738247157234,
+              "handHeightGap": 0.41195952142205916,
+              "kneeGap": 0.1546349524084661,
+              "ankleGap": 0.15369961103880764,
+              "toeGap": 0.13670976122332604,
+              "crossedLegs": false
+            },
+            "entryArmPositionValid": false,
+            "positionQualities": [
+              0.18272768965812186,
+              0.20003270405291176,
+              0.1544210005404411,
+              0.2082389816129602
+            ],
+            "ascent": 0.16856526013737433,
+            "preparationBounces": 2,
+            "surfaceLateralSpeed": 1.2111559676688504,
+            "entryAngularSpeed": 6.182359813320252,
+            "maxLateral": 0.24529824898518668,
+            "takeoffVerticalSpeed": 1.8164549403738217,
+            "departureLean": 18.922753247093407,
+            "time": 3.55599999999983,
+            "positionQuality": 0.18272768965812186
+          },
+          "practice": false,
+          "height": 1.0,
+          "apparatus": "springboard",
+          "routinePoints": 0.0,
+          "routineFinished": false,
+          "auxiliaryPractice": false,
+          "index": 3,
+          "return": -7.078349595799182,
+          "postContactRotationDegrees": 94.33831946036048
+        },
+        {
+          "declaration": "203A",
+          "category": 2,
+          "difficulty": 2.5,
+          "execution": 0.0,
+          "points": 0.0,
+          "trainingValue": 0.0,
+          "valid": false,
+          "clean": false,
+          "deductions": {
+            "takeoff": 1.476818034983932,
+            "position": 1.7024850344431228,
+            "entryAlignment": 6.0,
+            "entryForm": 1.9457699180273387,
+            "feet": 1.0,
+            "legs": 0.3829343273450696,
+            "hands": 1.0,
+            "lateralEntry": 0.32775491339554047,
+            "distance": 0.0
+          },
+          "failures": [
+            "declared somersault count not completed"
+          ],
+          "rotationError": 1.1997804868468478,
+          "twistError": 0.008312569252564907,
+          "entryAngle": 71.96640194690134,
+          "recognition": {
+            "somersaults": 0.5,
+            "twists": 0.0
+          },
+          "automatedJudge": true,
+          "splashIsProxy": true,
+          "judgeVersion": "self-declared-takeoff-and-whole-entry-v12",
+          "trainingRewardComponents": {
+            "total": -5.504008490728074,
+            "alignmentCost": 1.5,
+            "takeoffCost": 1.7769638129805565,
+            "rotationCost": 0.6306860613440526,
+            "twistCost": 0.0066225681006976,
+            "positionCost": 0.4256212586107807
+          },
+          "measurements": {
+            "index": 2,
+            "rotation": 0.3002195131531521,
+            "twist": 0.008312569252564907,
+            "boardInvalid": false,
+            "water": true,
+            "fullEntryComplete": true,
+            "firstGeometry": 3,
+            "x": 1.4185515930251653,
+            "firstContactAngle": 71.96640194690134,
+            "entryAngle": 71.96640194690134,
+            "form": 0.02711504098633061,
+            "entryGeometryValid": false,
+            "entryLimbsValid": false,
+            "entryGeometryWorst": {
+              "footLineAngles": [
+                66.17631924858806,
+                66.21057598208375
+              ],
+              "handAxisAngles": [
+                108.88665501533312,
+                169.55827016091587
+              ],
+              "handSeparation": 0.6549456549912517,
+              "handHeightGap": 0.2763125188841302,
+              "kneeGap": 0.2073702765819148,
+              "ankleGap": 0.20658686546901392,
+              "toeGap": 0.2057807827008237,
+              "crossedLegs": false
+            },
+            "entryArmPositionValid": false,
+            "positionQualities": [
+              0.1487574827784386,
+              0.2269703866520745,
+              0.18110703051414445,
+              0.2269703866520745
+            ],
+            "ascent": 0.0046363930032136125,
+            "preparationBounces": 0,
+            "surfaceLateralSpeed": 0.9832647401866215,
+            "entryAngularSpeed": 4.578568836041473,
+            "maxLateral": 0.06965755257520313,
+            "takeoffVerticalSpeed": 0.307144209685525,
+            "departureLean": 2.1767099485259642,
+            "time": 3.3899999999998482,
+            "positionQuality": 0.1487574827784386
+          },
+          "practice": false,
+          "height": 1.0,
+          "apparatus": "springboard",
+          "routinePoints": 0.0,
+          "routineFinished": false,
+          "auxiliaryPractice": false,
+          "index": 2,
+          "return": -5.572196958972313,
+          "postContactRotationDegrees": 94.3258076640236
+        },
+        {
+          "declaration": "401A",
+          "category": 4,
+          "difficulty": 1.8,
+          "execution": 0.0,
+          "points": 0.0,
+          "trainingValue": 0.0,
+          "valid": false,
+          "clean": false,
+          "deductions": {
+            "takeoff": 1.5,
+            "position": 2.0,
+            "entryAlignment": 6.0,
+            "entryForm": 1.9514054684638618,
+            "feet": 1.0,
+            "legs": 0.35818064732232174,
+            "hands": 1.0,
+            "lateralEntry": 0.4115050077323361,
+            "distance": 0.0
+          },
+          "failures": [
+            "declared somersault count not completed"
+          ],
+          "rotationError": 0.7547352123794944,
+          "twistError": 0.031656269593305815,
+          "entryAngle": 88.29606996633507,
+          "recognition": {
+            "somersaults": -0.5,
+            "twists": 0.0
+          },
+          "automatedJudge": true,
+          "splashIsProxy": true,
+          "judgeVersion": "self-declared-takeoff-and-whole-entry-v12",
+          "trainingRewardComponents": {
+            "total": -5.64565430969644,
+            "alignmentCost": 1.5,
+            "takeoffCost": 1.9905947217153146,
+            "rotationCost": 0.4498543755182716,
+            "twistCost": 0.024932431583223707,
+            "positionCost": 0.5
+          },
+          "measurements": {
+            "index": 1,
+            "rotation": 0.2547352123794943,
+            "twist": -0.031656269593305815,
+            "boardInvalid": false,
+            "water": true,
+            "fullEntryComplete": true,
+            "firstGeometry": 2,
+            "x": 1.2315775343994921,
+            "firstContactAngle": 88.29606996633507,
+            "entryAngle": 88.29606996633507,
+            "form": 0.02429726576806907,
+            "entryGeometryValid": false,
+            "entryLimbsValid": false,
+            "entryGeometryWorst": {
+              "footLineAngles": [
+                79.3902383079853,
+                79.39402145708242
+              ],
+              "handAxisAngles": [
+                111.93025133273623,
+                165.27775680014994
+              ],
+              "handSeparation": 0.8183862134608484,
+              "handHeightGap": 0.07382685635968467,
+              "kneeGap": 0.2041538915309047,
+              "ankleGap": 0.20163612946446435,
+              "toeGap": 0.19981826073814382,
+              "crossedLegs": false
+            },
+            "entryArmPositionValid": false,
+            "positionQualities": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "ascent": 0.0,
+            "preparationBounces": 0,
+            "surfaceLateralSpeed": 1.2345150231970083,
+            "entryAngularSpeed": 4.939932810140677,
+            "maxLateral": 0.057028648609311505,
+            "takeoffVerticalSpeed": -0.46237888686125816,
+            "departureLean": 7.808752615812487,
+            "time": 3.599999999999825,
+            "positionQuality": 0.0
+          },
+          "practice": false,
+          "height": 1.0,
+          "apparatus": "springboard",
+          "routinePoints": 0.0,
+          "routineFinished": false,
+          "auxiliaryPractice": false,
+          "index": 1,
+          "return": -5.711167560024478,
+          "postContactRotationDegrees": 94.07006292836326
+        },
+        {
+          "declaration": "101A",
+          "category": 1,
+          "difficulty": 1.4,
+          "execution": 0.0,
+          "points": 0.0,
+          "trainingValue": 0.0,
+          "valid": false,
+          "clean": false,
+          "deductions": {
+            "takeoff": 1.5235303183218571,
+            "position": 1.6896935981118262,
+            "entryAlignment": 6.0,
+            "entryForm": 1.8887956856776962,
+            "feet": 1.0,
+            "legs": 0.5023988504772331,
+            "hands": 1.0,
+            "lateralEntry": 0.3807625558476329,
+            "distance": 0.7212132154754352
+          },
+          "failures": [
+            "invalid takeoff or platform contact",
+            "declared somersault count not completed",
+            "feet entered before head or hands"
+          ],
+          "rotationError": 0.42045282660078703,
+          "twistError": 0.016672693934953055,
+          "entryAngle": 154.3744443078529,
+          "recognition": {
+            "somersaults": 0.0,
+            "twists": 0.0
+          },
+          "automatedJudge": true,
+          "splashIsProxy": true,
+          "judgeVersion": "self-declared-takeoff-and-whole-entry-v12",
+          "trainingRewardComponents": {
+            "total": -7.420678881073743,
+            "alignmentCost": 1.5,
+            "takeoffCost": 1.830954150160637,
+            "rotationCost": 0.28078057020025327,
+            "twistCost": 0.013228184315397499,
+            "positionCost": 0.42242339952795654
+          },
+          "measurements": {
+            "index": 3,
+            "rotation": 0.07954717339921297,
+            "twist": 0.016672693934953055,
+            "boardInvalid": true,
+            "water": true,
+            "fullEntryComplete": true,
+            "firstGeometry": 15,
+            "x": 0.4196966961311412,
+            "firstContactAngle": 151.33961905050046,
+            "entryAngle": 154.3744443078529,
+            "form": 0.055602157161151876,
+            "entryGeometryValid": false,
+            "entryLimbsValid": false,
+            "entryGeometryWorst": {
+              "footLineAngles": [
+                68.85202569712045,
+                69.59030957146064
+              ],
+              "handAxisAngles": [
+                65.23687533994168,
+                57.248647783064875
+              ],
+              "handSeparation": 0.44527357212643026,
+              "handHeightGap": 0.13268329033811632,
+              "kneeGap": 0.21432714494700636,
+              "ankleGap": 0.23047977009544662,
+              "toeGap": 0.23869246710264638,
+              "crossedLegs": false
+            },
+            "entryArmPositionValid": false,
+            "positionQualities": [
+              0.15515320094408694,
+              0.17302915448142223,
+              0.17941919303347534,
+              0.17941919303347534
+            ],
+            "ascent": 0.0014953021204270889,
+            "preparationBounces": 0,
+            "surfaceLateralSpeed": 1.1422876675428988,
+            "entryAngularSpeed": 8.46821892632382,
+            "maxLateral": 0.04204624150379372,
+            "takeoffVerticalSpeed": 0.17977635607361478,
+            "departureLean": 16.39530730157966,
+            "time": 2.265999999999972,
+            "positionQuality": 0.15515320094408694
+          },
+          "practice": false,
+          "height": 1.0,
+          "apparatus": "springboard",
+          "routinePoints": 0.0,
+          "routineFinished": true,
+          "auxiliaryPractice": false,
+          "index": 3,
+          "return": -7.686796145004337,
+          "postContactRotationDegrees": 64.72036237414493
+        },
+        {
+          "declaration": "612A",
+          "category": 6,
+          "difficulty": 2.0,
+          "execution": 0.0,
+          "points": 0.0,
+          "trainingValue": 0.0,
+          "valid": false,
+          "clean": false,
+          "deductions": {
+            "takeoff": 2.5,
+            "position": 1.7532404572967015,
+            "entryAlignment": 6.0,
+            "entryForm": 1.9330625383020894,
+            "feet": 0.3470548780360211,
+            "legs": 0.4059379982543998,
+            "hands": 1.0,
+            "lateralEntry": 1.0,
+            "distance": 0.49445584638483653
+          },
+          "failures": [
+            "invalid takeoff or platform contact",
+            "declared somersault count not completed",
+            "declared twist count not completed",
+            "wrong rotation plane"
+          ],
+          "rotationError": 0.5363205414627694,
+          "twistError": 1.243415080359978,
+          "entryAngle": 150.02644585071036,
+          "recognition": {
+            "somersaults": 0.5,
+            "twists": 1.0
+          },
+          "automatedJudge": true,
+          "splashIsProxy": true,
+          "judgeVersion": "self-declared-takeoff-and-whole-entry-v12",
+          "trainingRewardComponents": {
+            "total": -8.598349604055345,
+            "alignmentCost": 1.5,
+            "takeoffCost": 2.375,
+            "rotationCost": 0.34351223904142,
+            "twistCost": 0.6463994354454131,
+            "positionCost": 0.4383101143241754
+          },
+          "measurements": {
+            "index": 0,
+            "rotation": 0.4636794585372306,
+            "twist": 1.243415080359978,
+            "boardInvalid": true,
+            "water": true,
+            "fullEntryComplete": true,
+            "firstGeometry": 13,
+            "x": 0.47638603840379085,
+            "firstContactAngle": 150.02644585071036,
+            "entryAngle": 150.02644585071036,
+            "form": 0.03346873084895533,
+            "entryGeometryValid": false,
+            "entryLimbsValid": false,
+            "entryGeometryWorst": {
+              "footLineAngles": [
+                15.617469511620948,
+                15.422731983496382
+              ],
+              "handAxisAngles": [
+                152.39570464214728,
+                128.99144951862698
+              ],
+              "handSeparation": 0.7121229187550038,
+              "handHeightGap": 0.2709203897000485,
+              "kneeGap": 0.20948825000572585,
+              "ankleGap": 0.21118759965087996,
+              "toeGap": 0.21456555002805106,
+              "crossedLegs": false
+            },
+            "entryArmPositionValid": false,
+            "positionQualities": [
+              0.12337977135164924,
+              0.12388243478310038,
+              0.11135399033837766,
+              0.12978530863100055
+            ],
+            "ascent": 0.0,
+            "preparationBounces": 0,
+            "surfaceLateralSpeed": 6.639588491166673,
+            "entryAngularSpeed": 16.482732702542023,
+            "maxLateral": 0.996074258667433,
+            "takeoffVerticalSpeed": -2.105189295719566,
+            "departureLean": 174.42185974808072,
+            "time": 3.5879999999998264,
+            "positionQuality": 0.12337977135164924
+          },
+          "practice": false,
+          "height": 10.0,
+          "apparatus": "platform",
+          "routinePoints": 0.0,
+          "routineFinished": true,
+          "auxiliaryPractice": false,
+          "index": 0,
+          "return": -8.84002143762109,
+          "postContactRotationDegrees": 94.76941653434251
+        },
+        {
+          "declaration": "101A",
+          "category": 1,
+          "difficulty": 1.4,
+          "execution": 0.0,
+          "points": 0.0,
+          "trainingValue": 0.0,
+          "valid": false,
+          "clean": false,
+          "deductions": {
+            "takeoff": 0.0,
+            "position": 2.0,
+            "entryAlignment": 6.0,
+            "entryForm": 1.9076769399362141,
+            "feet": 1.0,
+            "legs": 0.03544407979132566,
+            "hands": 1.0,
+            "lateralEntry": 0.6571861097472851,
+            "distance": 0.0
+          },
+          "failures": [
+            "invalid takeoff or platform contact",
+            "declared somersault count not completed",
+            "feet entered before head or hands"
+          ],
+          "rotationError": 0.5960860417327769,
+          "twistError": 0.08075929660618893,
+          "entryAngle": 149.1546940170839,
+          "recognition": {
+            "somersaults": 0.0,
+            "twists": 0.0
+          },
+          "automatedJudge": true,
+          "splashIsProxy": true,
+          "judgeVersion": "self-declared-takeoff-and-whole-entry-v12",
+          "trainingRewardComponents": {
+            "total": -5.586251386335352,
+            "alignmentCost": 1.5,
+            "takeoffCost": 0.0,
+            "rotationCost": 0.3740435267476918,
+            "twistCost": 0.062131077218954334,
+            "positionCost": 0.5
+          },
+          "measurements": {
+            "index": 2,
+            "rotation": -0.09608604173277686,
+            "twist": 0.08075929660618893,
+            "boardInvalid": true,
+            "water": true,
+            "fullEntryComplete": true,
+            "firstGeometry": 12,
+            "x": 0.9761012987772699,
+            "firstContactAngle": 145.3559464475471,
+            "entryAngle": 149.1546940170839,
+            "form": 0.04616153003189294,
+            "entryGeometryValid": false,
+            "entryLimbsValid": false,
+            "entryGeometryWorst": {
+              "footLineAngles": [
+                45.48659969356428,
+                43.4547381923589
+              ],
+              "handAxisAngles": [
+                148.811409079997,
+                77.61471266945973
+              ],
+              "handSeparation": 0.8967904679313923,
+              "handHeightGap": 0.23117128545362953,
+              "kneeGap": 0.16514181130161903,
+              "ankleGap": 0.13708881595826514,
+              "toeGap": 0.11399469328627095,
+              "crossedLegs": false
+            },
+            "entryArmPositionValid": false,
+            "positionQualities": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "ascent": 0.32005049047986,
+            "preparationBounces": 0,
+            "surfaceLateralSpeed": 1.9715583292418553,
+            "entryAngularSpeed": 6.380462294428739,
+            "maxLateral": 0.04409156504056914,
+            "takeoffVerticalSpeed": 2.517196489375348,
+            "departureLean": 10.837052614550258,
+            "time": 3.5419999999998315,
+            "positionQuality": 0.0
+          },
+          "practice": false,
+          "height": 1.0,
+          "apparatus": "springboard",
+          "routinePoints": 0.0,
+          "routineFinished": true,
+          "auxiliaryPractice": false,
+          "index": 2,
+          "return": -5.853820250706121,
+          "postContactRotationDegrees": 96.46706451956224
+        },
+        {
+          "declaration": "101A",
+          "category": 1,
+          "difficulty": 1.4,
+          "execution": 0.0,
+          "points": 0.0,
+          "trainingValue": 0.0,
+          "valid": false,
+          "clean": false,
+          "deductions": {
+            "takeoff": 4.046122428988829,
+            "position": 2.0,
+            "entryAlignment": 6.0,
+            "entryForm": 1.9076471273326039,
+            "feet": 1.0,
+            "legs": 0.13926017596727416,
+            "hands": 1.0,
+            "lateralEntry": 0.5525371349774103,
+            "distance": 0.36983265956924916
+          },
+          "failures": [
+            "invalid takeoff or platform contact",
+            "declared somersault count not completed",
+            "feet entered before head or hands",
+            "double bounce"
+          ],
+          "rotationError": 0.5,
+          "twistError": 0.0,
+          "entryAngle": 171.53190117486488,
+          "recognition": {
+            "somersaults": 0.0,
+            "twists": 0.0
+          },
+          "automatedJudge": true,
+          "splashIsProxy": true,
+          "judgeVersion": "self-declared-takeoff-and-whole-entry-v12",
+          "trainingRewardComponents": {
+            "total": -8.328221968195372,
+            "alignmentCost": 1.5,
+            "takeoffCost": 2.7615306072472072,
+            "rotationCost": 0.32437208648653154,
+            "twistCost": 0.0,
+            "positionCost": 0.5
+          },
+          "measurements": {
+            "index": 1,
+            "rotation": 0.0,
+            "twist": 0.0,
+            "boardInvalid": true,
+            "water": true,
+            "fullEntryComplete": true,
+            "firstGeometry": 12,
+            "x": 0.5075418351076877,
+            "firstContactAngle": 145.60030974746974,
+            "entryAngle": 171.53190117486488,
+            "form": 0.046176436333698,
+            "entryGeometryValid": false,
+            "entryLimbsValid": false,
+            "entryGeometryWorst": {
+              "footLineAngles": [
+                53.672432367306506,
+                54.205766755707884
+              ],
+              "handAxisAngles": [
+                126.80252114486812,
+                136.94786541926018
+              ],
+              "handSeparation": 0.462224049998489,
+              "handHeightGap": 0.2508842380043126,
+              "kneeGap": 0.18079235958849021,
+              "ankleGap": 0.15785203519345484,
+              "toeGap": 0.1401440655589947,
+              "crossedLegs": false
+            },
+            "entryArmPositionValid": false,
+            "positionQualities": [
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "ascent": 0.0,
+            "preparationBounces": 3,
+            "surfaceLateralSpeed": 1.657611404932231,
+            "entryAngularSpeed": 7.695310148598025,
+            "maxLateral": 0.04841529500067131,
+            "takeoffVerticalSpeed": -2.7609531005028383,
+            "departureLean": 39.57550930449732,
+            "time": 3.8039999999998027,
+            "positionQuality": 0.0
+          },
+          "practice": false,
+          "height": 1.0,
+          "apparatus": "springboard",
+          "routinePoints": 0.0,
+          "routineFinished": true,
+          "auxiliaryPractice": false,
+          "index": 1,
+          "return": -8.588883400057512,
+          "postContactRotationDegrees": 110.08497604998823
+        }
+      ]
+    }
+  ],
+  "contrasts": {
+    "points": {
+      "units": 1,
+      "candidateMean": 0.0,
+      "referenceMean": 0.0,
+      "difference": 0.0,
+      "interval": [
+        0.0,
+        0.0
+      ],
+      "confidence": 0.95,
+      "preliminary": true,
+      "independentUnitMinimum": 5,
+      "method": "paired percentile cluster bootstrap",
+      "perUnitDifferences": [
+        0.0
+      ]
+    },
+    "execution": {
+      "units": 1,
+      "candidateMean": 0.0,
+      "referenceMean": 0.0,
+      "difference": 0.0,
+      "interval": [
+        0.0,
+        0.0
+      ],
+      "confidence": 0.95,
+      "preliminary": true,
+      "independentUnitMinimum": 5,
+      "method": "paired percentile cluster bootstrap",
+      "perUnitDifferences": [
+        0.0
+      ]
+    },
+    "clean": {
+      "units": 1,
+      "candidateMean": 0.0,
+      "referenceMean": 0.0,
+      "difference": 0.0,
+      "interval": [
+        0.0,
+        0.0
+      ],
+      "confidence": 0.95,
+      "preliminary": true,
+      "independentUnitMinimum": 5,
+      "method": "paired percentile cluster bootstrap",
+      "perUnitDifferences": [
+        0.0
+      ]
+    },
+    "jumped": {
+      "units": 1,
+      "candidateMean": 0.5833333333333334,
+      "referenceMean": 0.5416666666666666,
+      "difference": 0.04166666666666674,
+      "interval": [
+        0.04166666666666674,
+        0.04166666666666674
+      ],
+      "confidence": 0.95,
+      "preliminary": true,
+      "independentUnitMinimum": 5,
+      "method": "paired percentile cluster bootstrap",
+      "perUnitDifferences": [
+        0.04166666666666674
+      ]
+    },
+    "completedRotation": {
+      "units": 1,
+      "candidateMean": 0.0,
+      "referenceMean": 0.041666666666666664,
+      "difference": -0.041666666666666664,
+      "interval": [
+        -0.041666666666666664,
+        -0.041666666666666664
+      ],
+      "confidence": 0.95,
+      "preliminary": true,
+      "independentUnitMinimum": 5,
+      "method": "paired percentile cluster bootstrap",
+      "perUnitDifferences": [
+        -0.041666666666666664
+      ]
+    },
+    "entryAngle": {
+      "units": 1,
+      "candidateMean": 102.11903946006198,
+      "referenceMean": 102.41105318459644,
+      "difference": -0.2920137245344563,
+      "interval": [
+        -0.2920137245344563,
+        -0.2920137245344563
+      ],
+      "confidence": 0.95,
+      "preliminary": true,
+      "independentUnitMinimum": 5,
+      "method": "paired percentile cluster bootstrap",
+      "perUnitDifferences": [
+        -0.2920137245344563
+      ]
+    },
+    "entryAngularSpeed": {
+      "units": 1,
+      "candidateMean": 5.904930619217963,
+      "referenceMean": 6.419559639751107,
+      "difference": -0.5146290205331434,
+      "interval": [
+        -0.5146290205331434,
+        -0.5146290205331434
+      ],
+      "confidence": 0.95,
+      "preliminary": true,
+      "independentUnitMinimum": 5,
+      "method": "paired percentile cluster bootstrap",
+      "perUnitDifferences": [
+        -0.5146290205331434
+      ]
+    },
+    "postContactRotationDegrees": {
+      "units": 1,
+      "candidateMean": 62.81102420421754,
+      "referenceMean": 73.94987372605321,
+      "difference": -11.138849521835674,
+      "interval": [
+        -11.138849521835674,
+        -11.138849521835674
+      ],
+      "confidence": 0.95,
+      "preliminary": true,
+      "independentUnitMinimum": 5,
+      "method": "paired percentile cluster bootstrap",
+      "perUnitDifferences": [
+        -11.138849521835674
+      ]
+    },
+    "entryAngleDeterioration": {
+      "units": 1,
+      "candidateMean": 5.569951185183755,
+      "referenceMean": 11.357318598031704,
+      "difference": -5.787367412847948,
+      "interval": [
+        -5.787367412847948,
+        -5.787367412847948
+      ],
+      "confidence": 0.95,
+      "preliminary": true,
+      "independentUnitMinimum": 5,
+      "method": "paired percentile cluster bootstrap",
+      "perUnitDifferences": [
+        -5.787367412847948
+      ]
+    }
+  },
+  "phaseDefinitions": {
+    "jumped": "upward departure speed > 0.5 m/s",
+    "completedRotation": "declared somersault and twist tolerances met",
+    "postContactRotationDegrees": "20 ms sampled integral of angular speed after first water contact; total rotation, not signed somersault count",
+    "entryAngleDeterioration": "worst entry angle minus first-contact angle, in degrees"
+  },
+  "scope": "Paired evaluation-seed clusters for a single fixed checkpoint; not independent training runs or proof of generalization.",
+  "automaticPublication": false,
+  "optimizerSteps": 0
+}

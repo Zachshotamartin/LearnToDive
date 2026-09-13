@@ -17,8 +17,9 @@ approximations.
 import numpy as np
 
 from rules import DIVES, difficulty
+from entry_faults import entry_deductions
 
-VERSION = 'self-declared-takeoff-and-whole-entry-v12'
+VERSION = 'self-declared-independent-deductions-v13'
 FEET_FIRST_GEOMS = (12, 15)   # one-based sensor geom ids of the two feet
 ROTATION_TOLERANCE = .25      # somersaults; a quarter turn short is another dive
 TWIST_TOLERANCE = .25
@@ -61,22 +62,14 @@ def failures(d, apparatus, m, rotation_error, twist_error):
 
 def deductions(d, m, angle):
     """Execution deductions in points; the insertion order is the summation order."""
-    g = m['entryGeometryWorst']
-    hands = (min(1, max(0, g['handSeparation'] - .08) * 5 + max(0, g['handHeightGap'] - .02) * 10)
-             if d['headfirst'] else 0)
     return {
-        # Height, control (lean at departure) and hops (rules 10.4.3 and 8.6.5.2).
-        'takeoff': (min(1.5, 1.5 * max(0, 1 - m['ascent'] / RISE_TARGET)) + min(1, max(0, m['departureLean'] - FREE_LEAN) / LEAN_RANGE)
-                    + min(2, m['preparationBounces'])),
+        'takeoffHeight': min(1.5, 1.5 * max(0, 1 - m['ascent'] / RISE_TARGET)),
+        'takeoffLean': min(1, max(0, m['departureLean'] - FREE_LEAN) / LEAN_RANGE),
+        'preparationBounces': min(2, m['preparationBounces']),
         'position': 2 * (1 - np.clip(m['positionQuality'], 0, 1)),
         'entryAlignment': min(6, angle / 10),
-        'entryForm': min(2, 2 * (1 - np.clip(m['form'], 0, 1))),
-        'feet': min(1, max(g['footLineAngles']) / 45),
-        'legs': min(1, max(0, g['ankleGap'] - .13) * 5 + float(g['crossedLegs'])),
-        'hands': hands,
-        # Sideways (world y) speed of the parts crossing the surface, m/s.
+        **entry_deductions(m['entryFaultLosses']),
         'lateralEntry': min(1, m['surfaceLateralSpeed'] / 3),
-        # Too close to the board (rules 10.4.6 and 10.5.3, 'according to opinion').
         'distance': min(2, max(0, .6 - m['x']) * 4),
     }
 
@@ -90,43 +83,55 @@ def judge(declaration, apparatus, height, m):
     reasons = failures(d, apparatus, m, rotation_error, twist_error)
     angle = max(m['firstContactAngle'], m['entryAngle'])
     faults = deductions(d, m, angle)
-    execution = float(np.clip(10 - sum(faults.values()), 0, 10))
-    if m['positionQuality'] < .5:
-        execution = min(execution, 2.)
-    if m['x'] < UNSAFE_DISTANCE:
-        execution = min(execution, 2.)
-    if not m.get('entryArmPositionValid', True):
-        execution = min(execution, 4.5)
-    if reasons:
-        execution = 0.
+    raw_execution = float(10 - sum(faults.values()))
+    execution = float(np.clip(raw_execution, 0, 10))
+    # Score caps are separately reported rule adjustments, not a second charge
+    # in the dense training ledger for faults already measured above.
+    adjustments = {}
+    for name, applies, cap in [
+        ('positionCap', m['positionQuality'] < .5, 2.),
+        ('unsafeDistanceCap', m['x'] < UNSAFE_DISTANCE, 2.),
+        ('armPositionCap', not m['entryArmPositionValid'], 4.5),
+        ('failedDive', bool(reasons), 0.),
+    ]:
+        adjustment = max(0., execution - cap) if applies else 0.
+        adjustments[name] = adjustment
+        execution -= adjustment
     dd = difficulty(declaration, apparatus, height)
     clean = (not reasons and angle <= CLEAN_ANGLE and m['form'] >= CLEAN_FORM and m['entryGeometryValid']
-             and m['entryLimbsValid'])
+             and m['entryLimbsValid'] and m['entryArmPositionValid'])
     return dict(declaration=d['id'], category=d['group'], difficulty=dd, execution=execution,
                 points=POINTS_MULTIPLIER * dd * execution, trainingValue=dd * execution, valid=not reasons,
+                rawExecution=raw_execution, scoreAdjustments=adjustments,
                 clean=bool(clean), deductions={k: float(v) for k, v in faults.items()}, failures=reasons,
                 rotationError=rotation_error, twistError=twist_error, entryAngle=angle,
                 recognition=dict(somersaults=round(measured * 2) / 2, twists=round(abs(m['twist']) * 2) / 2),
                 automatedJudge=True, splashIsProxy=True, judgeVersion=VERSION)
 
 
-def terminal_reward(score, m):
-    """Training signal, not the competition score.
+def training_deductions(score, m):
+    """One additive training cost per named fault; no aggregate form charge.
 
-    Every judged component enters as a continuous cost, so a dive whose
-    official execution is already clipped to zero still receives gradient
-    toward each fault; a completed declaration earns a bounded bonus. The
-    reward is always <= 0 on a failed dive and extra spins never buy points.
-    The takeoff carries its own cost so that a jump is worth learning even
-    while it temporarily worsens the entry.
+    Extra takeoff emphasis is expressed as a weight on the same height fault,
+    rather than charging height twice under two names. Rule caps remain display
+    adjustments. The ledger stays active for invalid and zero-score dives.
     """
-    faults = score['deductions']
-    costs = .25 * sum(faults.values()) + .8 * np.log1p(score['rotationError']) + .8 * np.log1p(score['twistError'])
-    # The takeoff is the one phase every later phase depends on. Before v12 the entry
-    # angle could cost eleven times what a missing jump cost, so the learner settled
-    # on falling off the edge with a vertical entry; rise and departure speed are
-    # outcomes of a takeoff, not a prescribed motion.
-    costs += RISE_WEIGHT * max(0, 1 - m['ascent'] / RISE_TARGET)
-    costs += SPEED_WEIGHT * min(1.5, max(0, 1 - m['takeoffVerticalSpeed'] / TAKEOFF_SPEED_TARGET))
-    costs += 1.5 * float(not m['fullEntryComplete']) + 2 * float(m['boardInvalid']) + 1.5 * float(not m['water'])
-    return float(score['trainingValue'] + float(score['valid']) - costs)
+    costs = {name: .25 * value for name, value in score['deductions'].items()}
+    costs['takeoffHeight'] *= 1 + RISE_WEIGHT / (.25 * 1.5)
+    costs.update(
+        takeoffSpeed=SPEED_WEIGHT * min(1.5, max(0, 1 - m['takeoffVerticalSpeed'] / TAKEOFF_SPEED_TARGET)),
+        somersaultCount=.8 * float(np.log1p(score['rotationError'])),
+        twistCount=.8 * float(np.log1p(score['twistError'])),
+        incompleteEntry=1.5 * float(not m['fullEntryComplete']),
+        boardContact=2 * float(m['boardInvalid']),
+        missedWater=1.5 * float(not m['water']),
+        wrongEntryEnd=1.5 * float(any(reason in score['failures'] for reason in
+                                    ['feet entered before head or hands', 'feet-first dive did not enter feet first'])),
+        wrongRotationPlane=1.5 * float('wrong rotation plane' in score['failures']),
+    )
+    return costs
+
+
+def terminal_reward(score, m):
+    """Negative fault costs remain visible even when execution is clipped to zero."""
+    return float(score['trainingValue'] + float(score['valid']) - sum(training_deductions(score, m).values()))

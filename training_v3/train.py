@@ -21,11 +21,14 @@ import torch
 
 from checkpointing import atomic_checkpoint, atomic_json, hashes
 from environment import Arena
-from evaluation import evaluate, summary
+from evaluation import evaluate, summary, evaluate_motor_skills
+from model_selection import update_selection, comparison, competence
 from judge import VERSION
 from losses import ppo_terms
-from policy import FORMAT, Policy
+from policy import FORMAT, MOTOR_FORMAT, Policy
+from motor_curriculum import MotorCurriculum, EXTRA_OBSERVATIONS
 from rules import DIVES
+from reference_policies import load_reference
 from water import WATER_VERSION
 
 __all__ = ['train', 'parser', 'Trainer', 'evaluate', 'summary', 'atomic_json', 'atomic_checkpoint', 'hashes']
@@ -39,11 +42,11 @@ GRADIENT_NORM = .5
 REFINEMENT_CLEAN_RATE = .8  # held-out clean rate above which exploration is reduced
 REFINEMENT_FACTOR = .25
 PLATEAU_THRESHOLDS = [('points', .5), ('execution', .1), ('clean', .02), ('valid', .05)]
-RESUME_KEYS = ['envs', 'widths', 'rho', 'horizon', 'seed', 'lr', 'epochs', 'batch']
+RESUME_KEYS = ['envs', 'widths', 'rho', 'horizon', 'seed', 'lr', 'epochs', 'batch', 'reward_mode', 'gae_lambda', 'recovery_mode', 'exploration', 'motor_curriculum', 'architecture', 'practice', 'reference_policy', 'eval_cases', 'final_cases', 'final_seed']
 BEST_KEY_SIZE = 4
 
 
-def estimate_advantages(batch):
+def estimate_advantages(batch, gae_lambda=LAMBDA):
     """GAE for motor steps; a full n-step return to the episode boundary for declarations.
 
     Declaration is a sparse high-level decision, so it does not use GAE's
@@ -57,13 +60,14 @@ def estimate_advantages(batch):
         future = bootstrap if t == T - 1 else values[t + 1]
         live = 1 - dones[t]
         delta = rewards[t] + GAMMA * future * live - values[t]
-        gae = delta + GAMMA * LAMBDA * live * gae
+        gae = delta + GAMMA * gae_lambda * live * gae
         advantages[t] = gae
     returns = advantages + values
     decision_return = bootstrap.clone()
     for t in reversed(range(T)):
         decision_return = rewards[t] + GAMMA * decision_return * (1 - dones[t])
         advantages[t] = torch.where(choosing[t], decision_return - values[t], advantages[t])
+        returns[t] = torch.where(choosing[t], decision_return, returns[t])
     return advantages, returns
 
 
@@ -103,6 +107,10 @@ class Trainer:
 
     def __init__(self, args):
         self.args = args
+        if not 0 <= args.gae_lambda <= 1:
+            raise ValueError('GAE lambda must be between zero and one')
+        if args.final_seed == 771100 or args.final_cases < 1:
+            raise ValueError('Final evaluation requires a disjoint seed and positive cohort size')
         self.out = Path(args.output).resolve()
         self.out.mkdir(parents=True, exist_ok=True)
         if (self.out / 'latest.pt').exists() and not args.resume:
@@ -110,13 +118,51 @@ class Trainer:
         random.seed(args.seed)
         np.random.seed(args.seed)
         torch.manual_seed(args.seed)
-        self.env = Arena(args.envs, args.seed, args.threads, practice=args.practice)
+        self.env = Arena(args.envs, args.seed, args.threads, practice=args.practice, reward_mode=args.reward_mode, recovery_mode=args.recovery_mode)
+        if args.motor_curriculum != 'off':
+            self.env = MotorCurriculum(self.env, enabled=args.motor_curriculum == 'adaptive')
         try:
-            self.policy = Policy(self.env.observation_size, tuple(args.widths), args.rho, initial_action=self.env.initial_action)
+            self.policy = Policy(self.env.observation_size, tuple(args.widths), args.rho, initial_action=self.env.initial_action, exploration=args.exploration, architecture=args.architecture)
+            if sum(bool(path) for path in (args.initialize_from, args.resume, args.warm_start)) > 1:
+                raise ValueError('Choose only one initialization, warm-start, or exact resume source')
+            if args.initialize_from and not args.resume:
+                saved = torch.load(args.initialize_from, map_location='cpu', weights_only=False)
+                old_size = saved['contract']['observationSize']
+                added_context = self.env.observation_size - old_size
+                if saved['contract']['format'] not in (FORMAT, MOTOR_FORMAT) or added_context not in (0, EXTRA_OBSERVATIONS):
+                    raise ValueError('Initialization requires the same physical observation and policy format')
+                physical_files = ('diver.xml', 'geometry.py', 'stance.py', 'water.py')
+                current_hashes = hashes()
+                if any(saved['contract']['sourceHashes'].get(name) != current_hashes[name]
+                       for name in physical_files):
+                    raise ValueError('Initialization requires the same physical model and measurements')
+                fresh = self.policy.state_dict()
+                transferred = {k: v for k, v in saved['model'].items() if not k.startswith(('value', 'critic_trunk.'))}
+                if added_context:
+                    # Insert task goals before the final action-history columns.
+                    # Zero new weights preserve the old motor/choice functions.
+                    for key in ('trunk.0.weight', 'selector_trunk.0.weight'):
+                        if key in transferred:
+                            old = transferred[key]
+                            new = torch.zeros(old.shape[0], self.env.observation_size)
+                            new[:, :old_size - 9] = old[:, :-9]
+                            new[:, -9:] = old[:, -9:]
+                            transferred[key] = new
+                if args.architecture == 'split' and not any(k.startswith('selector_trunk.') for k in transferred):
+                    transferred.update({k.replace('trunk.', 'selector_trunk.', 1): v.clone()
+                                        for k, v in list(transferred.items()) if k.startswith('trunk.')})
+                fresh.update(transferred)
+                self.policy.load_state_dict(fresh)
+                atomic_json(self.out / 'initialization.json', dict(
+                    sourceSHA256=hashlib.sha256(Path(args.initialize_from).read_bytes()).hexdigest(),
+                    sourceSteps=saved['training']['steps'], actorTransferred=True, optimizer='fresh',
+                    valueHead='fresh', environment='fresh', newObjectiveSteps=0,
+                    insertedMotorContextColumns=added_context, architecture=args.architecture))
             self.optimizer = torch.optim.Adam(self.policy.parameters(), lr=args.lr, eps=1e-5)
             self.state = dict(steps=0, updates=0, elapsedSeconds=0, history=[], evaluations=[], bestValue=-1e30, stopReason=None)
-            self.contract = dict(format=FORMAT, judge=VERSION, water=WATER_VERSION, observationSize=self.env.observation_size,
-                                 actions=9, declarations=[d['id'] for d in DIVES], sourceHashes=hashes())
+            self.contract = dict(format=self.policy.format, judge=VERSION, water=WATER_VERSION, observationSize=self.env.observation_size,
+                                 motorCurriculum=args.motor_curriculum, architecture=args.architecture,
+                                 rewardMode=args.reward_mode, exploration=args.exploration, actions=9, declarations=[d['id'] for d in DIVES], sourceHashes=hashes())
             if args.resume:
                 self.resume(args.resume)
             elif args.warm_start:
@@ -196,23 +242,64 @@ class Trainer:
         self.stop = True
 
     # ------------------------------------------------------------- evaluation
+    def initialize_references(self):
+        if not self.args.reference_policy:
+            return
+        if 'referenceInputs' in self.state:
+            for item in self.state['referenceInputs']:
+                load_reference(item['path'], item['sha256'])
+            return
+        inputs, reports = [], []
+        for path in self.args.reference_policy:
+            model, identity = load_reference(path)
+            report = evaluate(model, cases=self.args.eval_cases, reward_mode=self.args.reward_mode)
+            report['reference'] = identity
+            inputs.append(identity)
+            reports.append(report)
+        self.state['referenceInputs'], self.state['referenceReports'] = inputs, reports
+        atomic_json(self.out / 'reference-evaluations.json', reports)
+
+    def final_test(self):
+        """One disjoint-cohort test per run; never automatically publish its model."""
+        state = self.state
+        if not state['selection']['eligibleForFinalTest'] or 'finalTest' in state:
+            return
+        candidate = evaluate(self.policy, seed=self.args.final_seed, cases=self.args.final_cases,
+                             reward_mode=self.args.reward_mode)
+        decisions = []
+        for item in state['referenceInputs']:
+            model, _ = load_reference(item['path'], item['sha256'])
+            reference = evaluate(model, seed=self.args.final_seed, cases=self.args.final_cases,
+                                 reward_mode=self.args.reward_mode)
+            decisions.append(dict(reference=item, comparison=comparison(candidate, reference)))
+        ability = competence(candidate)
+        qualified = ability['qualified'] and all(d['comparison']['eligibleForReview'] for d in decisions)
+        state['finalTest'] = dict(steps=state['steps'], candidate=candidate, competence=ability,
+                                 comparisons=decisions, qualified=qualified, automaticPublication=False)
+        atomic_json(self.out / 'final-test.json', state['finalTest'])
+        if qualified:
+            atomic_checkpoint(self.out / 'qualified-for-review.pt', self.persist('qualified-awaiting-review'))
+
     def run_evaluation(self):
         """Evaluate on held-out routines and keep the best; True once progress has plateaued."""
         # Evaluation uses a separate RNG and environment; preserve learner randomness.
+        self.initialize_references()
         rng = torch.get_rng_state()
-        report = evaluate(self.policy, cases=self.args.eval_cases)
+        report = evaluate(self.policy, cases=self.args.eval_cases, reward_mode=self.args.reward_mode)
         torch.set_rng_state(rng)
         state = self.state
         report['steps'] = state['steps']
+        if isinstance(self.env, MotorCurriculum):
+            report['motorSkills'] = evaluate_motor_skills(self.policy, cases=self.args.eval_cases)
         atomic_json(self.out / 'evaluations' / f"{state['steps']}.json", report)
         state['evaluations'].append(dict(steps=state['steps'], summary=report['summary']))
-        metrics = report['summary']['full']
-        score = metrics['points']
-        selection = (score, metrics['execution'], metrics['clean'], -metrics['entryAngle'])
-        if score is not None and selection > tuple(state.get('bestKey', [-1e30] * BEST_KEY_SIZE)):
-            state['bestKey'] = selection
-            state['bestValue'] = score
-            atomic_checkpoint(self.out / 'best.pt', self.persist('evaluated'))
+        labels = update_selection(state, report)
+        self.final_test()
+        saved = self.persist('evaluated')
+        for label in labels:
+            atomic_checkpoint(self.out / (label + '.pt'), saved)
+        atomic_json(self.out / 'selection.json', state['selection'])
+        if 'best' in labels:
             atomic_json(self.out / 'best-policy.json', dict(**self.policy.export(), contract=self.contract,
                                                             steps=state['steps'], qualified=False))
         return self.plateaued()
@@ -326,13 +413,15 @@ class Trainer:
     def update(self):
         """One rollout, one PPO update and the bookkeeping around them; True on plateau."""
         batch = self.collect()
-        advantages, returns = estimate_advantages(batch)
+        advantages, returns = estimate_advantages(batch, self.args.gae_lambda)
         losses, kls = self.optimize(batch, advantages, returns)
         state, args = self.state, self.args
         state['steps'] += self.block
         state['updates'] += 1
         row = dict(steps=state['steps'], **summary(batch['episodes']), loss=float(np.mean(losses)), kl=float(np.mean(kls)),
                    valueScale=float(self.policy.value_std))
+        if isinstance(self.env, MotorCurriculum):
+            row['motorSkills'] = self.env.metrics()
         state['history'].append(row)
         print(json.dumps(row, allow_nan=False), flush=True)
         saved = self.persist('training')
@@ -352,6 +441,7 @@ class Trainer:
         atomic_json(self.out / 'contract.json', self.contract)
         self.persist('starting')
         try:
+            self.initialize_references()
             while self.state['steps'] < self.target and not self.stop:
                 if self.update():
                     self.persist('plateau-awaiting-review')
@@ -379,6 +469,7 @@ def parser():
     p.add_argument('--output', required=True)
     p.add_argument('--resume')
     p.add_argument('--warm-start')
+    p.add_argument('--initialize-from', help='Same-schema actor only; fresh optimizer/value head/worlds for comparisons')
     p.add_argument('--accept-source-change', nargs='*', default=[],
                    help='Files whose hash may differ from the resumed checkpoint; recorded as an amendment')
     p.add_argument('--widths', type=int, nargs='+', default=[256, 256])
@@ -391,7 +482,16 @@ def parser():
     p.add_argument('--lr', type=float, default=.0003)
     p.add_argument('--entropy', type=float, default=.006)
     p.add_argument('--declaration-entropy', type=float, default=.01)
+    p.add_argument('--reward-mode', choices=['v12', 'continuous-entry', 'phase-dense'], default='v12')
+    p.add_argument('--motor-curriculum', choices=['off', 'context', 'adaptive'], default='off')
+    p.add_argument('--architecture', choices=['shared', 'split'], default='shared')
+    p.add_argument('--reference-policy', nargs='*', default=[], help='Immutable baseline checkpoints for paired full-dive qualification')
+    p.add_argument('--final-seed', type=int, default=883100)
+    p.add_argument('--final-cases', type=int, default=48)
     p.add_argument('--practice', type=float, default=.35)
+    p.add_argument('--gae-lambda', type=float, default=.95)
+    p.add_argument('--recovery-mode', choices=['recent', 'progress'], default='recent')
+    p.add_argument('--exploration', choices=['diagonal', 'state-covariance'], default='diagonal')
     return p
 
 

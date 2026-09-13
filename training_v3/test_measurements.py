@@ -8,14 +8,14 @@ from engine import ACTUATOR_MAP, STATE_SPEC
 from probes import action_for, single_athlete
 
 
-def drop(vy, vz=-9.2, height=3.):
+def drop(vy, vz=-9.2, height=3., arm_pitch=np.pi, elbow=0.):
     """Drop a straight head-first athlete into the water with the given velocity; returns the episode info."""
     p = single_athlete(seed=2)
     m, d = p.model, p.resetdata
     p.reset([0], [dict(skill=0, height=height, preload=0, disturbance=0)])
     p.platform[0] = True
     p.headfirst[0] = True
-    target = np.array([0, 0, 1.35, np.pi, np.pi, -.3, .3, 0, .06])
+    target = np.array([0, 0, 1.35, arm_pitch, arm_pitch, -.3, .3, elbow, .06])
     mujoco.mj_resetData(m, d)
     d.mocap_pos[0] = [0, 0, -height]
     d.qpos[p.qadr] = target[ACTUATOR_MAP]

@@ -1,0 +1,63 @@
+{
+  "startedUTC": "2026-09-12T19:13:55.372290+00:00",
+  "runs": {
+    "diving": {
+      "pid": 14255,
+      "command": [
+        "/tmp/teach-pet-training-venv/bin/python",
+        "/Volumes/Zach's SSD/PortfolioTraining/2026-09-12-research-training-options/source/LearnToDive/training_v3/compare_rewards.py",
+        "--suite",
+        "research",
+        "--output",
+        "/Volumes/Zach's SSD/PortfolioTraining/2026-09-12-research-training-options/diving",
+        "--initialize-from",
+        "/Volumes/Zach's SSD/PortfolioTraining/2026-09-12-research-training-options/inputs/diving-parent.pt",
+        "--seeds",
+        "91301",
+        "91302",
+        "91303"
+      ],
+      "nice": 15
+    },
+    "hide-and-seek": {
+      "pid": 14256,
+      "command": [
+        "/tmp/teach-pet-training-venv/bin/python",
+        "/Volumes/Zach's SSD/PortfolioTraining/2026-09-12-research-training-options/source/HideAndSeek/training_v5/compare_curriculum.py",
+        "--suite",
+        "research",
+        "--output",
+        "/Volumes/Zach's SSD/PortfolioTraining/2026-09-12-research-training-options/hide-and-seek",
+        "--source",
+        "/Volumes/Zach's SSD/PortfolioTraining/2026-09-12-research-training-options/inputs/hide-seek-parent.pt",
+        "--cohort",
+        "/Volumes/Zach's SSD/PortfolioTraining/2026-09-12-research-training-options/inputs/hide-seek-cohort.json",
+        "--heldout",
+        "/Volumes/Zach's SSD/PortfolioTraining/2026-09-12-research-training-options/inputs/hide-seek-heldout.pt",
+        "--history",
+        "/Volumes/Zach's SSD/PortfolioTraining/2026-09-12-research-training-options/inputs/hide-seek-anchor.pt",
+        "--seeds",
+        "91301",
+        "91302",
+        "91303"
+      ],
+      "nice": 15
+    }
+  },
+  "sourceHashes": "SOURCE_SHA256.json",
+  "inputHashes": "INPUT_SHA256.json",
+  "commits": {
+    "LearnToDive": "d122673cb0cf9c1450e8bf0ed76fa8fed0a35c69",
+    "HideAndSeek": "819cf2f6ac379435a022976e6b0061895cf56c74"
+  },
+  "sourceStatus": "Frozen working-tree changes; source manifest is authoritative, not the parent commit alone.",
+  "comparison": "Six arms per project, three matched seeds; combined settings first, then separate mechanisms and baseline.",
+  "budget": {
+    "divingNewStepsPerArm": 2048000,
+    "hideSeekRoleInteractionsPerArm": 5242880
+  },
+  "resources": "One physics worker per active trial; low CPU priority. Existing suites untouched; they share this host.",
+  "monitoring": "No scheduled monitoring or automated publication. Controllers execute only their bounded trial queues.",
+  "resume": "Send SIGTERM to the suite controller for an update-boundary checkpoint, then repeat its identical command.",
+  "publication": "No model is automatically qualified, exported to the live app, pushed, or deployed."
+}

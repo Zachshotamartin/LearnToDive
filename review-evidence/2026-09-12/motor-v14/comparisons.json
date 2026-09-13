@@ -1,0 +1,590 @@
+[
+  {
+    "name": "terminal",
+    "seed": 109314,
+    "steps": 102400,
+    "seconds": 47.910764291882515,
+    "before": {
+      "full": {
+        "n": 48,
+        "points": 2.000358494552921,
+        "execution": 0.37318287889766255,
+        "difficulty": 1.9208333333333334,
+        "clean": 0.0,
+        "valid": 0.22916666666666666,
+        "uniqueDives": 8,
+        "entryAngle": 37.02772163121481,
+        "trainingReturn": -9.531884755151642,
+        "jumped": 0.5208333333333334,
+        "rise": 0.197762836925625,
+        "takeoffSpeed": 0.7226365348256364,
+        "departureLean": 57.226473063014346,
+        "positionQuality": 0.10798398205708393,
+        "motorPositionQuality": 0.18129059123858848,
+        "entryArms": 0.0,
+        "completedRotation": 0.3125,
+        "entryAngularSpeed": 3.443784424836951,
+        "postContactRotationDegrees": 22.57726457467921,
+        "entryAngleDeterioration": 6.888893338173321
+      },
+      "skills": {
+        "takeoff": {
+          "n": 8,
+          "meanError": 0.9829243998816235,
+          "success": 0.375
+        },
+        "shape": {
+          "n": 8,
+          "meanError": 1.2469455420681987,
+          "success": 0.0
+        },
+        "aerial": {
+          "n": 8,
+          "meanError": 0.3835326293277298,
+          "success": 0.125
+        },
+        "entry": {
+          "n": 8,
+          "meanError": 6.55812999687267,
+          "success": 0.0
+        }
+      }
+    },
+    "after": {
+      "full": {
+        "n": 48,
+        "points": 1.9957820075130401,
+        "execution": 0.36899404522923085,
+        "difficulty": 1.9208333333333334,
+        "clean": 0.0,
+        "valid": 0.1875,
+        "uniqueDives": 8,
+        "entryAngle": 49.866983264617566,
+        "trainingReturn": -10.682339999680112,
+        "jumped": 0.5208333333333334,
+        "rise": 0.1833380952073389,
+        "takeoffSpeed": 0.8270432672704703,
+        "departureLean": 54.03968161875838,
+        "positionQuality": 0.1035057918273129,
+        "motorPositionQuality": 0.166082795255026,
+        "entryArms": 0.0,
+        "completedRotation": 0.20833333333333334,
+        "entryAngularSpeed": 2.8645265042797288,
+        "postContactRotationDegrees": 19.548207961519807,
+        "entryAngleDeterioration": 6.435107802901684
+      },
+      "skills": {
+        "takeoff": {
+          "n": 8,
+          "meanError": 1.208553513257412,
+          "success": 0.375
+        },
+        "shape": {
+          "n": 8,
+          "meanError": 1.3443052008490777,
+          "success": 0.0
+        },
+        "aerial": {
+          "n": 8,
+          "meanError": 0.41399703597804444,
+          "success": 0.125
+        },
+        "entry": {
+          "n": 8,
+          "meanError": 6.539774254469748,
+          "success": 0.0
+        }
+      }
+    }
+  },
+  {
+    "name": "phases",
+    "seed": 109314,
+    "steps": 102400,
+    "seconds": 73.51713274978101,
+    "before": {
+      "full": {
+        "n": 48,
+        "points": 2.000358494552921,
+        "execution": 0.37318287889766255,
+        "difficulty": 1.9208333333333334,
+        "clean": 0.0,
+        "valid": 0.22916666666666666,
+        "uniqueDives": 8,
+        "entryAngle": 37.02772163121481,
+        "trainingReturn": -9.531884755151642,
+        "jumped": 0.5208333333333334,
+        "rise": 0.197762836925625,
+        "takeoffSpeed": 0.7226365348256364,
+        "departureLean": 57.226473063014346,
+        "positionQuality": 0.10798398205708393,
+        "motorPositionQuality": 0.18129059123858848,
+        "entryArms": 0.0,
+        "completedRotation": 0.3125,
+        "entryAngularSpeed": 3.443784424836951,
+        "postContactRotationDegrees": 22.57726457467921,
+        "entryAngleDeterioration": 6.888893338173321
+      },
+      "skills": {
+        "takeoff": {
+          "n": 8,
+          "meanError": 0.9829243998816235,
+          "success": 0.375
+        },
+        "shape": {
+          "n": 8,
+          "meanError": 1.2469455420681987,
+          "success": 0.0
+        },
+        "aerial": {
+          "n": 8,
+          "meanError": 0.3835326293277298,
+          "success": 0.125
+        },
+        "entry": {
+          "n": 8,
+          "meanError": 6.55812999687267,
+          "success": 0.0
+        }
+      }
+    },
+    "after": {
+      "full": {
+        "n": 48,
+        "points": 0.8528118988658034,
+        "execution": 0.15793650135127604,
+        "difficulty": 1.8854166666666667,
+        "clean": 0.0,
+        "valid": 0.10416666666666667,
+        "uniqueDives": 9,
+        "entryAngle": 63.372360241826414,
+        "trainingReturn": -12.682844718520508,
+        "jumped": 0.2708333333333333,
+        "rise": 0.07239605084827712,
+        "takeoffSpeed": -0.3932881314010835,
+        "departureLean": 63.78539761907462,
+        "positionQuality": 0.08527668162948503,
+        "motorPositionQuality": 0.1585900438931738,
+        "entryArms": 0.020833333333333332,
+        "completedRotation": 0.3333333333333333,
+        "entryAngularSpeed": 4.13903094401373,
+        "postContactRotationDegrees": 30.09542935760553,
+        "entryAngleDeterioration": 11.155026445177237
+      },
+      "skills": {
+        "takeoff": {
+          "n": 8,
+          "meanError": 1.7293792104173393,
+          "success": 0.25
+        },
+        "shape": {
+          "n": 8,
+          "meanError": 1.292920134407773,
+          "success": 0.0
+        },
+        "aerial": {
+          "n": 8,
+          "meanError": 0.4503950896306187,
+          "success": 0.0
+        },
+        "entry": {
+          "n": 8,
+          "meanError": 7.235624197350248,
+          "success": 0.0
+        }
+      }
+    }
+  },
+  {
+    "name": "motor",
+    "seed": 109314,
+    "steps": 102400,
+    "seconds": 79.30394662497565,
+    "before": {
+      "full": {
+        "n": 48,
+        "points": 2.000358494552921,
+        "execution": 0.37318287889766255,
+        "difficulty": 1.9208333333333334,
+        "clean": 0.0,
+        "valid": 0.22916666666666666,
+        "uniqueDives": 8,
+        "entryAngle": 37.02772163121481,
+        "trainingReturn": -9.531884755151642,
+        "jumped": 0.5208333333333334,
+        "rise": 0.197762836925625,
+        "takeoffSpeed": 0.7226365348256364,
+        "departureLean": 57.226473063014346,
+        "positionQuality": 0.10798398205708393,
+        "motorPositionQuality": 0.18129059123858848,
+        "entryArms": 0.0,
+        "completedRotation": 0.3125,
+        "entryAngularSpeed": 3.443784424836951,
+        "postContactRotationDegrees": 22.57726457467921,
+        "entryAngleDeterioration": 6.888893338173321
+      },
+      "skills": {
+        "takeoff": {
+          "n": 8,
+          "meanError": 0.9829243998816235,
+          "success": 0.375
+        },
+        "shape": {
+          "n": 8,
+          "meanError": 1.2469455420681987,
+          "success": 0.0
+        },
+        "aerial": {
+          "n": 8,
+          "meanError": 0.3835326293277298,
+          "success": 0.125
+        },
+        "entry": {
+          "n": 8,
+          "meanError": 6.55812999687267,
+          "success": 0.0
+        }
+      }
+    },
+    "after": {
+      "full": {
+        "n": 48,
+        "points": 1.7874999999999999,
+        "execution": 0.3333333333333333,
+        "difficulty": 1.8354166666666665,
+        "clean": 0.0,
+        "valid": 0.20833333333333334,
+        "uniqueDives": 9,
+        "entryAngle": 58.54768557241985,
+        "trainingReturn": -11.342798257351475,
+        "jumped": 0.4791666666666667,
+        "rise": 0.11896517899711241,
+        "takeoffSpeed": 0.6873401703940836,
+        "departureLean": 56.80739465039002,
+        "positionQuality": 0.08437989681173236,
+        "motorPositionQuality": 0.155079543406298,
+        "entryArms": 0.041666666666666664,
+        "completedRotation": 0.22916666666666666,
+        "entryAngularSpeed": 2.8542182991889553,
+        "postContactRotationDegrees": 19.4118889401653,
+        "entryAngleDeterioration": 7.195678344038072
+      },
+      "skills": {
+        "takeoff": {
+          "n": 8,
+          "meanError": 0.9939412903923588,
+          "success": 0.375
+        },
+        "shape": {
+          "n": 8,
+          "meanError": 1.1503539148802422,
+          "success": 0.0
+        },
+        "aerial": {
+          "n": 8,
+          "meanError": 0.3653433734780629,
+          "success": 0.125
+        },
+        "entry": {
+          "n": 8,
+          "meanError": 6.6861885080783265,
+          "success": 0.0
+        }
+      }
+    }
+  },
+  {
+    "name": "terminal",
+    "seed": 109315,
+    "steps": 102400,
+    "seconds": 71.64522854192182,
+    "before": {
+      "full": {
+        "n": 48,
+        "points": 2.000358494552921,
+        "execution": 0.37318287889766255,
+        "difficulty": 1.9208333333333334,
+        "clean": 0.0,
+        "valid": 0.22916666666666666,
+        "uniqueDives": 8,
+        "entryAngle": 37.02772163121481,
+        "trainingReturn": -9.531884755151642,
+        "jumped": 0.5208333333333334,
+        "rise": 0.197762836925625,
+        "takeoffSpeed": 0.7226365348256364,
+        "departureLean": 57.226473063014346,
+        "positionQuality": 0.10798398205708393,
+        "motorPositionQuality": 0.18129059123858848,
+        "entryArms": 0.0,
+        "completedRotation": 0.3125,
+        "entryAngularSpeed": 3.443784424836951,
+        "postContactRotationDegrees": 22.57726457467921,
+        "entryAngleDeterioration": 6.888893338173321
+      },
+      "skills": {
+        "takeoff": {
+          "n": 8,
+          "meanError": 0.9829243998816235,
+          "success": 0.375
+        },
+        "shape": {
+          "n": 8,
+          "meanError": 1.2469455420681987,
+          "success": 0.0
+        },
+        "aerial": {
+          "n": 8,
+          "meanError": 0.3835326293277298,
+          "success": 0.125
+        },
+        "entry": {
+          "n": 8,
+          "meanError": 6.55812999687267,
+          "success": 0.0
+        }
+      }
+    },
+    "after": {
+      "full": {
+        "n": 48,
+        "points": 1.8047367005142745,
+        "execution": 0.33124706462758285,
+        "difficulty": 1.9208333333333334,
+        "clean": 0.0,
+        "valid": 0.2916666666666667,
+        "uniqueDives": 8,
+        "entryAngle": 54.41917298979745,
+        "trainingReturn": -9.887389272441107,
+        "jumped": 0.5416666666666666,
+        "rise": 0.14424412588349955,
+        "takeoffSpeed": 0.8184790299925989,
+        "departureLean": 55.20778840075217,
+        "positionQuality": 0.1014349668485514,
+        "motorPositionQuality": 0.17288236216493966,
+        "entryArms": 0.041666666666666664,
+        "completedRotation": 0.3333333333333333,
+        "entryAngularSpeed": 4.943506333690783,
+        "postContactRotationDegrees": 30.71871185260566,
+        "entryAngleDeterioration": 14.649989815402174
+      },
+      "skills": {
+        "takeoff": {
+          "n": 8,
+          "meanError": 1.068873131461623,
+          "success": 0.375
+        },
+        "shape": {
+          "n": 8,
+          "meanError": 1.335754488340366,
+          "success": 0.0
+        },
+        "aerial": {
+          "n": 8,
+          "meanError": 0.39083888571159137,
+          "success": 0.125
+        },
+        "entry": {
+          "n": 8,
+          "meanError": 6.6187610783829225,
+          "success": 0.0
+        }
+      }
+    }
+  },
+  {
+    "name": "phases",
+    "seed": 109315,
+    "steps": 102400,
+    "seconds": 161.05090254102834,
+    "before": {
+      "full": {
+        "n": 48,
+        "points": 2.000358494552921,
+        "execution": 0.37318287889766255,
+        "difficulty": 1.9208333333333334,
+        "clean": 0.0,
+        "valid": 0.22916666666666666,
+        "uniqueDives": 8,
+        "entryAngle": 37.02772163121481,
+        "trainingReturn": -9.531884755151642,
+        "jumped": 0.5208333333333334,
+        "rise": 0.197762836925625,
+        "takeoffSpeed": 0.7226365348256364,
+        "departureLean": 57.226473063014346,
+        "positionQuality": 0.10798398205708393,
+        "motorPositionQuality": 0.18129059123858848,
+        "entryArms": 0.0,
+        "completedRotation": 0.3125,
+        "entryAngularSpeed": 3.443784424836951,
+        "postContactRotationDegrees": 22.57726457467921,
+        "entryAngleDeterioration": 6.888893338173321
+      },
+      "skills": {
+        "takeoff": {
+          "n": 8,
+          "meanError": 0.9829243998816235,
+          "success": 0.375
+        },
+        "shape": {
+          "n": 8,
+          "meanError": 1.2469455420681987,
+          "success": 0.0
+        },
+        "aerial": {
+          "n": 8,
+          "meanError": 0.3835326293277298,
+          "success": 0.125
+        },
+        "entry": {
+          "n": 8,
+          "meanError": 6.55812999687267,
+          "success": 0.0
+        }
+      }
+    },
+    "after": {
+      "full": {
+        "n": 48,
+        "points": 0.0,
+        "execution": 0.0,
+        "difficulty": 1.9208333333333332,
+        "clean": 0.0,
+        "valid": 0.125,
+        "uniqueDives": 8,
+        "entryAngle": 93.71391323780654,
+        "trainingReturn": -14.197567877145294,
+        "jumped": 0.020833333333333332,
+        "rise": 0.000841289674293808,
+        "takeoffSpeed": -0.7663231137060681,
+        "departureLean": 58.56649075416021,
+        "positionQuality": 0.08294243069769654,
+        "motorPositionQuality": 0.15318415233527075,
+        "entryArms": 0.08333333333333333,
+        "completedRotation": 0.22916666666666666,
+        "entryAngularSpeed": 4.558038793468343,
+        "postContactRotationDegrees": 30.749026084265,
+        "entryAngleDeterioration": 12.374708834527548
+      },
+      "skills": {
+        "takeoff": {
+          "n": 8,
+          "meanError": 1.7529051307055639,
+          "success": 0.0
+        },
+        "shape": {
+          "n": 8,
+          "meanError": 1.4336332183248812,
+          "success": 0.0
+        },
+        "aerial": {
+          "n": 8,
+          "meanError": 0.3816436711234552,
+          "success": 0.25
+        },
+        "entry": {
+          "n": 8,
+          "meanError": 7.3440355828944295,
+          "success": 0.0
+        }
+      }
+    }
+  },
+  {
+    "name": "motor",
+    "seed": 109315,
+    "steps": 102400,
+    "seconds": 84.85705687501468,
+    "before": {
+      "full": {
+        "n": 48,
+        "points": 2.000358494552921,
+        "execution": 0.37318287889766255,
+        "difficulty": 1.9208333333333334,
+        "clean": 0.0,
+        "valid": 0.22916666666666666,
+        "uniqueDives": 8,
+        "entryAngle": 37.02772163121481,
+        "trainingReturn": -9.531884755151642,
+        "jumped": 0.5208333333333334,
+        "rise": 0.197762836925625,
+        "takeoffSpeed": 0.7226365348256364,
+        "departureLean": 57.226473063014346,
+        "positionQuality": 0.10798398205708393,
+        "motorPositionQuality": 0.18129059123858848,
+        "entryArms": 0.0,
+        "completedRotation": 0.3125,
+        "entryAngularSpeed": 3.443784424836951,
+        "postContactRotationDegrees": 22.57726457467921,
+        "entryAngleDeterioration": 6.888893338173321
+      },
+      "skills": {
+        "takeoff": {
+          "n": 8,
+          "meanError": 0.9829243998816235,
+          "success": 0.375
+        },
+        "shape": {
+          "n": 8,
+          "meanError": 1.2469455420681987,
+          "success": 0.0
+        },
+        "aerial": {
+          "n": 8,
+          "meanError": 0.3835326293277298,
+          "success": 0.125
+        },
+        "entry": {
+          "n": 8,
+          "meanError": 6.55812999687267,
+          "success": 0.0
+        }
+      }
+    },
+    "after": {
+      "full": {
+        "n": 48,
+        "points": 0.17072004898014215,
+        "execution": 0.033474519407871016,
+        "difficulty": 1.8645833333333333,
+        "clean": 0.0,
+        "valid": 0.125,
+        "uniqueDives": 9,
+        "entryAngle": 100.46123948707147,
+        "trainingReturn": -13.70377135531635,
+        "jumped": 0.22916666666666666,
+        "rise": 0.012977622600854917,
+        "takeoffSpeed": -0.2877968550478142,
+        "departureLean": 50.29915511042239,
+        "positionQuality": 0.06368206776839566,
+        "motorPositionQuality": 0.13476747710228357,
+        "entryArms": 0.14583333333333334,
+        "completedRotation": 0.16666666666666666,
+        "entryAngularSpeed": 4.170938349959763,
+        "postContactRotationDegrees": 28.642509500340253,
+        "entryAngleDeterioration": 12.552622120298672
+      },
+      "skills": {
+        "takeoff": {
+          "n": 8,
+          "meanError": 1.3566940975336155,
+          "success": 0.0
+        },
+        "shape": {
+          "n": 8,
+          "meanError": 1.2852004611787522,
+          "success": 0.0
+        },
+        "aerial": {
+          "n": 8,
+          "meanError": 0.35400196490356384,
+          "success": 0.25
+        },
+        "entry": {
+          "n": 8,
+          "meanError": 7.1228791149524255,
+          "success": 0.0
+        }
+      }
+    }
+  }
+]

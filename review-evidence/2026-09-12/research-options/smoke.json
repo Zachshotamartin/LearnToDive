@@ -1,0 +1,13 @@
+{
+  "steps": 25600,
+  "archiveStates": 240,
+  "archiveVisits": 66,
+  "stages": [
+    0,
+    1,
+    2
+  ],
+  "evaluationDives": 24,
+  "evaluationPracticeEpisodes": 0,
+  "qualification": "Implementation smoke only"
+}

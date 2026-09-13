@@ -12,9 +12,12 @@ import numpy as np
 
 from engine import ACTION_HIGH, ACTION_LOW, SCRATCH, Arena as Physics, board_forces, framed_angles, initial_state
 from geometry import FOOT_GEOMS
-from judge import judge, terminal_reward
+from judge import judge
+from training_reward import reward_components, MODES
 from rules import CODE_INDEX, CODES, DIVES, POSITIONS, legal_mask, validate_declaration
 from stance import balanced_armstand
+from recovery_curriculum import RecoveryArchive, recovery_stage
+from motor_objective import potential_components, shaped_reward
 
 PLATFORM_HEIGHTS = [5, 7.5, 10]
 SPRINGBOARD_HEIGHTS = [1, 3]
@@ -37,7 +40,14 @@ def rows(engine):
 class Arena:
     """A batch of routines: six declared dives per athlete, or one auxiliary practice dive."""
 
-    def __init__(self, n=64, seed=1, threads=4, training=True, practice=.35):
+    def __init__(self, n=64, seed=1, threads=4, training=True, practice=.35, reward_mode="v12", recovery_mode="recent"):
+        if reward_mode not in MODES:
+            raise ValueError("Unknown reward mode")
+        self.reward_mode = reward_mode
+        if recovery_mode not in ("recent", "progress"):
+            raise ValueError("Unknown recovery curriculum")
+        self.recovery_mode = recovery_mode
+        self.recovery_archive = RecoveryArchive()
         self.perturb = False
         self.n = n
         self.training = training
@@ -62,10 +72,17 @@ class Arena:
         self.routine_points = np.zeros(n)
         self.returns = np.zeros(n)
         self.practice = np.zeros(n, bool)
+        self.recovery_allowed = np.ones(n, bool)
         self.bank = [[] for _ in range(ROUTINE_LENGTH)]
+        self.banked_stages = np.zeros((n, 3), bool)
+        self.selected_recovery = np.full(n, -1, dtype=int)
         self.attempts = np.zeros(ROUTINE_LENGTH)
         self.clean = np.zeros(ROUTINE_LENGTH)
         self.interactions = 0
+        self.potential_names = ('takeoff', 'flightPosition', 'entryAlignment', 'entryHip', 'entryKnee',
+                                'entryShoulderPitch', 'entryShoulderRoll', 'entryElbow', 'entryToes', 'entryHands', 'entryLegs')
+        self.phase_previous = np.zeros((n, len(self.potential_names)))
+        self.phase_totals = np.zeros_like(self.phase_previous)
         self.reset(np.arange(n), new_routine=True)
         self.observation_size = self.observe().shape[-1]
 
@@ -81,7 +98,11 @@ class Arena:
             self.choosing[i] = True
             self.returns[i] = 0
             self.practice[i] = False
+            self.banked_stages[i] = False
+            self.selected_recovery[i] = -1
             self.previous_actions[i] = 0
+            self.phase_previous[i] = 0
+            self.phase_totals[i] = 0
             self.stand(i, FORWARD_SKILL)
         return self.observe()
 
@@ -176,9 +197,20 @@ class Arena:
         Snapshots come only from this learner's real dives with the same
         declaration, apparatus and height; a target is never assigned.
         """
+        if not self.recovery_allowed[i]:
+            return
         g = self.group[i] - 1
         rate = self.clean[g] / max(1, self.attempts[g])
         probability = self.practice_rate * (1 - rate)
+        if self.recovery_mode == 'progress':
+            if self.training and self.rng.random() < probability:
+                selected = self.recovery_archive.choose(g, choice, self.height[i], self.apparatus[i], self.rng)
+                if selected is not None:
+                    for name, value in selected['snapshot']['physics'].items():
+                        getattr(self.physics, name)[i] = value
+                    self.selected_recovery[i] = selected['id']
+                    self.practice[i] = True
+            return
         eligible = [x for x in self.bank[g] if x['declaration'] == choice and x['height'] == self.height[i]
                     and x['apparatus'] == self.apparatus[i]]
         if self.training and eligible and self.rng.random() < probability:
@@ -192,6 +224,13 @@ class Arena:
         e = self.physics
         snapshot = dict(declaration=int(self.declaration[i]), height=float(self.height[i]),
                         apparatus=int(self.apparatus[i]), physics={k: v[i].copy() for k, v in rows(e).items()})
+        if self.recovery_mode == 'progress':
+            ratio = float(e.above_water[i] / max(.1, self.height[i]))
+            stage = recovery_stage(ratio)
+            features = [ratio, e.sensors[i, 5] / 10, e.phase_theta[i] / (2 * np.pi), e.air_twist[i] / (2 * np.pi)]
+            self.recovery_archive.add(self.group[i] - 1, snapshot, features, stage)
+            self.banked_stages[i, stage] = True
+            return
         bank = self.bank[self.group[i] - 1]
         bank.append(snapshot)
         if len(bank) > BANK_LIMIT:
@@ -200,6 +239,11 @@ class Arena:
 
     def bankable(self, i, chosen):
         e = self.physics
+        if self.recovery_mode == 'progress':
+            stage = recovery_stage(e.above_water[i] / max(.1, self.height[i]))
+            return (self.training and i not in chosen and not self.practice[i] and e.released[i]
+                    and not np.isfinite(e.entry_time[i]) and e.sensors[i, 5] < 0
+                    and e.above_water[i] > .3 and not self.banked_stages[i, stage])
         return (self.training and i not in chosen and not self.practice[i] and not e.banked[i] and e.released[i]
                 and not np.isfinite(e.entry_time[i]) and e.sensors[i, 5] < 0 and .3 < e.above_water[i] < 3)
 
@@ -224,6 +268,13 @@ class Arena:
         for i in range(self.n):
             if self.bankable(i, chosen):
                 self.bank_snapshot(i)
+        if self.reward_mode == 'phase-dense':
+            parts = potential_components(self)
+            current = np.column_stack([parts[name] for name in self.potential_names])
+            shaped = shaped_reward(self.phase_previous, current, done[:, None])
+            self.phase_previous[:] = np.where(done[:, None], 0., current)
+            self.phase_totals += shaped
+            reward += shaped.sum(axis=1)
         completed = [self.complete(m, reward) for m in info]
         self.returns += reward
         for record in completed:
@@ -237,9 +288,19 @@ class Arena:
         i = m['index']
         d = DIVES[self.declaration[i]]
         m['positionQuality'] = m['positionQualities'][POSITIONS.index(d['position'])]
+        m['motorPositionQuality'] = m['motorPositionQualities'][POSITIONS.index(d['position'])]
         score = judge(self.declaration[i], self.apparatus_name(i), self.height[i], m)
-        reward[i] += terminal_reward(score, m)
+        components = reward_components(score, m, self.reward_mode)
+        reward[i] += components["total"]
+        score["trainingRewardComponents"] = components
+        if self.reward_mode == 'phase-dense':
+            score['potentialShaping'] = dict(zip(self.potential_names, self.phase_totals[i].tolist()))
         g = self.group[i] - 1
+        if self.practice[i] and self.recovery_mode == 'progress':
+            # This affects only reset sampling, never the competition or training reward.
+            quality = max(0., 1 - score['entryAngle'] / 90) * m['positionQuality']
+            quality /= 1 + score['rotationError'] + score['twistError']
+            self.recovery_archive.observe(g, self.selected_recovery[i], quality)
         if not self.practice[i]:
             self.attempts[g] += 1
             self.clean[g] += score['clean']
@@ -255,7 +316,7 @@ class Arena:
     def state_dict(self):
         return dict(physics={k: v.copy() for k, v in rows(self.physics).items()},
                     arrays={k: v.copy() for k, v in vars(self).items() if isinstance(v, np.ndarray)},
-                    bank=copy.deepcopy(self.bank), rng=self.rng.bit_generator.state,
+                    bank=copy.deepcopy(self.bank), recoveryArchive=self.recovery_archive.state_dict(), rng=self.rng.bit_generator.state,
                     physicsRng=self.physics.rng.bit_generator.state, interactions=self.interactions)
 
     def load_state_dict(self, state):
@@ -264,6 +325,7 @@ class Arena:
         for k, v in state['arrays'].items():
             getattr(self, k)[:] = v
         self.bank = copy.deepcopy(state['bank'])
+        self.recovery_archive.load_state_dict(state['recoveryArchive'])
         self.rng.bit_generator.state = state['rng']
         self.physics.rng.bit_generator.state = state['physicsRng']
         self.interactions = state['interactions']

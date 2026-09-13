@@ -1,6 +1,8 @@
 """Rules table and judge behaviour on synthetic measurements."""
 import unittest
 
+from entry_faults import ENTRY_BUDGETS
+
 from judge import judge, terminal_reward
 from rules import DIVES, IDS, difficulty, legal_mask
 
@@ -8,6 +10,7 @@ from rules import DIVES, IDS, difficulty, legal_mask
 def measurements():
     """A perfect forward dive as the engine would report it."""
     return dict(rotation=.5, twist=0, boardInvalid=False, water=True, fullEntryComplete=True, firstGeometry=6, x=1,
+                entryFaultLosses={name: 0. for name in ENTRY_BUDGETS}, entryArmPositionValid=True,
                 maxLateral=0, firstContactAngle=0, entryAngle=0, ascent=.4, preparationBounces=0, positionQuality=1,
                 form=1, entryGeometryWorst=dict(footLineAngles=[0, 0], ankleGap=.12, crossedLegs=False,
                                                 handSeparation=.07, handHeightGap=0),
@@ -52,12 +55,13 @@ class JudgeTests(unittest.TestCase):
     def test_training_reward_stays_dense_when_execution_is_clipped(self):
         base = measurements()
         base.update(ascent=0, positionQuality=0, form=0, entryAngle=40, firstContactAngle=40)
-        base['entryGeometryWorst']['footLineAngles'] = [45, 45]
+        base['entryFaultLosses'].update({name: 4. for name in ENTRY_BUDGETS})
         better = judge(IDS['101C'], 'platform', 10, base)
         self.assertEqual(better['execution'], 0)
         m = measurements()
         m.update(ascent=0, positionQuality=0, form=0, entryAngle=40, firstContactAngle=40, surfaceLateralSpeed=3)
-        m['entryGeometryWorst'].update(footLineAngles=[45, 45], handSeparation=.4)
+        m['entryFaultLosses'].update({name: 4. for name in ENTRY_BUDGETS})
+        m['entryFaultLosses']['entryHandSeparation'] = 8.
         worse = judge(IDS['101C'], 'platform', 10, m)
         self.assertEqual(worse['execution'], 0)
         self.assertGreater(terminal_reward(better, base), terminal_reward(worse, m))
@@ -93,7 +97,8 @@ class JudgeTests(unittest.TestCase):
         fall.update(ascent=0, takeoffVerticalSpeed=-1.5, departureLean=60)
         jumped = judge(IDS['101C'], 'platform', 10, jump)
         fell = judge(IDS['101C'], 'platform', 10, fall)
-        self.assertGreater(fell['deductions']['takeoff'], jumped['deductions']['takeoff'] + 2)
+        names = ['takeoffHeight', 'takeoffLean', 'preparationBounces']
+        self.assertGreater(sum(fell['deductions'][k] for k in names), sum(jumped['deductions'][k] for k in names) + 2)
         # A missing takeoff must cost at least as much as a thirty-degree entry error;
         # before v12 it cost less than a fifth of one.
         flat = measurements()

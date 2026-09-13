@@ -16,6 +16,8 @@ from pathlib import Path
 
 import mujoco
 import numpy as np
+
+from entry_faults import ENTRY_BUDGETS
 from mujoco.rollout import Rollout
 
 from geometry import (
@@ -41,8 +43,8 @@ RELEASE_AIR_TIME = .04
 ASSIST_IMPULSE = .1  # N s of non-foot board contact that invalidates a takeoff
 ASSIST_FORCE = 15    # N of non-foot board contact that invalidates a takeoff
 TARGET_RATE = np.array([14, 14, 14, 10, 10, 8, 8, 10, 4])  # rad/s servo target slew; legs must outrun a jump
-TRAINING_SOURCES = ('environment.py', 'engine.py', 'geometry.py', 'stance.py', 'positions.py', 'water.py', 'rules.py', 'judge.py', 'evaluation.py',
-                    'policy.py', 'losses.py', 'train.py', 'difficulty.json', 'diver.xml')
+TRAINING_SOURCES = ('environment.py', 'engine.py', 'geometry.py', 'stance.py', 'positions.py', 'water.py', 'rules.py', 'judge.py', 'training_reward.py', 'entry_faults.py', 'motor_objective.py', 'motor_curriculum.py', 'recovery_curriculum.py', 'evaluation.py', 'model_selection.py', 'assessment_stats.py',
+                    'policy.py', 'losses.py', 'train.py', 'reference_policies.py', 'difficulty.json', 'diver.xml')
 CONTROL_SPEC = 3904  # CTRL | XFRC_APPLIED | EQ_ACTIVE | MOCAP_POS | MOCAP_QUAT for MuJoCo 3.13
 ATHLETE = slice(1, 16)               # the fifteen athlete geoms in the model
 BOARD_FOUND = slice(150, 210, 4)     # 'found' flag of every board contact sensor
@@ -123,6 +125,8 @@ class Arena:
         self.rotated_recontact = zeros(dtype=bool)
         # Flight position assessment.
         self.position_sums = zeros(4)
+        self.motor_position_sums = zeros(4)
+        self.motor_position_weight = zeros()
         self.position_ticks = zeros()
         # Water entry bookkeeping.
         self.entry_time = np.full(n, np.nan)
@@ -139,6 +143,7 @@ class Arena:
         self.entry_omega = zeros()
         self.surface_finished = zeros(GEOM_COUNT, dtype=bool)
         self.surface_group_loss = zeros(6)
+        self.entry_fault_losses = zeros(len(ENTRY_BUDGETS))
         self.surface_lateral = zeros()
         self.above_water = zeros()
         self.water_fraction = zeros()
@@ -204,9 +209,9 @@ class Arena:
                      'foot_departure_gap', 'takeoff_tilt_invalid', 'air_clear_time', 'air_theta', 'air_twist',
                      'release_theta', 'release_twist', 'release_time', 'released', 'board_invalid', 'board_impulse',
                      'board_peak', 'stand_impulse', 'stand_peak', 'preparation_bounces', 'foot_side_contact',
-                     'rotated_recontact', 'position_sums', 'position_ticks', 'first_geometry', 'entry_max_angle',
+                     'rotated_recontact', 'position_sums', 'position_ticks', 'motor_position_sums', 'motor_position_weight', 'first_geometry', 'entry_max_angle',
                      'entry_worst_geometry', 'entry_crossed', 'entry_omega', 'surface_finished',
-                     'surface_group_loss', 'surface_lateral', 'returns', 'practice', 'banked'):
+                     'surface_group_loss', 'entry_fault_losses', 'surface_lateral', 'returns', 'practice', 'banked'):
             getattr(self, name)[i] = 0
         self.entry_time[i] = np.nan
         self.full_entry_time[i] = np.nan
@@ -300,6 +305,29 @@ class Arena:
         pitch = joint[:, [6, 9]] - np.where(head, 3.05, 0)[:, None]
         roll = joint[:, [7, 10]] - head[:, None] * np.array([-.3, .3])
         elbows = joint[:, [8, 11]]
+        # Inspect arm placement from first water contact until the corresponding
+        # segment is submerged, so raising the arms after the head enters cannot
+        # erase the fault. Post-submersion movement cannot add entry penalties.
+        arm_mask = ~self.surface_finished[ids][:, SHOULDER_GEOMS]
+        elbow_mask = ~self.surface_finished[ids][:, FOREARM_GEOMS]
+        hand_mask = ~self.surface_finished[ids][:, HAND_GEOMS]
+        hand_window = np.any(hand_mask, axis=1) & head
+        individual = np.stack([
+            np.sum(1.25 * hips ** 2 * thighs, axis=1),
+            np.sum(1.25 * knees ** 2 * shins, axis=1),
+            np.sum(.325 * pitch ** 2 * arm_mask, axis=1),
+            np.sum(.65 * roll ** 2 * arm_mask, axis=1),
+            np.sum(.5 * elbows ** 2 * elbow_mask, axis=1),
+            np.sum(.55 * geometry['footLineAngles'] ** 2 * feet, axis=1),
+            np.sum(1.5 * np.maximum(geometry['handAxisAngles'] - np.pi / 12, 0) ** 2 * hand_mask, axis=1) * head,
+            4 * np.maximum(geometry['handSeparation'] - .07, 0) ** 2 * hand_window,
+            20 * geometry['handHeightGap'] ** 2 * hand_window,
+            12 * np.maximum(geometry['kneeGap'] - .17, 0) ** 2 * knee_cross,
+            12 * np.maximum(geometry['ankleGap'] - .13, 0) ** 2 * ankle_cross,
+            12 * np.maximum(geometry['toeGap'] - .11, 0) ** 2 * toe_cross,
+            4 * geometry['crossedLegs'] * toe_cross,
+        ], axis=1)
+        self.entry_fault_losses[ids] = np.maximum(self.entry_fault_losses[ids], individual)
         losses = np.stack([
             np.sum(1.25 * hips ** 2 * thighs, axis=1),
             np.sum(1.25 * knees ** 2 * shins, axis=1) + 12 * np.maximum(geometry['kneeGap'] - .17, 0) ** 2 * knee_cross,
@@ -560,6 +588,13 @@ class Arena:
         assess = self.released & ~contacted & (((progress > .15) & (progress < .8)) | (turns == 0))
         self.position_sums += quality * assess[:, None]
         self.position_ticks += assess
+        # Learning feedback is available even when rotation is wrong. Entry
+        # preparation gradually replaces the flight shape, rather than requiring
+        # the athlete to remain tucked while entering the water.
+        from motor_objective import entry_weight
+        weight = self.released * ~contacted * (1 - entry_weight(self.above_water, sensors[:, 5]))
+        self.motor_position_sums += quality * weight[:, None]
+        self.motor_position_weight += weight
 
     def _regularizers(self, started_wet, contacted, old_invalid):
         """Shape-agnostic small physical regularizers; no desired rotation or twist."""
@@ -585,6 +620,7 @@ class Arena:
             boardInvalid=bool(self.board_invalid[i]), water=bool(contacted),
             fullEntryComplete=bool(np.isfinite(self.full_entry_time[i])), firstGeometry=int(self.first_geometry[i]),
             x=float(sensors[0]), firstContactAngle=first_angle, entryAngle=float(max(first_angle, self.entry_max_angle[i])),
+            entryFaultLosses={name: float(self.entry_fault_losses[i, j]) for j, name in enumerate(ENTRY_BUDGETS)},
             form=float(self.entry_min_form[i]), entryGeometryValid=bool(self.entry_geometry_valid[i]),
             entryLimbsValid=bool(self.entry_limbs_valid[i]),
             entryGeometryWorst=dict(footLineAngles=np.degrees(worst[:2]).tolist(), handAxisAngles=np.degrees(worst[2:4]).tolist(),
@@ -592,6 +628,7 @@ class Arena:
                                     crossedLegs=bool(self.entry_crossed[i])),
             entryArmPositionValid=bool(np.max(np.abs(state[1 + self.qadr[[6, 9]]] - arm_reference)) < .8),
             positionQualities=(self.position_sums[i] / max(1, self.position_ticks[i])).tolist(),
+            motorPositionQualities=(self.motor_position_sums[i] / max(1e-8, self.motor_position_weight[i])).tolist(),
             ascent=float(max(0, self.apex_com[i] - self.departure_com[i])), preparationBounces=int(self.preparation_bounces[i]),
             surfaceLateralSpeed=float(self.surface_lateral[i]), entryAngularSpeed=float(self.entry_omega[i]),
             maxLateral=float(self.max_lateral[i]), takeoffVerticalSpeed=float(self.takeoff_vertical_speed[i]),
