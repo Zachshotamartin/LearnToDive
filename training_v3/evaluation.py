@@ -8,6 +8,7 @@ from engine import DT, ENTRY_WINDOW, TIMEOUT
 from geometry import ANGULAR_VELOCITY
 from judge import ROTATION_TOLERANCE, TWIST_TOLERANCE
 from environment import Arena
+from rules import DIVES, IDS
 
 EVALUATION_SEED = 771100
 ROUTINE_LENGTH = 6
@@ -31,7 +32,15 @@ def measured(rows, key):
 
 
 def group(rows):
+    signed = [DIVES[IDS[r['declaration']]]['sign'] * r['measurements']['rotation'] for r in rows]
+    momentum = [DIVES[IDS[r['declaration']]]['sign'] * r['measurements']['takeoffAngularMomentum'][1]
+                for r in rows if 'takeoffAngularMomentum' in r['measurements']]
     return dict(n=len(rows), points=mean(rows, 'points'), execution=mean(rows, 'execution'),
+                signedRotationTurns=float(np.mean(signed)) if signed else None,
+                wrongDirection=float(np.mean(np.asarray(signed) < -.02)) if signed else None,
+                correctDirection=float(np.mean(np.asarray(signed) > .02)) if signed else None,
+                signedTakeoffMomentum=float(np.mean(momentum)) if momentum else None,
+                correctTakeoffDirection=float(np.mean(np.asarray(momentum) > 2.)) if momentum else None,
                 difficulty=mean(rows, 'difficulty'), clean=mean(rows, 'clean'), valid=mean(rows, 'valid'),
                 uniqueDives=len({r['declaration'] for r in rows}), entryAngle=mean(rows, 'entryAngle'),
                 trainingReturn=mean(rows, 'return'),
@@ -97,7 +106,7 @@ def evaluate(policy, seed=EVALUATION_SEED, cases=48, perturb=False, reward_mode=
 
 
 @torch.no_grad()
-def evaluate_motor_skills(policy, seed=782100, cases=24, level=0.):
+def evaluate_motor_skills(policy, seed=782100, cases=24, level=0., direction_practice=False):
     """Reproducible motor-only diagnostics, explicitly excluded from dive scores."""
     from motor_curriculum import MotorCurriculum, TASKS, HORIZONS
     if cases < 1 or not 0 <= level <= 1:
@@ -108,7 +117,7 @@ def evaluate_motor_skills(policy, seed=782100, cases=24, level=0.):
     records = []
     try:
         base = Arena(cases * 4, seed, threads=1, training=False, practice=0)
-        e = MotorCurriculum(base, enabled=False)
+        e = MotorCurriculum(base, enabled=False, direction_practice=direction_practice)
         e.task[:] = np.repeat(np.arange(1, 5), cases)
         e.level[:] = level
         goals = np.random.default_rng(seed + 1)
@@ -116,7 +125,10 @@ def evaluate_motor_skills(policy, seed=782100, cases=24, level=0.):
         theta = goals.uniform(-np.pi, np.pi, e.n)
         e.up_goal[:] = np.column_stack([np.sin(theta), np.zeros(e.n), np.cos(theta)])
         e.up_goal[e.task == 4] = [0, 0, -1]
-        for _ in range(int(HORIZONS.max() / DT) + 3):
+        if direction_practice:
+            ids = np.flatnonzero(e.task == 1)
+            e.group[ids] = np.arange(len(ids)) % 4 + 1
+        for _ in range(int(e.horizons().max() / DT) + 3):
             obs = e.observe()
             if policy.obs == base.observation_size:
                 # A baseline without task context still receives the same physical
@@ -129,7 +141,7 @@ def evaluate_motor_skills(policy, seed=782100, cases=24, level=0.):
                 break
         if len(records) != cases * 4:
             raise RuntimeError('Incomplete motor evaluation')
-        return dict(seed=seed, casesPerTask=cases, level=level, practiceOnly=True,
+        return dict(seed=seed, casesPerTask=cases, level=level, practiceOnly=True, directionPractice=direction_practice,
                     tasks={TASKS[t]: dict(n=cases, meanError=float(np.mean([r['error'] for r in records if r['task'] == t])),
                                          success=float(np.mean([r['success'] for r in records if r['task'] == t])))
                            for t in range(1, 5)}, episodes=records)
@@ -137,3 +149,49 @@ def evaluate_motor_skills(policy, seed=782100, cases=24, level=0.):
         if e is not None:
             e.close()
         torch.set_rng_state(torch_rng)
+
+
+@torch.no_grad()
+def evaluate_targets(policy, seed=794100, cases_per_target=4, reward_mode='phase-dense'):
+    """Explicit-target motor benchmark, separate from autonomous routine results.
+
+    Every rollout starts on the board. This reports whether the requested dive
+    was performed; its assigned declaration is never a selector success.
+    """
+    targets = ('101C', '103C', '201C', '203C', '301C', '303C', '401C', '403C', '5132D', '612C')
+    assignments = np.repeat([IDS[code] for code in targets], cases_per_target)
+    random_state = torch.get_rng_state()
+    torch.manual_seed(seed)
+    e = None
+    records, completed = [], set()
+    try:
+        e = Arena(len(assignments), seed, threads=1, training=False, practice=0, reward_mode=reward_mode)
+        if policy.obs == e.observation_size + 10:
+            from motor_curriculum import MotorCurriculum
+            e = MotorCurriculum(e, enabled=False)
+        base = getattr(e, 'base', e)
+        for i, target in enumerate(assignments):
+            base.group[i], base.height[i], base.apparatus[i] = DIVES[target]['group'], 10, 1
+            base.declare(i, int(target))
+            # Paired deterministic disturbances test more than one identical reset.
+            if i % cases_per_target:
+                base.physics.disturbance[i] = (-1 if i % 2 else 1) * (10 + 5 * (i % cases_per_target))
+                base.physics.disturbance_time[i] = .75
+        for _ in range(DIVE_TICKS):
+            out = policy(torch.tensor(e.observe()), torch.tensor(e.mask()), torch.tensor(e.choosing), deterministic=True)
+            _, _, _, rows = e.step(out['choice'].numpy(), out['action'].numpy())
+            for row in rows:
+                if row['index'] not in completed:
+                    row['assignedEvaluationGoal'] = True
+                    records.append(row)
+                    completed.add(row['index'])
+            if len(completed) == len(assignments):
+                break
+        if len(completed) != len(assignments):
+            raise RuntimeError('Incomplete target benchmark')
+        return dict(seed=seed, casesPerTarget=cases_per_target, autonomousSelection=False, boardStartsOnly=True,
+                    targets={code: group([r for r in records if r['declaration'] == code]) for code in targets}, episodes=records)
+    finally:
+        if e is not None:
+            e.close()
+        torch.set_rng_state(random_state)

@@ -1,8 +1,9 @@
 """Self-declared diving routines on top of the physics arena.
 
 One policy selects a declaration for each round, then drives real joint
-servos. The trainer never selects dive targets or supplies motion
-demonstrations; the only physical priors are the standing and armstand
+servos. The curriculum may assign legal dive targets during marked practice;
+autonomous routines choose their own. No motion demonstrations are supplied.
+The only physical priors are the standing and armstand
 starting poses, and recovery snapshots originate from this learner's own
 dives.
 """
@@ -80,9 +81,10 @@ class Arena:
         self.clean = np.zeros(ROUTINE_LENGTH)
         self.interactions = 0
         self.potential_names = ('takeoff', 'flightPosition', 'entryAlignment', 'entryHip', 'entryKnee',
-                                'entryShoulderPitch', 'entryShoulderRoll', 'entryElbow', 'entryToes', 'entryHands', 'entryLegs')
+                                'entryShoulderPitch', 'entryShoulderRoll', 'entryElbow', 'entryToes', 'entryHands', 'entryLegs', 'takeoffDirection')
         self.phase_previous = np.zeros((n, len(self.potential_names)))
         self.phase_totals = np.zeros_like(self.phase_previous)
+        self.direction_practice = False
         self.reset(np.arange(n), new_routine=True)
         self.observation_size = self.observe().shape[-1]
 

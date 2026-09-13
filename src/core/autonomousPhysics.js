@@ -17,19 +17,14 @@ import {
 } from "./control.js";
 import { immersion, bodyWater } from "./autonomousWater.js";
 import { DIVES, CODES } from "../data/declarations.js";
+import { legalDeclarations, requestedDeclaration } from "../data/diveChoices.js";
+export { legalDeclarations } from "../data/diveChoices.js";
 const RATE = [14, 14, 14, 10, 10, 8, 8, 10, 4],
   FEET = [11, 14],
   HANDS = [5, 8];
 const rad = Math.PI / 180,
   sum = (a) => a.reduce((s, x) => s + x, 0),
   sq = (x) => x * x;
-export const legalDeclarations = (group, apparatus, height, used = []) =>
-  DIVES.map(
-    (d) =>
-      d.group === group &&
-      `${apparatus}:${height}` in d.difficulty &&
-      !used.includes(d.code),
-  );
 const orientation = (t, y) => [
   Math.cos(t / 2) * Math.cos(y / 2),
   Math.sin(t / 2) * Math.sin(y / 2),
@@ -665,7 +660,8 @@ export function simulateAutonomous(engine, parameters, policy) {
     parameters.height,
     parameters.used,
   );
-  engine.declare(policy.predict(engine.observation(), mask).choice);
+  const requested = requestedDeclaration(parameters.dive, mask);
+  engine.declare(requested ?? policy.predict(engine.observation(), mask).choice);
   for (let i = 0; i < 250; i++) {
     const r = policy.predict(engine.observation(), mask);
     if (engine.step(r.action)) break;

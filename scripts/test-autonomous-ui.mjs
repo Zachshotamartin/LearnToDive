@@ -43,6 +43,23 @@ try {
     () => Number(document.querySelector("[name=timeline]").value) > 0.3,
   );
   await page.locator("[data-action=play]").click();
+  // Explicit goals must reach the physical engine, not merely change a label.
+  await page.locator('[name=category]').selectOption('3');
+  await page.locator('[data-state=ready]').waitFor({ timeout: 60000 });
+  await page.locator('[name=dive]').selectOption('303C');
+  await page.locator('[data-state=ready][data-dive="303C"]').waitFor({ timeout: 60000 });
+  assert.equal(await page.locator('[name=autoplay]').isDisabled(), true);
+  const targetedDownload = page.waitForEvent('download');
+  await page.locator('[data-action=export]').click();
+  const targeted = JSON.parse(await fs.readFile(await (await targetedDownload).path(), 'utf8'));
+  assert.equal(targeted.parameters.dive, '303C');
+  assert.equal(targeted.skill.id, '303C');
+  assert.equal(targeted.result.declaration, '303C');
+  await page.locator('[data-action=next]').click();
+  await page.locator('[data-state=ready][data-dive="303C"]').waitFor({ timeout: 60000 });
+  await page.locator('[name=dive]').selectOption('auto');
+  await page.locator('[data-state=ready]').waitFor({ timeout: 60000 });
+  assert.equal(await page.locator('[name=autoplay]').isEnabled(), true);
   for (const [name, value] of [
     ["category", "6"],
     ["apparatus", "springboard"],

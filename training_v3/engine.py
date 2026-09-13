@@ -101,6 +101,7 @@ class Arena:
         self.departure_com = zeros()
         self.apex_com = zeros()
         self.takeoff_vertical_speed = zeros()
+        self.takeoff_angular_momentum = zeros(3)
         self.phase_theta = zeros()
         self.departure_pitch = zeros()
         self.departure_theta = zeros()
@@ -204,7 +205,7 @@ class Arena:
         up = quat_up(quaternion)[0]
         self.prev_pitch[i] = np.arctan2(up[0], up[2])
         self.prev_twist[i] = framed_angles(quaternion)[1][0]
-        for name in ('theta', 'twist', 'max_lateral', 'departure_com', 'apex_com', 'takeoff_vertical_speed',
+        for name in ('theta', 'twist', 'max_lateral', 'departure_com', 'apex_com', 'takeoff_vertical_speed', 'takeoff_angular_momentum',
                      'phase_theta', 'departure_pitch', 'departure_theta', 'departure_twist', 'last_foot_contact',
                      'foot_departure_gap', 'takeoff_tilt_invalid', 'air_clear_time', 'air_theta', 'air_twist',
                      'release_theta', 'release_twist', 'release_time', 'released', 'board_invalid', 'board_impulse',
@@ -542,6 +543,7 @@ class Arena:
             self.departure_com[first_clear] = sensors[first_clear, k, 2]
             self.apex_com[first_clear] = sensors[first_clear, k, 2]
             self.takeoff_vertical_speed[first_clear] = sensors[first_clear, k, 5]
+            self.takeoff_angular_momentum[first_clear] = sensors[first_clear, k, 6:9]
             self.departure_pitch[first_clear] = pitches[first_clear, k]
             self.departure_theta[first_clear] = trajectory_theta[first_clear, k]
             self.departure_twist[first_clear] = twist_path[first_clear, k]
@@ -632,5 +634,6 @@ class Arena:
             ascent=float(max(0, self.apex_com[i] - self.departure_com[i])), preparationBounces=int(self.preparation_bounces[i]),
             surfaceLateralSpeed=float(self.surface_lateral[i]), entryAngularSpeed=float(self.entry_omega[i]),
             maxLateral=float(self.max_lateral[i]), takeoffVerticalSpeed=float(self.takeoff_vertical_speed[i]),
+            takeoffAngularMomentum=self.takeoff_angular_momentum[i].tolist(),
             departureLean=float(np.degrees(lean)),
             time=float(self.state[i, 0]))

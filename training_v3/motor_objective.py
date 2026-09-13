@@ -12,6 +12,7 @@ from positions import position_qualities
 
 GAMMA = .995
 VERSION = 'continuous-motor-phases-v14'
+DIRECTION_VERSION = 'signed-takeoff-practice-v1'
 ENTRY_WEIGHTS = dict(entryHipBend=.5, entryKneeBend=.75, entryShoulderPitch=1.5,
                     entryShoulderRoll=.5, entryElbowBend=.75, entryFootPoint=.75,
                     entryHandAlignment=.5, entryHandSeparation=.5,
@@ -51,6 +52,18 @@ def live_errors(e):
     )
 
 
+def rotation_direction_cost(momentum_y, signed_turns, released=True):
+    """Bounded momentum-direction error; no prescribed angular speed or sequence.
+
+    World Y momentum and the judge's unwrapped swing share a sign. Beyond a
+    modest momentum floor there is no extra credit. Competition still judges
+    the actual rotation count and entry; rocking before release is not success.
+    """
+    direction = np.sign(signed_turns)
+    error = np.clip(1 - direction * np.asarray(momentum_y) / 12., 0, 3)
+    return np.where(direction != 0, np.where(released, error, np.maximum(1., error)), 0.)
+
+
 def potential_components(env):
     e = env.physics
     q = e.state[:, 1 + e.qadr]
@@ -67,6 +80,11 @@ def potential_components(env):
         takeoff=1.5 * takeoff * ~e.released * ~e.armstand,
         flightPosition=-2 * (1 - pose) * airborne * (1 - preparing),
     )
+    # Contacts can generate momentum before departure. Terminal cancellation
+    # prevents repeatedly collecting points by rocking or delaying takeoff.
+    components['takeoffDirection'] = (
+        -.75 * rotation_direction_cost(e.sensors[:, 7], e.goals[:, 0], e.released)
+        * ~e.released * bool(getattr(env, 'direction_practice', False)))
     weights = dict(alignment=1., hip=.5, knee=.75, shoulderPitch=1.5,
                    shoulderRoll=.5, elbow=.75, toes=.75, hands=.5, legs=.5)
     for name, value in errors.items():

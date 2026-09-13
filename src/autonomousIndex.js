@@ -1,6 +1,7 @@
 import { createScene } from "./scene.js";
 import { ASSETS } from "./data/autonomousAssets.js";
 import { EVALUATION } from "./data/autonomousEvaluation.js";
+import { availableDives, diveLabel } from "./data/diveChoices.js";
 export const metadata = {
   id: "learn-to-dive",
   title: "Learn to Dive",
@@ -8,7 +9,7 @@ export const metadata = {
     "A neural policy chooses a legal dive and controls an articulated athlete throughout the simulation.",
   technique: "Self-declared PPO with torque-limited MuJoCo physics.",
   instructions: [
-    "Choose an apparatus and category. The model chooses its own legal declaration.",
+    "Choose a category and specific dive, or let Auto select a legal dive for the conditions.",
     "Play, pause and scrub the physical dive. Compare against initial network weights.",
   ],
   limitations: [
@@ -37,6 +38,14 @@ export function mountExperiment(element, options = {}) {
     abort = new AbortController(),
     listen = (el, e, fn) =>
       el.addEventListener(e, fn, { signal: abort.signal });
+  const targetLabel = document.createElement('label');
+  targetLabel.textContent = 'Dive';
+  const targetSelect = document.createElement('select');
+  targetSelect.name = 'dive';
+  targetLabel.append(targetSelect);
+  input('category').closest('label').after(targetLabel);
+  const targetNote = root.querySelector('.ld-controls > p');
+  targetNote.textContent = 'Choose a target or let Auto select one. Available dives are not all mastered yet.';
   const scene = createScene($(".ld-canvas")),
     worker = new Worker(new URL("./autonomous.worker.js", import.meta.url), {
       type: "module",
@@ -51,6 +60,21 @@ export function mountExperiment(element, options = {}) {
     disposed = false,
     used = [],
     round = 0;
+  function refreshDives() {
+    const previous = input('dive').value || 'auto';
+    const choices = availableDives(Number(input('category').value), input('apparatus').value, Number(input('height').value));
+    input('dive').replaceChildren(new Option('Auto · model chooses', 'auto'),
+      ...choices.map(d => new Option(diveLabel(d), d.id)));
+    input('dive').value = choices.some(d => d.id === previous) ? previous : 'auto';
+    const specific = input('dive').value !== 'auto';
+    const selected = choices.find(d => d.id === input('dive').value);
+    targetNote.textContent = selected
+      ? `${diveLabel(selected)}. This is a practice target; the current model may not complete it.`
+      : 'The model selects a legal dive in this category. Available dives are not all mastered yet.';
+    input('autoplay').disabled = specific;
+    button('next').textContent = specific ? 'Try again' : 'Next dive';
+    button('reset').textContent = specific ? 'Reset practice' : 'Reset round';
+  }
   const assets = options.assetBase
     ? Object.fromEntries(
         Object.entries(ASSETS).map(([k, v]) => [
@@ -86,6 +110,7 @@ export function mountExperiment(element, options = {}) {
         height: Number(input("height").value),
         apparatus: input("apparatus").value,
         category: Number(input("category").value),
+        dive: input('dive').value,
         used,
         round,
       },
@@ -94,9 +119,14 @@ export function mountExperiment(element, options = {}) {
   function reset() {
     used = [];
     round = 0;
+    refreshDives();
     request();
   }
   function next() {
+    if (input('dive').value !== 'auto') {
+      reset();
+      return;
+    }
     if (dive && !used.includes(dive.skill.code)) used.push(dive.skill.code);
     round++;
     if (round >= 6) {
@@ -107,6 +137,7 @@ export function mountExperiment(element, options = {}) {
     input("category").value = String(
       (Number(input("category").value) % max) + 1,
     );
+    refreshDives();
     request();
   }
   worker.onmessage = ({ data }) => {
@@ -126,6 +157,7 @@ export function mountExperiment(element, options = {}) {
       button(n).disabled = false;
     root.dataset.state = "ready";
     root.dataset.steps = String(dive.physics.policySteps);
+    root.dataset.dive = dive.skill.id;
     const r = dive.result;
     for (const [key, value] of Object.entries({
       execution: r.execution,
@@ -135,7 +167,7 @@ export function mountExperiment(element, options = {}) {
     }))
       $(`[data-metric="${key}"]`).textContent = value.toFixed(2);
     $(".ld-stage-label").textContent =
-      `${dive.skill.id} · ${categories[r.category - 1]} · ${dive.parameters.height} m ${dive.parameters.apparatus}`;
+      `${diveLabel(dive.skill)} · ${dive.parameters.height} m ${dive.parameters.apparatus}`;
     $(".ld-outcome").textContent = r.failures.length
       ? r.failures.join(" · ")
       : r.clean
@@ -151,6 +183,7 @@ export function mountExperiment(element, options = {}) {
       }),
     );
     $(".ld-round").textContent =
+      input('dive').value !== 'auto' ? 'Targeted practice · repeat this dive to inspect its execution' :
       `Round attempt ${round + 1} of 6${used.length ? " · used " + used.join(", ") : ""}`;
     $(".ld-status").textContent =
       "Simulation ready. Playback shows actual physical joint motion.";
@@ -161,7 +194,7 @@ export function mountExperiment(element, options = {}) {
     root.dataset.state = "error";
     $(".ld-status").textContent = e.message || "Simulator worker failed";
   };
-  for (const n of ["height", "category", "policy"])
+  for (const n of ["height", "category", "policy", "dive"])
     listen(input(n), "change", reset);
   listen(input("apparatus"), "change", () => {
     const platform = input("apparatus").value === "platform";
@@ -223,7 +256,7 @@ export function mountExperiment(element, options = {}) {
       if (time >= end) {
         time = end;
         play(false);
-        if (input("autoplay").checked) autoTimer = setTimeout(next, 1600);
+        if (input("autoplay").checked && input('dive').value === 'auto') autoTimer = setTimeout(next, 1600);
       }
       scene.render(time);
       input("timeline").value = time;
@@ -233,6 +266,7 @@ export function mountExperiment(element, options = {}) {
     raf = requestAnimationFrame(tick);
   }
   raf = requestAnimationFrame(tick);
+  refreshDives();
   request();
   return {
     dispose() {

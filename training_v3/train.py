@@ -21,12 +21,13 @@ import torch
 
 from checkpointing import atomic_checkpoint, atomic_json, hashes
 from environment import Arena
-from evaluation import evaluate, summary, evaluate_motor_skills
+from evaluation import evaluate, summary, evaluate_motor_skills, evaluate_targets
 from model_selection import update_selection, comparison, competence
 from judge import VERSION
 from losses import ppo_terms
 from policy import FORMAT, MOTOR_FORMAT, Policy
 from motor_curriculum import MotorCurriculum, EXTRA_OBSERVATIONS
+from motor_objective import DIRECTION_VERSION
 from rules import DIVES
 from reference_policies import load_reference
 from water import WATER_VERSION
@@ -42,7 +43,7 @@ GRADIENT_NORM = .5
 REFINEMENT_CLEAN_RATE = .8  # held-out clean rate above which exploration is reduced
 REFINEMENT_FACTOR = .25
 PLATEAU_THRESHOLDS = [('points', .5), ('execution', .1), ('clean', .02), ('valid', .05)]
-RESUME_KEYS = ['envs', 'widths', 'rho', 'horizon', 'seed', 'lr', 'epochs', 'batch', 'reward_mode', 'gae_lambda', 'recovery_mode', 'exploration', 'motor_curriculum', 'architecture', 'practice', 'reference_policy', 'eval_cases', 'final_cases', 'final_seed']
+RESUME_KEYS = ['envs', 'widths', 'rho', 'horizon', 'seed', 'lr', 'epochs', 'batch', 'reward_mode', 'gae_lambda', 'recovery_mode', 'exploration', 'motor_curriculum', 'architecture', 'practice', 'reference_policy', 'eval_cases', 'final_cases', 'final_seed', 'direction_practice', 'goal_practice']
 BEST_KEY_SIZE = 4
 
 
@@ -107,6 +108,8 @@ class Trainer:
 
     def __init__(self, args):
         self.args = args
+        if (args.direction_practice or args.goal_practice) and (args.motor_curriculum != 'adaptive' or args.reward_mode != 'phase-dense'):
+            raise ValueError('Direction practice requires the adaptive phase-dense curriculum')
         if not 0 <= args.gae_lambda <= 1:
             raise ValueError('GAE lambda must be between zero and one')
         if args.final_seed == 771100 or args.final_cases < 1:
@@ -120,10 +123,11 @@ class Trainer:
         torch.manual_seed(args.seed)
         self.env = Arena(args.envs, args.seed, args.threads, practice=args.practice, reward_mode=args.reward_mode, recovery_mode=args.recovery_mode)
         if args.motor_curriculum != 'off':
-            self.env = MotorCurriculum(self.env, enabled=args.motor_curriculum == 'adaptive')
+            self.env = MotorCurriculum(self.env, enabled=args.motor_curriculum == 'adaptive', direction_practice=args.direction_practice,
+                                       goal_practice=args.goal_practice)
         try:
             self.policy = Policy(self.env.observation_size, tuple(args.widths), args.rho, initial_action=self.env.initial_action, exploration=args.exploration, architecture=args.architecture)
-            if sum(bool(path) for path in (args.initialize_from, args.resume, args.warm_start)) > 1:
+            if sum(bool(path) for path in (args.initialize_from, args.resume, args.warm_start, args.continue_from)) > 1:
                 raise ValueError('Choose only one initialization, warm-start, or exact resume source')
             if args.initialize_from and not args.resume:
                 saved = torch.load(args.initialize_from, map_location='cpu', weights_only=False)
@@ -162,9 +166,12 @@ class Trainer:
             self.state = dict(steps=0, updates=0, elapsedSeconds=0, history=[], evaluations=[], bestValue=-1e30, stopReason=None)
             self.contract = dict(format=self.policy.format, judge=VERSION, water=WATER_VERSION, observationSize=self.env.observation_size,
                                  motorCurriculum=args.motor_curriculum, architecture=args.architecture,
-                                 rewardMode=args.reward_mode, exploration=args.exploration, actions=9, declarations=[d['id'] for d in DIVES], sourceHashes=hashes())
+                                 rewardMode=args.reward_mode, exploration=args.exploration, directionPractice=args.direction_practice, goalPractice=args.goal_practice,
+                                 actions=9, declarations=[d['id'] for d in DIVES], sourceHashes=hashes())
             if args.resume:
                 self.resume(args.resume)
+            elif args.continue_from:
+                self.continue_phase(args.continue_from)
             elif args.warm_start:
                 transfer_warm_start(self.policy, args, self.out)
         except BaseException:
@@ -177,6 +184,60 @@ class Trainer:
         self.target = self.state['steps'] + math.ceil(args.steps / self.block) * self.block
 
     # ------------------------------------------------------------ persistence
+    def continue_phase(self, path):
+        """Explicit objective migration, preserving learned weights and Adam state.
+
+        This is a continuation with new experiences, not an exact resume of the
+        old learning problem. It must write a separate directory. No prior
+        archive is overwritten and cumulative training counters never reset.
+        """
+        raw = Path(path).read_bytes()
+        import io
+        saved = torch.load(io.BytesIO(raw), map_location='cpu', weights_only=False)
+        if Path(path).resolve().parent == self.out:
+            raise ValueError('A new phase must preserve the previous output directory')
+        if not self.args.direction_practice or saved['config'].get('direction_practice', False):
+            raise ValueError('Only the v14 to directional-practice migration is supported')
+        for key in RESUME_KEYS:
+            if key not in ('direction_practice', 'goal_practice') and saved['config'][key] != getattr(self.args, key):
+                raise ValueError('Continuation changed ' + key)
+        for key in ('format', 'observationSize', 'architecture', 'actions', 'declarations', 'judge', 'water'):
+            if saved['contract'][key] != self.contract[key]:
+                raise ValueError('Incompatible continuation contract: ' + key)
+        for name in ('diver.xml', 'geometry.py', 'stance.py', 'water.py', 'policy.py', 'rules.py', 'judge.py'):
+            if saved['contract']['sourceHashes'][name] != self.contract['sourceHashes'][name]:
+                raise ValueError('Continuation must preserve physics, policy and judging: ' + name)
+        if self.args.architecture != 'split':
+            raise ValueError('Critic recalibration requires independent actor and critic trunks')
+        self.policy.load_state_dict(saved['model'])
+        self.optimizer.load_state_dict(saved['optimizer'])
+        self.state = copy.deepcopy(saved['training'])
+        # Restore the episode generators and unaffected skill progress. Start
+        # fresh episodes because old partial rewards/tasks have different goals.
+        old = saved['environment']
+        self.env.base.rng.bit_generator.state = copy.deepcopy(old['base']['rng'])
+        self.env.physics.rng.bit_generator.state = copy.deepcopy(old['base']['physicsRng'])
+        self.env.base.interactions = old['base']['interactions']
+        for name in ('visits', 'successes', 'readiness', 'level', 'error_sum'):
+            getattr(self.env, name)[:] = old['curriculum'][name]
+            getattr(self.env, name)[1] = 0  # Old jump-only success is not directional mastery.
+        self.env.base.reset(np.arange(self.env.n), new_routine=True)
+        self.env.assign(np.arange(self.env.n))
+        torch.set_rng_state(saved['torchRNG'])
+        np.random.set_state(saved['numpyRNG'])
+        random.setstate(saved['pythonRNG'])
+        phase = dict(version=DIRECTION_VERSION, goalPractice=self.args.goal_practice,
+                     startSteps=self.state['steps'], startUpdates=self.state['updates'],
+                     parent=str(Path(path).resolve()), parentSHA256=hashlib.sha256(raw).hexdigest(),
+                     actor='preserved', optimizer='preserved', critic='preserved; four critic-only recalibration updates',
+                     episodeState='fresh; partial rollouts and recovery snapshots remain in parent checkpoint',
+                     unaffectedMotorProgress='preserved', takeoffReadiness='reset for changed skill criterion',
+                     sourceHashes=self.contract['sourceHashes'])
+        self.state.setdefault('trainingPhases', []).append(phase)
+        self.state['phaseStartSteps'] = self.state['steps']
+        self.state['criticWarmupRemaining'] = 4
+        atomic_json(self.out / 'continuation.json', phase)
+
     def resume(self, path):
         saved = torch.load(path, map_location='cpu', weights_only=False)
         amendments = self.source_amendments(saved['contract'], saved['training']['steps'])
@@ -290,7 +351,11 @@ class Trainer:
         state = self.state
         report['steps'] = state['steps']
         if isinstance(self.env, MotorCurriculum):
-            report['motorSkills'] = evaluate_motor_skills(self.policy, cases=self.args.eval_cases)
+            report['motorSkills'] = evaluate_motor_skills(self.policy, cases=self.args.eval_cases, direction_practice=self.args.direction_practice)
+        if self.args.goal_practice:
+            targets = evaluate_targets(self.policy, cases_per_target=max(2, self.args.eval_cases // 6), reward_mode=self.args.reward_mode)
+            targets['steps'] = state['steps']
+            atomic_json(self.out / 'target-evaluations' / f"{state['steps']}.json", targets)
         atomic_json(self.out / 'evaluations' / f"{state['steps']}.json", report)
         state['evaluations'].append(dict(steps=state['steps'], summary=report['summary']))
         labels = update_selection(state, report)
@@ -307,10 +372,11 @@ class Trainer:
     def plateaued(self):
         """No category improved on any metric over the last ``patience`` evaluations."""
         state, args = self.state, self.args
-        if state['steps'] < args.minimum_steps or len(state['evaluations']) <= args.patience:
+        evaluations = [row for row in state['evaluations'] if row['steps'] >= state.get('phaseStartSteps', 0)]
+        if state['steps'] < args.minimum_steps or len(evaluations) <= args.patience:
             return False
-        old = state['evaluations'][:-args.patience]
-        new = state['evaluations'][-args.patience:]
+        old = evaluations[:-args.patience]
+        new = evaluations[-args.patience:]
 
         def best(rows, g, key):
             return max((r['summary']['categories'][str(g)].get(key) or 0) for r in rows)
@@ -395,7 +461,7 @@ class Trainer:
                 # returns into V(choosing); they are excluded like their policy gradient.
                 value_rows = selected if selected.any() else torch.ones_like(selected)
                 vf = .5 * (pred['normalizedValue'] - (ret[ids] - policy.value_mean) / policy.value_std).square()[value_rows].mean()
-                loss = pg + vf
+                loss = vf if self.state.get('criticWarmupRemaining', 0) > 0 else pg + vf
                 if not torch.isfinite(loss):
                     raise FloatingPointError('Non-finite PPO loss')
                 optimizer.zero_grad()
@@ -416,6 +482,7 @@ class Trainer:
         advantages, returns = estimate_advantages(batch, self.args.gae_lambda)
         losses, kls = self.optimize(batch, advantages, returns)
         state, args = self.state, self.args
+        state['criticWarmupRemaining'] = max(0, state.get('criticWarmupRemaining', 0) - 1)
         state['steps'] += self.block
         state['updates'] += 1
         row = dict(steps=state['steps'], **summary(batch['episodes']), loss=float(np.mean(losses)), kl=float(np.mean(kls)),
@@ -468,6 +535,9 @@ def parser():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--output', required=True)
     p.add_argument('--resume')
+    p.add_argument('--continue-from', help='Explicit new curriculum phase preserving actor, optimizer and cumulative counters')
+    p.add_argument('--direction-practice', action='store_true', help='Balance and teach signed takeoff momentum and extend into flight')
+    p.add_argument('--goal-practice', action='store_true', help='Train shared motors on assigned legal dive targets alongside autonomous routines')
     p.add_argument('--warm-start')
     p.add_argument('--initialize-from', help='Same-schema actor only; fresh optimizer/value head/worlds for comparisons')
     p.add_argument('--accept-source-change', nargs='*', default=[],

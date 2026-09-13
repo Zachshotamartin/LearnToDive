@@ -11,8 +11,9 @@ import numpy as np
 
 from engine import STATE_SPEC
 from geometry import ACTUATOR_MAP, framed_angles, quat_up, ANGULAR_VELOCITY
-from motor_objective import live_errors
+from motor_objective import live_errors, rotation_direction_cost, entry_weight
 from stance import orientation
+from rules import DIVES, IDS
 
 TASKS = ('full', 'takeoff', 'shape', 'aerial', 'entry')
 EXTRA_OBSERVATIONS = 10  # five task indicators, hip/knee goals, three-axis up goal
@@ -20,8 +21,11 @@ HORIZONS = np.array([0, 1.4, 1., 1., 3.])
 
 
 class MotorCurriculum:
-    def __init__(self, base, enabled=True):
+    def __init__(self, base, enabled=True, direction_practice=False, goal_practice=False):
         self.base = base
+        self.direction_practice = bool(direction_practice)
+        self.base.direction_practice = self.direction_practice
+        self.goal_practice_enabled = bool(goal_practice)
         self.enabled = bool(enabled and base.training)
         self.n = base.n
         self.task = np.zeros(self.n, int)
@@ -36,6 +40,14 @@ class MotorCurriculum:
         self.readiness = np.zeros(5)
         self.level = np.zeros(5)
         self.error_sum = np.zeros(5)
+        self.direction_visits = np.zeros(4, int)
+        self.direction_successes = np.zeros(4, int)
+        self.direction_assignments = np.zeros(4, int)
+        self.direction_readiness = np.zeros(4)
+        self.assigned_goal = np.zeros(self.n, bool)
+        self.goal_visits = np.zeros(len(DIVES), int)
+        self.goal_mastery = np.zeros(len(DIVES))
+        self.goal_progress = np.zeros(len(DIVES))
         self.last_completed = []
         self.assign(np.arange(self.n))
 
@@ -48,23 +60,58 @@ class MotorCurriculum:
 
     @property
     def practice(self):
-        return self.base.practice | (self.task != 0)
+        return self.base.practice | (self.task != 0) | self.assigned_goal
 
     def assign(self, ids):
         for i in ids:
             self.task[i] = 0
+            self.assigned_goal[i] = False
             if self.enabled:
                 # Full-from-board rollouts remain at least 25% from the start.
-                share = max(.2, .75 * (1 - float(self.readiness[1:].min())))
+                initial_share = .5 if self.goal_practice_enabled else .75
+                share = max(.2, initial_share * (1 - float(self.readiness[1:].min())))
                 if self.base.rng.random() < share:
                     weights = .15 + 1 - self.readiness[1:]
                     self.task[i] = 1 + self.base.rng.choice(4, p=weights / weights.sum())
+                elif self.goal_practice_enabled:
+                    # At least 20% autonomous routines remain. Full-target
+                    # practice gets 30–48%, motor fundamentals get 20–50%.
+                    self.assigned_goal[i] = self.base.rng.random() < .6
             self.age[i] = self.task_returns[i] = self.previous_cost[i] = 0
             self.shape_goal[i] = [(0, 0), (1.5, 0), (1.4, 2)][self.base.rng.integers(3)] if self.task[i] == 2 else (0, 0)
             self.up_goal[i] = [0, 0, -1 if self.task[i] == 4 else 1]
             if self.task[i] == 3:
                 theta = self.base.rng.uniform(-np.pi, np.pi)
                 self.up_goal[i] = [np.sin(theta), 0, np.cos(theta)]
+            if self.direction_practice and self.task[i] == 1:
+                # Balance facing/direction combinations; the actor still chooses
+                # its own legal declaration. No maneuver or control path is given.
+                candidates = np.flatnonzero(self.direction_assignments == self.direction_assignments.min())
+                direction = int(self.base.rng.choice(candidates))
+                self.direction_assignments[direction] += 1
+                self.base.group[i] = direction + 1
+                self.base.schedule[i, self.base.round[i]] = direction + 1
+
+    def choose_practice_goal(self, i):
+        legal = np.flatnonzero(self.base.mask()[i])
+        mastery, visits = self.goal_mastery[legal], self.goal_visits[legal]
+        complexity = np.array([DIVES[j]['turns'] + .5 * DIVES[j]['twists'] for j in legal])
+        learned = complexity[mastery > .5]
+        frontier = (float(learned.max()) if len(learned) else float(complexity.min())) + .5
+        # 20% uniform coverage ensures no legal target can be permanently
+        # avoided. Most practice stays near learned skills and recent progress.
+        weights = (1 / np.sqrt(1 + visits) + 4 * np.maximum(self.goal_progress[legal], 0) + .05)
+        weights *= np.exp(-np.maximum(0, complexity - frontier))
+        weights = .2 / len(legal) + .8 * weights / weights.sum()
+        return int(self.base.rng.choice(legal, p=weights))
+
+    def horizons(self):
+        horizons = HORIZONS[self.task].copy()
+        if self.direction_practice:
+            # Gradually connect board takeoff to complete flight/entry. Never
+            # inject root motion or change the control policy between phases.
+            horizons[self.task == 1] = 1.4 + 3.4 * self.level[1]
+        return horizons
 
     def observe(self):
         obs = self.base.observe()
@@ -75,6 +122,8 @@ class MotorCurriculum:
 
     def initialize_task(self, i):
         task = self.task[i]
+        if self.assigned_goal[i]:
+            self.base.practice[i] = True
         if not task:
             return
         e, rng = self.base.physics, self.base.rng
@@ -134,16 +183,42 @@ class MotorCurriculum:
         # Armstand practice rewards a genuine clear release, not an impossible
         # standing-jump target from a hand-supported starting pose.
         takeoff = np.where(e.armstand, (~e.released).astype(float) + 2 * e.board_invalid, takeoff)
+        if self.direction_practice:
+            momentum = np.where(e.released, e.takeoff_angular_momentum[:, 1], e.sensors[:, 7])
+            direction_cost = rotation_direction_cost(momentum, e.goals[:, 0], e.released)
+            # A correct contact impulse alone is insufficient if the body then
+            # somersaults the wrong way. Small counter-motions have a dead band.
+            wrong_way = np.clip(-np.sign(e.goals[:, 0]) * e.phase_theta / np.pi - .04, 0, 2)
+            takeoff += .8 * direction_cost + wrong_way
+            preparing = entry_weight(e.above_water, e.sensors[:, 5]) * e.released
+            desired_position = 1 - live_position_quality(e)
+            takeoff += self.level[1] * (desired_position * (1-preparing) + entry * preparing)
         return np.choose(self.task, [np.zeros(self.n), takeoff, shape, aerial, entry]).clip(0, 20)
 
     def step(self, choices, actions):
         self.last_completed = []
         chosen = self.base.choosing.copy()
         tasks = self.task.copy()
+        goals = self.assigned_goal.copy()
+        horizons = self.horizons()
+        groups = self.base.group.copy()
         previous = self.costs()
-        self.base.recovery_allowed[:] = tasks == 0
+        choices = np.array(choices, copy=True)
+        for i in np.flatnonzero(chosen & goals):
+            choices[i] = self.choose_practice_goal(i)
+        self.base.recovery_allowed[:] = (tasks == 0) & ~goals
         _, reward, done, rows = self.base.step(choices, actions)
         finished = {row['index']: row for row in rows}
+        for row in rows:
+            i = row['index']
+            if goals[i]:
+                target = IDS[row['declaration']]
+                outcome = float(row['valid']) * np.clip(row['execution'] / 10, 0, 1)
+                delta = .05 * (outcome - self.goal_mastery[target])
+                self.goal_mastery[target] += delta
+                self.goal_progress[target] += .1 * (delta - self.goal_progress[target])
+                self.goal_visits[target] += 1
+                row['assignedPracticeGoal'] = True
         for i in np.flatnonzero(chosen):
             self.initialize_task(i)
         cost = self.costs()
@@ -151,7 +226,7 @@ class MotorCurriculum:
         skill = tasks != 0
         # Fixed practice duration removes an incentive to prolong a good pose or
         # terminate early to evade accumulated error.
-        timed = skill & ~chosen & (self.age >= HORIZONS[tasks] - 1e-8)
+        timed = skill & ~chosen & (self.age >= horizons - 1e-8)
         ended = skill & (done | timed)
         for i in np.flatnonzero(skill):
             if chosen[i]:
@@ -165,6 +240,12 @@ class MotorCurriculum:
                 elif tasks[i] == 1:
                     cost[i] = (max(0, 1 - m['ascent'] / .3) + .5 * max(0, 1 - m['takeoffVerticalSpeed'] / 2.8)
                                + 2 * m['boardInvalid']) if finished[i]['category'] != 6 else 2 * m['boardInvalid'] + float(not m['water'])
+                    if self.direction_practice:
+                        intent = DIVES[IDS[finished[i]['declaration']]]
+                        cost[i] += .8 * rotation_direction_cost(m['takeoffAngularMomentum'][1], intent['sign'] * intent['turns'])
+                        cost[i] += np.clip(-intent['sign'] * m['rotation'] * 2 - .04, 0, 2)
+                        cost[i] += self.level[1] * (finished[i]['entryAngle'] / 45 + (not m['fullEntryComplete'])
+                                                   + sum(np.log1p(v) for v in m['entryFaultLosses'].values()))
                 else:
                     cost[i] = 20.  # An early crash cannot improve a motor task.
             # Direct task error plus a progress term. Terminal cancellation keeps
@@ -173,7 +254,7 @@ class MotorCurriculum:
             if ended[i]:
                 reward[i] -= 2 * cost[i]
                 if done[i] and tasks[i] in (2, 3):
-                    reward[i] -= 20 * max(0, HORIZONS[tasks[i]] - self.age[i])
+                    reward[i] -= 20 * max(0, horizons[i] - self.age[i])
                 threshold = [0, .7, .2, .25, .8][tasks[i]]
                 success = cost[i] < threshold
                 task = tasks[i]
@@ -182,13 +263,21 @@ class MotorCurriculum:
                 self.successes[task] += success
                 self.readiness[task] += .03 * (success - self.readiness[task])
                 self.error_sum[task] += cost[i]
-                if self.visits[task] >= 64 and self.readiness[task] > .65:
+                if self.direction_practice and task == 1 and 1 <= groups[i] <= 4:
+                    self.direction_visits[groups[i]-1] += 1
+                    self.direction_successes[groups[i]-1] += success
+                    g = groups[i]-1
+                    self.direction_readiness[g] += .03 * (success - self.direction_readiness[g])
+                direction_ready = (not self.direction_practice or task != 1
+                                   or (self.direction_visits.min() >= 16 and self.direction_readiness.min() > .65))
+                if self.visits[task] >= 64 and self.readiness[task] > .65 and direction_ready:
                     self.level[task] = min(1., self.level[task] + .01)
         self.task_returns += reward * skill
         # A practice declaration, score or used-dive mask must never become the
         # starting history of a subsequent autonomous competition routine.
-        if ended.any():
-            self.base.reset(np.flatnonzero(ended), new_routine=True)
+        clean_history = ended | (goals & done)
+        if clean_history.any():
+            self.base.reset(np.flatnonzero(clean_history), new_routine=True)
         done |= ended
         if done.any():
             self.assign(np.flatnonzero(done))
@@ -197,17 +286,39 @@ class MotorCurriculum:
         return self.observe(), reward, done, rows
 
     def metrics(self):
-        return {TASKS[t]: dict(episodes=int(self.visits[t]), successes=int(self.successes[t]),
+        result = {TASKS[t]: dict(episodes=int(self.visits[t]), successes=int(self.successes[t]),
                               readiness=float(self.readiness[t]), level=float(self.level[t]),
                               meanError=float(self.error_sum[t] / max(1, self.visits[t]))) for t in range(1, 5)}
+        if self.direction_practice:
+            result['takeoff']['byDirection'] = {
+                str(g+1): dict(episodes=int(self.direction_visits[g]), successes=int(self.direction_successes[g]),
+                               readiness=float(self.direction_readiness[g]))
+                for g in range(4)}
+        if self.goal_practice_enabled:
+            result['specificDives'] = dict(attempts=int(self.goal_visits.sum()),
+                                           practicedTargets=int((self.goal_visits > 0).sum()),
+                                           masteredTargets=int((self.goal_mastery > .5).sum()))
+        return result
 
     def state_dict(self):
         arrays = {k: v.copy() for k, v in vars(self).items() if isinstance(v, np.ndarray)}
-        return dict(base=self.base.state_dict(), curriculum=arrays, enabled=self.enabled)
+        return dict(base=self.base.state_dict(), curriculum=arrays, enabled=self.enabled,
+                    directionPractice=self.direction_practice, goalPractice=self.goal_practice_enabled)
 
     def load_state_dict(self, state):
-        if state['enabled'] != self.enabled:
+        if (state['enabled'] != self.enabled or state.get('directionPractice', False) != self.direction_practice
+                or state.get('goalPractice', False) != self.goal_practice_enabled):
             raise ValueError('Cannot resume with changed motor curriculum')
         self.base.load_state_dict(state['base'])
         for k, v in state['curriculum'].items():
             getattr(self, k)[:] = copy.deepcopy(v)
+
+
+def live_position_quality(e):
+    from positions import position_qualities
+    from geometry import tuck_geometry
+    q = e.state[:, 1 + e.qadr]
+    qualities = position_qualities(q[:, 0], q[:, 1], np.max(tuck_geometry(e.sensors)[0], axis=1))
+    # The physics goal order is C, B, D, A; qualities use A, B, C, D.
+    indices = np.array([2, 1, 3, 0])[e.goals[:, 3].astype(int)]
+    return qualities[np.arange(e.n), indices]

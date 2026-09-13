@@ -1,0 +1,11 @@
+# Specific-dive curriculum review — September 13, 2026
+
+The revised trainer is a continuation of the existing actor, not a claim of a better finished model. The actor, Adam state and total steps transfer unchanged. New tasks start fresh episodes; old episodes and archives remain in the parent.
+
+Validation: 60 native tests passed before the explicit-target benchmark test was added; all 8 focused continuation/direction/target tests then passed, including that added benchmark. 50 JavaScript tests passed. A real Chromium test selected 303C, checked the physical result export, replayed the target and returned to Auto; ordinary play/pause, apparatus, height and initial/trained model controls also passed.
+
+The short comparison used one parent at 75,898,880 steps and 204,800 further steps for each arm. The candidate used four critic-only updates, then actor learning; the control continued the original trainer. Eight paired full-routine worlds and two resets per requested target are development diagnostics, not a statistically powered promotion result. Full-routine execution: parent 0.714, control 0.563, candidate 0.529 out of 10. All had zero clean entries. There is no established quality improvement from this short run, and its candidate is not being published or used to replace the latest ongoing actor. The new long phase continues from the latest checkpoint after the user explicitly requested the specific-dive curriculum.
+
+Physics probes searched bounded joint commands from the real board. Forward, backward and inward witnesses generated the correct final-departure momentum and rotation, without a board-invalid flag. The bounded reverse search did not establish a successful clear reverse takeoff: its later replay hit the board. This is an unresolved capability diagnostic, not evidence that reverse dives are impossible. Probe controls are never policy training data. The unit test independently checks momentum and quaternion sign conventions for all four facing/direction combinations; MuJoCo free-joint angular velocity is local-frame, whereas the momentum sensor is world-frame.
+
+No new actor has been qualified for browser publication. The website controls use the existing published model and identify the selectable dives as practice targets.
