@@ -678,6 +678,8 @@ class Trainer:
                    valueScale=float(self.policy.value_std))
         if isinstance(self.env, MotorCurriculum):
             row['motorSkills'] = self.env.metrics()
+        if args.stage_curriculum:
+            row['stage'] = self.progression.index
         state['history'].append(row)
         print(json.dumps(row, allow_nan=False), flush=True)
         saved = self.persist('training')
@@ -688,8 +690,6 @@ class Trainer:
             atomic_checkpoint(folder / f"{state['steps']}.pt", saved)
         if not self.stop and args.evaluate_every and (state['updates'] % args.evaluate_every == 0 or finished):
             return self.run_evaluation()
-        if isinstance(self.env, MotorCurriculum) or args.stage_curriculum:
-            row['stage'] = self.progression.index if args.stage_curriculum else None
         return False
 
     def train(self):
