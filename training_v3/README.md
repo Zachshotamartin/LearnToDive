@@ -19,7 +19,16 @@ v13 changes, none of which prescribes a motion:
 - The entry sub-task starts near the pose an entry needs and widens with mastery; a task that is being lost narrows again instead of staying unwinnable. Direction practice stays inside the current scope.
 - Clean form threshold 0.7 (the best scripted dives score 0.67 to 0.79 on this rigid rig).
 - Gates: at 10.24M steps the entry sub-task must succeed more than half the time and at least one dive must be clean; at 30.72M the clean rate on the current scope must exceed 20%. A failed gate stops the run for review instead of waiting for a plateau. Evaluations report per-declaration clean rates and entry-angle percentiles; `best.pt` follows the clean rate once any clean dive exists; the suite ranks pilots by clean rate.
-- Suite defaults: 128 environments, batch 2048, three epochs, `--random-motor-init`, three seeds of 256x256x128, then the median seed continues with a 256M-step minimum before any plateau decision.
+- Suite defaults: 128 environments, batch 2048, three epochs, three seeds of 256x256x128, then the median seed continues with a 256M-step minimum before any plateau decision.
+
+## What changed in v13.1 (after the first gate failure, 2026-09-15)
+
+The v13 pilot (seed 109310, run `2026-09-15-v13-final`) stopped on the first gate at 10.24M steps: entry sub-task success 0.0 (22 successes in 19,460 practice attempts), no clean dive, takeoff sub-task 3.6%, every practice level still at zero. Two probes on the frozen source explain it, and neither is about reward weights:
+
+- The entry sub-task is winnable as designed. A constant action that simply holds the straight, arms-overhead pose passes it 69% of the time at level 0 (cost median 0.59 against the 0.8 threshold, entry angle median 22°); a centred action (every joint half bent, the `--random-motor-init` default of the v13 suite) never passes (cost median 7.8). The trained policy's entries had hip-bend losses of 13 and knee-bend losses of 17, that is, it never left the bent default.
+- The exploration scale made the skill unobservable. With the coherent AR(1) noise the servo no longer averages the perturbation away, so the marginal scale σ = exp(−0.5) = 0.61 is what the joints see. The same pose-holding policy sampled with the training noise passes 0% (cost median 6.7); it passes 3% at σ 0.22, 25% at σ 0.14 and 56% at σ 0.08. Over the pilot the learned log standard deviations drifted up (−0.5 to between −0.4 and −0.1), so no clean entry could ever be sampled and no gradient toward precision existed.
+
+v13.1 changes (`train.py`, `policy.py`, `run_suite.py`): `--motor-init entry-pose` biases the untrained motor head to hold the straight entry pose (a posture prior the agent moves away from freely, not a motion; the old `--random-motor-init` and the board-stance default remain available), `--motor-logstd -2` starts the coherent exploration at σ 0.135, and the motor entropy coefficient is 0.002 so the scale is learned by the objective rather than pushed up by the bonus. `test_motor_init.py` checks that the untrained entry-pose policy passes the entry sub-task deterministically and at σ 0.135 under sampling, and that the historical scale never does. The gates, the objective and the curriculum are unchanged; the failed run's evidence is in its `evaluations/` and `STATUS.json`.
 
 ## What changed in v12 (the fall-off-the-edge optimum)
 

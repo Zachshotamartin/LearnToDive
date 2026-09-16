@@ -28,7 +28,7 @@ TRIAL_ARGUMENTS = ['--envs', '128', '--threads', '4', '--horizon', '160', '--bat
                    '--motor-curriculum', 'adaptive', '--direction-practice', '--goal-practice', '--rotation-progress',
                    '--architecture', 'split', '--recovery-mode', 'progress', '--practice', '.15', '--gae-lambda', '.99',
                    '--noise-rho', '.9', '--input-normalization', '1', '--stage-curriculum', '1', '--gates', '1',
-                   '--random-motor-init', '--final-seed', '883117']
+                   '--motor-init', 'entry-pose', '--motor-logstd', '-2', '--entropy', '.002', '--final-seed', '883117']
 # The continuation may only stop on a plateau after a quarter of a billion steps and
 # twenty-five evaluation windows (51M steps) without any category improving.
 CONTINUATION_ARGUMENTS = ['--minimum-steps', '256000000', '--patience', '25']

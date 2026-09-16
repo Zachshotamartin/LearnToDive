@@ -20,13 +20,16 @@ HISTORY = 2 * ACTIONS   # trailing observation columns: previous noise, previous
 NORMALIZATION_EPS = 1e-6
 LOG_STD_MIN = -2.8
 LOG_STD_MAX = 0.
+INITIAL_LOG_STD = -.5      # the historical default; the v13.1 suite passes -2
 POPART_RATE = .01
 
 
 class Policy(nn.Module):
     def __init__(self, obs, widths=(256, 256), rho=.6, initial_action=None, exploration="diagonal", architecture='shared',
-                 noise_rho=0., normalize_inputs=False):
+                 noise_rho=0., normalize_inputs=False, motor_logstd=INITIAL_LOG_STD):
         super().__init__()
+        if not LOG_STD_MIN <= motor_logstd <= LOG_STD_MAX:
+            raise ValueError('The initial motor log standard deviation must lie inside the clamp range')
         self.widths = tuple(widths)
         self.obs = obs
         self.rho = rho
@@ -59,7 +62,10 @@ class Policy(nn.Module):
         self.motor = nn.Linear(size, ACTIONS)
         self.choice = nn.Linear(size, len(DIVES))
         self.value = nn.Linear(size, 1)
-        self.logstd = nn.Parameter(torch.full((ACTIONS,), -.5))
+        # The marginal exploration scale. A coherent (AR(1)) perturbation is not
+        # averaged away by the servo, so a precision phase such as the entry sees
+        # the full scale; the final run therefore starts small (see train.py).
+        self.logstd = nn.Parameter(torch.full((ACTIONS,), float(motor_logstd)))
         self.register_buffer('value_mean', torch.zeros(()))
         self.register_buffer('value_std', torch.ones(()))
         for layer in self.modules():

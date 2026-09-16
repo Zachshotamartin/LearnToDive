@@ -26,8 +26,9 @@ from evaluation import evaluate, summary, evaluate_motor_skills, evaluate_target
 from model_selection import update_selection, comparison, competence
 from judge import VERSION
 from losses import ppo_terms
-from policy import FORMAT, MOTOR_FORMAT, FINAL_FORMAT, Policy
-from motor_curriculum import MotorCurriculum, EXTRA_OBSERVATIONS
+from policy import FORMAT, MOTOR_FORMAT, FINAL_FORMAT, INITIAL_LOG_STD, Policy
+from geometry import encoded_action
+from motor_curriculum import MotorCurriculum, EXTRA_OBSERVATIONS, ENTRY_POSE
 from motor_objective import DIRECTION_VERSION, COMPLETION_VERSION, CONJUNCTIVE_VERSION
 from rules import DIVES, PRACTICE_SCOPE
 from reference_policies import load_reference
@@ -136,10 +137,11 @@ class Trainer:
                                        goal_practice=args.goal_practice)
         try:
             self.policy = Policy(self.env.observation_size, tuple(args.widths), args.rho,
-                                 initial_action=None if getattr(args, 'random_motor_init', False) else self.env.initial_action,
+                                 initial_action=motor_initial_action(args, self.env),
                                  exploration=args.exploration, architecture=args.architecture,
-                                 noise_rho=args.noise_rho, normalize_inputs=args.input_normalization)
-            if getattr(args, 'random_motor_init', False) and any((args.initialize_from, args.warm_start, args.continue_from)):
+                                 noise_rho=args.noise_rho, normalize_inputs=args.input_normalization,
+                                 motor_logstd=getattr(args, 'motor_logstd', INITIAL_LOG_STD))
+            if motor_init_mode(args) == 'random' and any((args.initialize_from, args.warm_start, args.continue_from)):
                 raise ValueError('Random initialization cannot load a checkpoint')
             if sum(bool(path) for path in (args.initialize_from, args.resume, args.warm_start, args.continue_from)) > 1:
                 raise ValueError('Choose only one initialization, warm-start, or exact resume source')
@@ -185,7 +187,8 @@ class Trainer:
                                  rewardMode=args.reward_mode, exploration=args.exploration, directionPractice=args.direction_practice, goalPractice=args.goal_practice,
                                  boundedPractice=PRACTICE_SCOPE, completionFeedback=COMPLETION_VERSION,
                                  conjunctiveCredit=CONJUNCTIVE_VERSION if args.reward_mode == 'conjunctive' else None,
-                                 noiseRho=args.noise_rho, inputNormalization=args.input_normalization,
+                                 noiseRho=args.noise_rho, inputNormalization=args.input_normalization, motorInit=motor_init_mode(args),
+                                 motorLogStd=getattr(args, 'motor_logstd', INITIAL_LOG_STD),
                                  stageCurriculum=[s['name'] for s in mastery.STAGES] if args.stage_curriculum else None,
                                  actions=9, declarations=[d['id'] for d in DIVES], sourceHashes=hashes())
             if getattr(args, 'rotation_progress', False):
@@ -723,12 +726,45 @@ def train(args):
     return Trainer(args).train()
 
 
+MOTOR_INITS = ('stance', 'random', 'entry-pose')
+
+
+def motor_init_mode(args):
+    """Which posture the untrained motor head holds: the board stance, none, or the straight entry pose."""
+    mode = getattr(args, 'motor_init', None)
+    if mode is None:
+        mode = 'random' if getattr(args, 'random_motor_init', False) else 'stance'
+    if mode not in MOTOR_INITS:
+        raise ValueError('Unknown motor initialization')
+    return mode
+
+
+def motor_initial_action(args, env):
+    """The initial motor bias is a posture prior, never a motion: the agent moves away from it freely.
+
+    A fresh head centred at zero holds every joint half bent, and the v13 pilot
+    never learned the straight, arms-overhead pose an entry needs from there.
+    Holding that pose alone passes the entry sub-task most of the time, so the
+    final run starts from it.
+    """
+    mode = motor_init_mode(args)
+    if mode == 'random':
+        return None
+    if mode == 'entry-pose':
+        return encoded_action(ENTRY_POSE).astype(np.float32)
+    return env.initial_action
+
+
 def parser():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--output', required=True)
     p.add_argument('--resume')
+    p.add_argument('--motor-init', choices=MOTOR_INITS, default=None,
+                   help='Posture the untrained motor head holds: the board stance (default), none (random), or the straight entry pose')
     p.add_argument('--random-motor-init', action='store_true',
-                   help='Fresh random networks without the neutral-pose motor bias; an exact resume remains supported')
+                   help='Alias of --motor-init random: fresh random networks without any posture bias')
+    p.add_argument('--motor-logstd', type=float, default=INITIAL_LOG_STD,
+                   help='Initial log standard deviation of the motor exploration (marginal scale of the coherent noise)')
     p.add_argument('--continue-from', help='Explicit new curriculum phase preserving actor, optimizer and cumulative counters')
     p.add_argument('--rotation-progress', action='store_true', help='Explicit remaining turns and potential-based rotation progress')
     p.add_argument('--direction-practice', action='store_true', help='Balance and teach signed takeoff momentum and extend into flight')
