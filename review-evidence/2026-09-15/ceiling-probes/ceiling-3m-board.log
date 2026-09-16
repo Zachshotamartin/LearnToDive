@@ -1,0 +1,28 @@
+{"batch": 0, "valid": 5, "bestExecution": 7.90877936082344, "bestAngle": 13.033230007839922, "medianAngle": 88.7884828589188, "minAngle": 13.033230007839922}
+{"batch": 1, "valid": 4, "bestExecution": 7.90877936082344, "bestAngle": 13.033230007839922, "medianAngle": 88.78846842214654, "minAngle": 16.728950619036343}
+{"batch": 2, "valid": 8, "bestExecution": 7.90877936082344, "bestAngle": 13.033230007839922, "medianAngle": 88.7866910787332, "minAngle": 26.691297124653946}
+{"batch": 3, "valid": 1, "bestExecution": 7.90877936082344, "bestAngle": 13.033230007839922, "medianAngle": 88.78970943961919, "minAngle": 18.759134807899446}
+{"batch": 4, "valid": 2, "bestExecution": 7.90877936082344, "bestAngle": 13.033230007839922, "medianAngle": 88.78875495718655, "minAngle": 19.239818908985423}
+{"batch": 5, "valid": 7, "bestExecution": 7.90877936082344, "bestAngle": 13.033230007839922, "medianAngle": 88.78982769214049, "minAngle": 10.942352690814685}
+{"batch": 6, "valid": 1, "bestExecution": 7.90877936082344, "bestAngle": 13.033230007839922, "medianAngle": 88.90651481677331, "minAngle": 17.03138276776523}
+{"batch": 7, "valid": 3, "bestExecution": 7.90877936082344, "bestAngle": 13.033230007839922, "medianAngle": 88.7896970601217, "minAngle": 13.133630686472985}
+{"batch": 8, "valid": 26, "bestExecution": 7.90877936082344, "bestAngle": 13.033230007839922, "medianAngle": 88.66999861035451, "minAngle": 27.201081559285196}
+{"batch": 9, "valid": 26, "bestExecution": 7.90877936082344, "bestAngle": 13.033230007839922, "medianAngle": 88.5209968120318, "minAngle": 19.517715609716905}
+{"batch": 10, "valid": 21, "bestExecution": 8.573817403805004, "bestAngle": 7.980266607391722, "medianAngle": 88.57215041833224, "minAngle": 7.9721395258707695}
+{"batch": 11, "valid": 32, "bestExecution": 8.573817403805004, "bestAngle": 7.980266607391722, "medianAngle": 87.36916184976175, "minAngle": 10.016243528264836}
+{"batch": 12, "valid": 35, "bestExecution": 8.649968240831628, "bestAngle": 8.890666635342374, "medianAngle": 81.01391766359053, "minAngle": 8.560974394521226}
+{"batch": 13, "valid": 31, "bestExecution": 8.667692165484802, "bestAngle": 8.571074840670128, "medianAngle": 77.14000275351498, "minAngle": 8.571074840670128}
+{"batch": 14, "valid": 31, "bestExecution": 8.828424526516025, "bestAngle": 7.123344810206912, "medianAngle": 81.54792227250859, "minAngle": 7.123344810206912}
+{"batch": 15, "valid": 21, "bestExecution": 8.828424526516025, "bestAngle": 7.123344810206912, "medianAngle": 88.78673298144138, "minAngle": 7.552133669396551}
+{"batch": 16, "valid": 25, "bestExecution": 8.828424526516025, "bestAngle": 7.123344810206912, "medianAngle": 88.3946815210568, "minAngle": 10.199023643149983}
+{"batch": 17, "valid": 21, "bestExecution": 8.828424526516025, "bestAngle": 7.123344810206912, "medianAngle": 88.78287656739086, "minAngle": 11.333604706222193}
+{"batch": 18, "valid": 30, "bestExecution": 8.828424526516025, "bestAngle": 7.123344810206912, "medianAngle": 86.90878132904196, "minAngle": 8.016922737369729}
+{"batch": 19, "valid": 20, "bestExecution": 8.828424526516025, "bestAngle": 7.123344810206912, "medianAngle": 88.78024268517213, "minAngle": 11.472527807977702}
+{"batch": 20, "valid": 23, "bestExecution": 8.828424526516025, "bestAngle": 7.123344810206912, "medianAngle": 88.78200600909406, "minAngle": 8.910769324135568}
+{"batch": 21, "valid": 25, "bestExecution": 8.828424526516025, "bestAngle": 7.123344810206912, "medianAngle": 88.5937779705924, "minAngle": 13.37020737685983}
+{"batch": 22, "valid": 23, "bestExecution": 8.828424526516025, "bestAngle": 7.123344810206912, "medianAngle": 88.77135586188861, "minAngle": 8.694665922338578}
+{"batch": 23, "valid": 29, "bestExecution": 8.828424526516025, "bestAngle": 7.123344810206912, "medianAngle": 79.8533056622845, "minAngle": 19.79843386525611}
+BEST {"execution": 8.828, "entryAngle": 7.123, "valid": true, "clean": false, "failures": [], "deductions": {"takeoffHeight": 0.0, "takeoffLean": 0.0, "preparationBounces": 0.0, "position": 0.14972275934270374, "entryAlignment": 0.7123344810206912, "entryHipBend": 0.09289872072217116, "entryKneeBend": 0.06534585067037603, "entryShoulderPitch": 0.02852374724596823, "entryShoulderRoll": 0.0011390170079472316, "entryElbowBend": 0.0019785968587140382, "entryFootPoint": 0.021521801526159748, "entryHandAlignment": 0.0004387059802222698, "entryHandSeparation": 5.71992857232125e-05, "entryHandHeightDifference": 3.7352956729883655e-06, "entryKneeSeparation": 8.527781132590639e-05, "entryAnkleSeparation": 0.0022485003564347325, "entryToeSeparation": 0.0019844133269765543, "entryCrossedLegs": 0.0, "lateralEntry": 0.09329266703288697, "distance": 0.0}, "rotation": 0.48, "ascent": 0.437, "form": 0.673, "firstContactAngle": 7.123}
+PARAMS [0.682, 0.883, 2.2, 0.08, 0.012, 0.492, 0.084, 0.221, 0.032, -0.5, 2.255, 0.131, 0.496, 1.06, 3.14]
+failure mix over last batch [('invalid takeoff or platform contact', 31), ('double bounce', 28), ('declared somersault count not completed', 25), ('entry did not complete', 17), ('no water entry', 16), ('feet entered before head or hands', 9)]
+exit 0

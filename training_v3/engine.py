@@ -24,9 +24,9 @@ from geometry import (
     ACTION_HIGH, ACTION_LOW, ACTUATOR_MAP, ANGULAR_VELOCITY, BOARD_CONTACTS, FOOT_CONTACT_FOUND, FOOT_GEOMS,
     FOREARM_GEOMS, GEOM_COUNT, GEOM_POSES, GEOM_VELOCITIES, HAND_CONTACT_FOUND, HAND_GEOMS, LEG_GEOMS, SHIN_GEOMS,
     SHOULDER_GEOMS, THIGH_GEOMS, TRUNK_GEOMS, board_forces, decoded_action, entry_geometry, framed_angles, quat_up,
-    stand_forces, tuck_geometry, wrap,
+    stand_forces, tuck_geometry, wrap, entry_arm_errors, entry_arm_assessment,
 )
-from positions import position_qualities
+from positions import position_qualities, recognized_positions
 from stance import SKILLS, STATE_SPEC, initial_state
 from water import body_water, immersion
 
@@ -44,7 +44,7 @@ ASSIST_IMPULSE = .1  # N s of non-foot board contact that invalidates a takeoff
 ASSIST_FORCE = 15    # N of non-foot board contact that invalidates a takeoff
 TARGET_RATE = np.array([14, 14, 14, 10, 10, 8, 8, 10, 4])  # rad/s servo target slew; legs must outrun a jump
 TRAINING_SOURCES = ('environment.py', 'engine.py', 'geometry.py', 'stance.py', 'positions.py', 'water.py', 'rules.py', 'judge.py', 'training_reward.py', 'entry_faults.py', 'motor_objective.py', 'motor_curriculum.py', 'recovery_curriculum.py', 'evaluation.py', 'model_selection.py', 'assessment_stats.py',
-                    'policy.py', 'losses.py', 'train.py', 'reference_policies.py', 'difficulty.json', 'diver.xml')
+                    'rotation_progress.py', 'policy.py', 'losses.py', 'train.py', 'reference_policies.py', 'difficulty.json', 'diver.xml')
 CONTROL_SPEC = 3904  # CTRL | XFRC_APPLIED | EQ_ACTIVE | MOCAP_POS | MOCAP_QUAT for MuJoCo 3.13
 ATHLETE = slice(1, 16)               # the fifteen athlete geoms in the model
 BOARD_FOUND = slice(150, 210, 4)     # 'found' flag of every board contact sensor
@@ -74,6 +74,7 @@ class Arena:
         self.qadr = self.model.jnt_qposadr[self.model.actuator_trnid[:, 0]]
         self.vadr = self.model.jnt_dofadr[self.model.actuator_trnid[:, 0]]
         self.diverged_events = 0
+        self.stance_spread = 1.   # fraction of the full stance randomisation width (a curriculum knob)
         self._allocate(n)
         self.reset(np.arange(n))
 
@@ -126,6 +127,7 @@ class Arena:
         self.rotated_recontact = zeros(dtype=bool)
         # Flight position assessment.
         self.position_sums = zeros(4)
+        self.position_votes = zeros(3)
         self.motor_position_sums = zeros(4)
         self.motor_position_weight = zeros()
         self.position_ticks = zeros()
@@ -138,6 +140,8 @@ class Arena:
         self.entry_max_angle = zeros()
         self.entry_min_form = np.ones(n)
         self.entry_limbs_valid = np.ones(n, bool)
+        self.entry_arms_valid = np.ones(n, bool)
+        self.entry_arm_cap = np.zeros(n, bool)
         self.entry_geometry_valid = np.ones(n, bool)
         self.entry_worst_geometry = zeros(9)
         self.entry_crossed = zeros(dtype=bool)
@@ -190,14 +194,21 @@ class Arena:
         return self.sensors
 
     def _stance_parameters(self, context):
+        """Randomised standing stance; ``stance_spread`` scales the width around the centres.
+
+        The draws are always made so the random stream is unchanged; a spread
+        of 1 is the full training width, 0 the fixed evaluation stance.
+        """
         draw = self.rng.uniform
         training = self.training
+        spread = self.stance_spread
+        scaled = lambda value, centre: centre + spread * (value - centre)
         return dict(
-            lean=context.get('lean', draw(.02, .08) if training else .04),
-            preload=context.get('preload', draw(-.20, -.16) if training else -.18),
-            hip=context.get('hip', draw(.08, .2) if training else .12),
-            knee=context.get('knee', draw(.15, .3) if training else .2),
-            toe_over=context.get('toeOver', draw(0, .06) if training else .03),
+            lean=context.get('lean', scaled(draw(.02, .08), .05) if training else .04),
+            preload=context.get('preload', scaled(draw(-.20, -.16), -.18) if training else -.18),
+            hip=context.get('hip', scaled(draw(.08, .2), .14) if training else .12),
+            knee=context.get('knee', scaled(draw(.15, .3), .225) if training else .2),
+            toe_over=context.get('toeOver', scaled(draw(0, .06), .03) if training else .03),
             platform=bool(context.get('platform', False)))
 
     def _clear(self, i, state):
@@ -210,7 +221,7 @@ class Arena:
                      'foot_departure_gap', 'takeoff_tilt_invalid', 'air_clear_time', 'air_theta', 'air_twist',
                      'release_theta', 'release_twist', 'release_time', 'released', 'board_invalid', 'board_impulse',
                      'board_peak', 'stand_impulse', 'stand_peak', 'preparation_bounces', 'foot_side_contact',
-                     'rotated_recontact', 'position_sums', 'position_ticks', 'motor_position_sums', 'motor_position_weight', 'first_geometry', 'entry_max_angle',
+                     'rotated_recontact', 'position_votes', 'entry_arm_cap', 'position_sums', 'position_ticks', 'motor_position_sums', 'motor_position_weight', 'first_geometry', 'entry_max_angle',
                      'entry_worst_geometry', 'entry_crossed', 'entry_omega', 'surface_finished',
                      'surface_group_loss', 'entry_fault_losses', 'surface_lateral', 'returns', 'practice', 'banked'):
             getattr(self, name)[i] = 0
@@ -218,6 +229,7 @@ class Arena:
         self.full_entry_time[i] = np.nan
         self.entry_min_form[i] = 1
         self.entry_limbs_valid[i] = True
+        self.entry_arms_valid[i] = True
         self.entry_geometry_valid[i] = True
 
     # ------------------------------------------------------------------ water
@@ -303,9 +315,7 @@ class Arena:
         joint = state[:, 1 + self.qadr]
         hips = joint[:, [0, 3]]
         knees = joint[:, [1, 4]]
-        pitch = joint[:, [6, 9]] - np.where(head, 3.05, 0)[:, None]
-        roll = joint[:, [7, 10]] - head[:, None] * np.array([-.3, .3])
-        elbows = joint[:, [8, 11]]
+        pitch, roll, elbows = entry_arm_errors(joint, head)
         # Inspect arm placement from first water contact until the corresponding
         # segment is submerged, so raising the arms after the head enters cannot
         # erase the fault. Post-submersion movement cannot add entry penalties.
@@ -313,6 +323,9 @@ class Arena:
         elbow_mask = ~self.surface_finished[ids][:, FOREARM_GEOMS]
         hand_mask = ~self.surface_finished[ids][:, HAND_GEOMS]
         hand_window = np.any(hand_mask, axis=1) & head
+        arm_valid, arm_cap = entry_arm_assessment(joint, sensor, head, arm_mask, elbow_mask, hand_mask)
+        self.entry_arms_valid[ids] &= arm_valid
+        self.entry_arm_cap[ids] |= arm_cap
         individual = np.stack([
             np.sum(1.25 * hips ** 2 * thighs, axis=1),
             np.sum(1.25 * knees ** 2 * shins, axis=1),
@@ -584,12 +597,14 @@ class Arena:
         hip, knee = joint[:, 0], joint[:, 1]
         omega = np.linalg.norm(sensors[:, ANGULAR_VELOCITY], axis=1)
         self.entry_omega = np.where(contacted, np.maximum(self.entry_omega, omega), self.entry_omega)
-        quality = position_qualities(hip, knee, np.max(tuck_geometry(sensors)[0], axis=1))
+        quality = position_qualities(hip, knee, np.max(tuck_geometry(sensors)[0], axis=1), joint[:, 3], joint[:, 4])
         turns = self.goals[:, 0]
         progress = self.phase_theta / np.where(np.abs(turns) > 1e-6, turns * 2 * np.pi, 1)
         assess = self.released & ~contacted & (((progress > .15) & (progress < .8)) | (turns == 0))
         self.position_sums += quality * assess[:, None]
         self.position_ticks += assess
+        recognized = recognized_positions(joint[:, [0, 3]], joint[:, [1, 4]])
+        self.position_votes += (recognized[:, None] == np.arange(3)) * assess[:, None]
         # Learning feedback is available even when rotation is wrong. Entry
         # preparation gradually replaces the flight shape, rather than requiring
         # the athlete to remain tucked while entering the water.
@@ -615,7 +630,7 @@ class Arena:
         sign = -1 if self.headfirst[i] else 1
         first_angle = float(np.degrees(np.arccos(np.clip(sign * quat_up(state[5:9][None])[0, 2], -1, 1))))
         worst = self.entry_worst_geometry[i]
-        arm_reference = 3.05 if self.headfirst[i] else 0
+        arm_valid, arm_cap = entry_arm_assessment(state[None, 1 + self.qadr], sensors[None], self.headfirst[i:i+1])
         lean = np.abs(np.abs(self.departure_pitch[i]) - np.pi) if self.armstand[i] else np.abs(self.departure_pitch[i])
         return dict(
             index=int(i), rotation=float(self.phase_theta[i] / (2 * np.pi)), twist=float(self.air_twist[i] / (2 * np.pi)),
@@ -628,7 +643,10 @@ class Arena:
             entryGeometryWorst=dict(footLineAngles=np.degrees(worst[:2]).tolist(), handAxisAngles=np.degrees(worst[2:4]).tolist(),
                                     **{key: float(worst[4 + j]) for j, key in enumerate(['handSeparation', 'handHeightGap', 'kneeGap', 'ankleGap', 'toeGap'])},
                                     crossedLegs=bool(self.entry_crossed[i])),
-            entryArmPositionValid=bool(np.max(np.abs(state[1 + self.qadr[[6, 9]]] - arm_reference)) < .8),
+            entryArmPositionValid=bool(arm_valid[0] and self.entry_arms_valid[i]),
+            entryArmPositionCap=bool(arm_cap[0] or self.entry_arm_cap[i]),
+            positionRecognition=dict(fractions=(self.position_votes[i] / max(1, self.position_ticks[i])).tolist(),
+                                     samples=int(self.position_ticks[i])),
             positionQualities=(self.position_sums[i] / max(1, self.position_ticks[i])).tolist(),
             motorPositionQualities=(self.motor_position_sums[i] / max(1e-8, self.motor_position_weight[i])).tolist(),
             ascent=float(max(0, self.apex_com[i] - self.departure_com[i])), preparationBounces=int(self.preparation_bounces[i]),

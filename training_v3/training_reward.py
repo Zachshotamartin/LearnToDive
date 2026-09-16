@@ -3,7 +3,7 @@ import math
 
 from judge import training_deductions
 
-MODES = ('v12', 'continuous-entry', 'phase-dense')
+MODES = ('v12', 'continuous-entry', 'phase-dense', 'completion-first', 'conjunctive')
 VERSION = 'diving-independent-reward-ledger-v2'
 ALIGNMENT_BUDGET = 1.5
 
@@ -23,9 +23,13 @@ def alignment_cost(angle):
 def reward_components(score, measurements, mode='v12'):
     if mode not in MODES:
         raise ValueError('Unknown reward comparison mode')
-    if mode == 'phase-dense':
+    if mode == 'conjunctive':
+        from motor_objective import conjunctive_components
+        return conjunctive_components(score, measurements, armstand=score['category'] == 6)
+    if mode in ('phase-dense', 'completion-first'):
         from motor_objective import terminal_components
-        return terminal_components(score, measurements, armstand=score['category'] == 6)
+        return terminal_components(score, measurements, armstand=score['category'] == 6,
+                                   completion_first=mode == 'completion-first')
     costs = training_deductions(score, measurements)
     if mode == 'continuous-entry':
         costs['entryAlignment'] = alignment_cost(score['entryAngle'])

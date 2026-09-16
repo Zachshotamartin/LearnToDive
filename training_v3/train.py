@@ -19,16 +19,17 @@ from pathlib import Path
 import numpy as np
 import torch
 
+import mastery
 from checkpointing import atomic_checkpoint, atomic_json, hashes
 from environment import Arena
 from evaluation import evaluate, summary, evaluate_motor_skills, evaluate_targets
 from model_selection import update_selection, comparison, competence
 from judge import VERSION
 from losses import ppo_terms
-from policy import FORMAT, MOTOR_FORMAT, Policy
+from policy import FORMAT, MOTOR_FORMAT, FINAL_FORMAT, Policy
 from motor_curriculum import MotorCurriculum, EXTRA_OBSERVATIONS
-from motor_objective import DIRECTION_VERSION
-from rules import DIVES
+from motor_objective import DIRECTION_VERSION, COMPLETION_VERSION, CONJUNCTIVE_VERSION
+from rules import DIVES, PRACTICE_SCOPE
 from reference_policies import load_reference
 from water import WATER_VERSION
 
@@ -43,8 +44,13 @@ GRADIENT_NORM = .5
 REFINEMENT_CLEAN_RATE = .8  # held-out clean rate above which exploration is reduced
 REFINEMENT_FACTOR = .25
 PLATEAU_THRESHOLDS = [('points', .5), ('execution', .1), ('clean', .02), ('valid', .05)]
-RESUME_KEYS = ['envs', 'widths', 'rho', 'horizon', 'seed', 'lr', 'epochs', 'batch', 'reward_mode', 'gae_lambda', 'recovery_mode', 'exploration', 'motor_curriculum', 'architecture', 'practice', 'reference_policy', 'eval_cases', 'final_cases', 'final_seed', 'direction_practice', 'goal_practice']
+RESUME_KEYS = ['envs', 'widths', 'rho', 'horizon', 'seed', 'lr', 'epochs', 'batch', 'reward_mode', 'gae_lambda', 'recovery_mode', 'exploration', 'motor_curriculum', 'architecture', 'practice', 'reference_policy', 'eval_cases', 'final_cases', 'final_seed', 'direction_practice', 'goal_practice',
+               'noise_rho', 'input_normalization', 'stage_curriculum', 'start_stage', 'gates']
 BEST_KEY_SIZE = 4
+# Gates: a run that has not produced these by the given step count stops for a
+# change instead of waiting for a plateau or the budget.
+GATES = (dict(name='entry-skill-and-first-clean-dive', steps=10_240_000, entrySuccess=.5, cleanDives=1),
+         dict(name='clean-rate-on-current-scope', steps=30_720_000, cleanRate=.2))
 
 
 def estimate_advantages(batch, gae_lambda=LAMBDA):
@@ -108,7 +114,7 @@ class Trainer:
 
     def __init__(self, args):
         self.args = args
-        if (args.direction_practice or args.goal_practice) and (args.motor_curriculum != 'adaptive' or args.reward_mode != 'phase-dense'):
+        if (args.direction_practice or args.goal_practice) and (args.motor_curriculum != 'adaptive' or args.reward_mode not in ('phase-dense', 'completion-first', 'conjunctive')):
             raise ValueError('Direction practice requires the adaptive phase-dense curriculum')
         if not 0 <= args.gae_lambda <= 1:
             raise ValueError('GAE lambda must be between zero and one')
@@ -121,19 +127,27 @@ class Trainer:
         random.seed(args.seed)
         np.random.seed(args.seed)
         torch.manual_seed(args.seed)
-        self.env = Arena(args.envs, args.seed, args.threads, practice=args.practice, reward_mode=args.reward_mode, recovery_mode=args.recovery_mode)
+        self.progression = mastery.Progression(args.start_stage)
+        stage = self.progression.index if args.stage_curriculum else None
+        self.env = Arena(args.envs, args.seed, args.threads, practice=args.practice, reward_mode=args.reward_mode, recovery_mode=args.recovery_mode,
+                         rotation_progress=getattr(args, 'rotation_progress', False), stage=stage)
         if args.motor_curriculum != 'off':
             self.env = MotorCurriculum(self.env, enabled=args.motor_curriculum == 'adaptive', direction_practice=args.direction_practice,
                                        goal_practice=args.goal_practice)
         try:
-            self.policy = Policy(self.env.observation_size, tuple(args.widths), args.rho, initial_action=self.env.initial_action, exploration=args.exploration, architecture=args.architecture)
+            self.policy = Policy(self.env.observation_size, tuple(args.widths), args.rho,
+                                 initial_action=None if getattr(args, 'random_motor_init', False) else self.env.initial_action,
+                                 exploration=args.exploration, architecture=args.architecture,
+                                 noise_rho=args.noise_rho, normalize_inputs=args.input_normalization)
+            if getattr(args, 'random_motor_init', False) and any((args.initialize_from, args.warm_start, args.continue_from)):
+                raise ValueError('Random initialization cannot load a checkpoint')
             if sum(bool(path) for path in (args.initialize_from, args.resume, args.warm_start, args.continue_from)) > 1:
                 raise ValueError('Choose only one initialization, warm-start, or exact resume source')
             if args.initialize_from and not args.resume:
                 saved = torch.load(args.initialize_from, map_location='cpu', weights_only=False)
                 old_size = saved['contract']['observationSize']
                 added_context = self.env.observation_size - old_size
-                if saved['contract']['format'] not in (FORMAT, MOTOR_FORMAT) or added_context not in (0, EXTRA_OBSERVATIONS):
+                if saved['contract']['format'] not in (FORMAT, MOTOR_FORMAT, FINAL_FORMAT) or added_context not in (0, EXTRA_OBSERVATIONS):
                     raise ValueError('Initialization requires the same physical observation and policy format')
                 physical_files = ('diver.xml', 'geometry.py', 'stance.py', 'water.py')
                 current_hashes = hashes()
@@ -141,16 +155,18 @@ class Trainer:
                        for name in physical_files):
                     raise ValueError('Initialization requires the same physical model and measurements')
                 fresh = self.policy.state_dict()
-                transferred = {k: v for k, v in saved['model'].items() if not k.startswith(('value', 'critic_trunk.'))}
+                # Input statistics are not actor weights; a transferred actor starts fresh ones.
+                transferred = {k: v for k, v in saved['model'].items() if not k.startswith(('value', 'critic_trunk.', 'input_'))}
                 if added_context:
-                    # Insert task goals before the final action-history columns.
+                    # Insert task goals before the final history columns.
                     # Zero new weights preserve the old motor/choice functions.
+                    from policy import HISTORY
                     for key in ('trunk.0.weight', 'selector_trunk.0.weight'):
                         if key in transferred:
                             old = transferred[key]
                             new = torch.zeros(old.shape[0], self.env.observation_size)
-                            new[:, :old_size - 9] = old[:, :-9]
-                            new[:, -9:] = old[:, -9:]
+                            new[:, :old_size - HISTORY] = old[:, :-HISTORY]
+                            new[:, -HISTORY:] = old[:, -HISTORY:]
                             transferred[key] = new
                 if args.architecture == 'split' and not any(k.startswith('selector_trunk.') for k in transferred):
                     transferred.update({k.replace('trunk.', 'selector_trunk.', 1): v.clone()
@@ -167,7 +183,14 @@ class Trainer:
             self.contract = dict(format=self.policy.format, judge=VERSION, water=WATER_VERSION, observationSize=self.env.observation_size,
                                  motorCurriculum=args.motor_curriculum, architecture=args.architecture,
                                  rewardMode=args.reward_mode, exploration=args.exploration, directionPractice=args.direction_practice, goalPractice=args.goal_practice,
+                                 boundedPractice=PRACTICE_SCOPE, completionFeedback=COMPLETION_VERSION,
+                                 conjunctiveCredit=CONJUNCTIVE_VERSION if args.reward_mode == 'conjunctive' else None,
+                                 noiseRho=args.noise_rho, inputNormalization=args.input_normalization,
+                                 stageCurriculum=[s['name'] for s in mastery.STAGES] if args.stage_curriculum else None,
                                  actions=9, declarations=[d['id'] for d in DIVES], sourceHashes=hashes())
+            if getattr(args, 'rotation_progress', False):
+                from rotation_progress import VERSION as ROTATION_VERSION
+                self.contract['rotationProgress'] = ROTATION_VERSION
             if args.resume:
                 self.resume(args.resume)
             elif args.continue_from:
@@ -196,6 +219,10 @@ class Trainer:
         saved = torch.load(io.BytesIO(raw), map_location='cpu', weights_only=False)
         if Path(path).resolve().parent == self.out:
             raise ValueError('A new phase must preserve the previous output directory')
+        if getattr(self.args, 'rotation_progress', False) and not saved['contract'].get('rotationProgress'):
+            return self.continue_rotation_phase(saved, raw, path)
+        if self.args.reward_mode == 'completion-first':
+            return self.continue_completion_phase(saved, raw, path)
         if not self.args.direction_practice or saved['config'].get('direction_practice', False):
             raise ValueError('Only the v14 to directional-practice migration is supported')
         for key in RESUME_KEYS:
@@ -238,6 +265,111 @@ class Trainer:
         self.state['criticWarmupRemaining'] = 4
         atomic_json(self.out / 'continuation.json', phase)
 
+    def continue_completion_phase(self, saved, raw, path):
+        """Change the reward without resetting any learned network or optimizer.
+
+        Fresh episode boundaries are necessary: unfinished old-reward rollouts
+        and potential accumulators cannot become new-objective experience.
+        Preserved parent checkpoints retain every original episode/archive.
+        """
+        if saved['config']['reward_mode'] != 'phase-dense' or not self.args.goal_practice:
+            raise ValueError('Completion-first continuation requires existing specific-dive training')
+        for key in RESUME_KEYS:
+            if key != 'reward_mode' and saved['config'][key] != getattr(self.args, key):
+                raise ValueError('Completion continuation changed ' + key)
+        old_contract = {k: v for k, v in saved['contract'].items() if k not in ('sourceHashes', 'rewardMode')}
+        new_contract = {k: v for k, v in self.contract.items() if k not in ('sourceHashes', 'rewardMode')}
+        if old_contract != new_contract:
+            raise ValueError('Completion continuation changed the model contract')
+        allowed = {'train.py', 'training_reward.py', 'motor_objective.py', 'environment.py', 'motor_curriculum.py'}
+        if set(saved['contract']['sourceHashes']) != set(self.contract['sourceHashes']):
+            raise ValueError('Completion continuation changed the source inventory')
+        for name, digest in self.contract['sourceHashes'].items():
+            if name not in allowed and saved['contract']['sourceHashes'][name] != digest:
+                raise ValueError('Completion continuation changed protected source: ' + name)
+        if self.args.architecture != 'split':
+            raise ValueError('Critic recalibration requires independent actor and critic trunks')
+        self.policy.load_state_dict(saved['model'])
+        self.optimizer.load_state_dict(saved['optimizer'])
+        self.state = copy.deepcopy(saved['training'])
+        self.env.load_state_dict(saved['environment'])
+        # Retain all motor readiness and visit counts. Only the target success
+        # averages change meaning under completion-first and must be relearned.
+        self.env.goal_mastery[:] = 0
+        self.env.goal_progress[:] = 0
+        self.env.base.bank = [[] for _ in self.env.base.bank]
+        self.env.base.recovery_archive = type(self.env.base.recovery_archive)()
+        self.env.base.reset(np.arange(self.env.n), new_routine=True)
+        self.env.assign(np.arange(self.env.n))
+        torch.set_rng_state(saved['torchRNG'])
+        np.random.set_state(saved['numpyRNG'])
+        random.setstate(saved['pythonRNG'])
+        phase = dict(version=COMPLETION_VERSION, startSteps=self.state['steps'],
+                     startUpdates=self.state['updates'], parent=str(Path(path).resolve()),
+                     parentSHA256=hashlib.sha256(raw).hexdigest(), actor='preserved', optimizer='preserved',
+                     critic='preserved; four critic-only recalibration updates',
+                     episodeState='fresh at reward boundary; old episodes retained in parent',
+                     motorProgress='preserved', goalMastery='reset because its success criterion changed',
+                     sourceHashes=self.contract['sourceHashes'])
+        self.state.setdefault('trainingPhases', []).append(phase)
+        self.state['phaseStartSteps'] = self.state['steps']
+        self.state['criticWarmupRemaining'] = 4
+        atomic_json(self.out / 'continuation.json', phase)
+
+    def continue_rotation_phase(self, saved, raw, path):
+        """Add two zero-weight inputs and dense feedback to the current learner.
+
+        Every existing parameter and Adam moment survives. Fresh episode starts
+        prevent mixing partial returns from the two reward definitions.
+        """
+        from rotation_progress import VERSION, OLD_SIZE, NEW_SIZE, INSERT, ADDED, migrated_states
+        if (saved['contract']['observationSize'] != OLD_SIZE or self.env.observation_size != NEW_SIZE
+                or self.args.architecture != 'split' or self.args.reward_mode != 'completion-first'):
+            raise ValueError('Rotation continuation requires the existing completion-first split motor model')
+        for key in RESUME_KEYS:
+            if saved['config'][key] != getattr(self.args, key):
+                raise ValueError('Rotation continuation changed ' + key)
+        excluded = {'sourceHashes', 'observationSize', 'rotationProgress'}
+        if ({k: v for k, v in saved['contract'].items() if k not in excluded}
+                != {k: v for k, v in self.contract.items() if k not in excluded}):
+            raise ValueError('Rotation continuation changed a protected contract field')
+        old_hashes, new_hashes = saved['contract']['sourceHashes'], self.contract['sourceHashes']
+        allowed = {'environment.py', 'motor_objective.py', 'engine.py', 'evaluation.py', 'train.py'}
+        if set(new_hashes) != set(old_hashes) | {'rotation_progress.py'}:
+            raise ValueError('Rotation continuation changed source inventory')
+        for name in old_hashes:
+            if name not in allowed and old_hashes[name] != new_hashes[name]:
+                raise ValueError('Rotation continuation changed protected source: ' + name)
+        model, optimizer = migrated_states(saved['model'], saved['optimizer'], self.policy.named_parameters())
+        self.policy.load_state_dict(model)
+        self.optimizer.load_state_dict(optimizer)
+        self.state = copy.deepcopy(saved['training'])
+        old_environment = copy.deepcopy(saved['environment'])
+        for name in ('phase_previous', 'phase_totals'):
+            old_environment['base']['arrays'][name] = np.zeros_like(getattr(self.env.base, name))
+        self.env.load_state_dict(old_environment)
+        # Physics, curriculum mastery, counters, and random generators survive;
+        # old recovery snapshots and their return histories stay in the parent.
+        self.env.base.bank = [[] for _ in self.env.base.bank]
+        self.env.base.recovery_archive = type(self.env.base.recovery_archive)()
+        self.env.base.reset(np.arange(self.env.n), new_routine=True)
+        self.env.assign(np.arange(self.env.n))
+        torch.set_rng_state(saved['torchRNG'])
+        np.random.set_state(saved['numpyRNG'])
+        random.setstate(saved['pythonRNG'])
+        phase = dict(version=VERSION, startSteps=self.state['steps'], startUpdates=self.state['updates'],
+                     parent=str(Path(path).resolve()), parentSHA256=hashlib.sha256(raw).hexdigest(),
+                     actor='all old weights preserved; two zero-initialized inputs',
+                     optimizer='all old Adam moments and steps preserved; new input moments zero',
+                     critic='preserved; four critic-only calibration updates',
+                     insertedObservationColumns=[INSERT, INSERT + ADDED],
+                     episodeState='fresh boundaries; old partial rollouts remain in parent checkpoint',
+                     motorProgress='preserved', sourceHashes=self.contract['sourceHashes'])
+        self.state.setdefault('trainingPhases', []).append(phase)
+        self.state['phaseStartSteps'] = self.state['steps']
+        self.state['criticWarmupRemaining'] = 4
+        atomic_json(self.out / 'continuation.json', phase)
+
     def resume(self, path):
         saved = torch.load(path, map_location='cpu', weights_only=False)
         amendments = self.source_amendments(saved['contract'], saved['training']['steps'])
@@ -250,6 +382,10 @@ class Trainer:
         self.optimizer.load_state_dict(saved['optimizer'])
         self.env.load_state_dict(saved['environment'])
         self.state = copy.deepcopy(saved['training'])
+        if 'stages' in self.state:
+            self.progression.load_state_dict(self.state['stages'])
+            if self.args.stage_curriculum:
+                self.base_environment().set_stage(self.progression.index)
         if amendments:
             # The change is explicit on the command line and permanent in the checkpoint.
             self.state.setdefault('sourceAmendments', []).extend(amendments)
@@ -279,10 +415,14 @@ class Trainer:
         return [dict(file=name, before=saved_hashes[name], after=current_hashes[name], atSteps=at_steps)
                 for name in changed]
 
+    def base_environment(self):
+        return self.env.base if isinstance(self.env, MotorCurriculum) else self.env
+
     def persist(self, reason):
         state = self.state
         state['elapsedSeconds'] = self.prior_seconds + time.monotonic() - self.started
         state['stopReason'] = reason
+        state['stages'] = self.progression.state_dict()
         saved = dict(contract=self.contract, config=vars(self.args), model=self.policy.state_dict(),
                      optimizer=self.optimizer.state_dict(), environment=self.env.state_dict(), training=copy.deepcopy(state),
                      torchRNG=torch.get_rng_state(), numpyRNG=np.random.get_state(), pythonRNG=random.getstate())
@@ -291,6 +431,7 @@ class Trainer:
                                                    elapsedSeconds=state['elapsedSeconds'], updates=state['updates'],
                                                    bestValue=state['bestValue'],
                                                    latestMetrics=state['history'][-1] if state['history'] else None,
+                                                   stage=self.progression.state_dict(), gates=state.get('gates', []),
                                                    publication='Not qualified for browser publication'))
         return saved
 
@@ -341,12 +482,48 @@ class Trainer:
         if qualified:
             atomic_checkpoint(self.out / 'qualified-for-review.pt', self.persist('qualified-awaiting-review'))
 
+    def check_gates(self, report):
+        """Record every gate whose step count has been reached; returns the first failed one."""
+        state = self.state
+        results = state.setdefault('gates', [])
+        checked = {row['name'] for row in results}
+        clean = report['summary']['full']['clean'] or 0.
+        clean_dives = sum(1 for row in report['episodes'] if row['clean'] and not row['practice'])
+        entry_success = (report.get('motorSkills', {}).get('tasks', {}).get('entry', {}).get('success'))
+        failed = None
+        for gate in GATES:
+            if gate['name'] in checked or state['steps'] < gate['steps']:
+                continue
+            reasons = []
+            if 'entrySuccess' in gate and (entry_success is None or entry_success < gate['entrySuccess']):
+                reasons.append(f"entry sub-task success {entry_success} below {gate['entrySuccess']}")
+            if 'cleanDives' in gate and clean_dives < gate['cleanDives']:
+                reasons.append(f"{clean_dives} clean dives, at least {gate['cleanDives']} required")
+            if 'cleanRate' in gate and clean < gate['cleanRate']:
+                reasons.append(f"clean rate {clean:.3f} below {gate['cleanRate']}")
+            row = dict(gate, checkedAtSteps=state['steps'], passed=not reasons, reasons=reasons,
+                       cleanRate=clean, cleanDives=clean_dives, entrySuccess=entry_success)
+            results.append(row)
+            if reasons and failed is None:
+                failed = row
+        return failed if self.args.gates else None
+
+    def advance_stage(self, report):
+        """Widen the declaration scope once the current stage's clean rate has held."""
+        if not self.args.stage_curriculum:
+            return
+        clean = report['summary']['full']['clean']
+        if self.progression.observe(clean, self.state['steps']):
+            self.base_environment().set_stage(self.progression.index)
+            print(json.dumps(dict(stageAdvanced=self.progression.history[-1], stage=mastery.stage(self.progression.index)['name'])), flush=True)
+
     def run_evaluation(self):
-        """Evaluate on held-out routines and keep the best; True once progress has plateaued."""
+        """Evaluate on held-out routines and keep the best; True once training should stop."""
         # Evaluation uses a separate RNG and environment; preserve learner randomness.
         self.initialize_references()
         rng = torch.get_rng_state()
-        report = evaluate(self.policy, cases=self.args.eval_cases, reward_mode=self.args.reward_mode)
+        stage = self.progression.index if self.args.stage_curriculum else None
+        report = evaluate(self.policy, cases=self.args.eval_cases, reward_mode=self.args.reward_mode, stage=stage)
         torch.set_rng_state(rng)
         state = self.state
         report['steps'] = state['steps']
@@ -357,8 +534,13 @@ class Trainer:
             targets['steps'] = state['steps']
             atomic_json(self.out / 'target-evaluations' / f"{state['steps']}.json", targets)
         atomic_json(self.out / 'evaluations' / f"{state['steps']}.json", report)
-        state['evaluations'].append(dict(steps=state['steps'], summary=report['summary']))
+        state['evaluations'].append(dict(steps=state['steps'], stage=stage, summary=report['summary']))
         labels = update_selection(state, report)
+        # The checkpoint that ships is the one with the most clean dives, once any exist.
+        if 'best-clean' in labels and (report['summary']['full']['clean'] or 0) > 0 and 'best' not in labels:
+            labels.append('best')
+        failed_gate = self.check_gates(report)
+        self.advance_stage(report)
         self.final_test()
         saved = self.persist('evaluated')
         for label in labels:
@@ -367,6 +549,9 @@ class Trainer:
         if 'best' in labels:
             atomic_json(self.out / 'best-policy.json', dict(**self.policy.export(), contract=self.contract,
                                                             steps=state['steps'], qualified=False))
+        if failed_gate is not None:
+            print(json.dumps(dict(gateFailed=failed_gate)), flush=True)
+            return 'gate'
         return self.plateaued()
 
     def plateaued(self):
@@ -407,7 +592,7 @@ class Trainer:
             batch['choices'][t] = pred['choice']
             batch['oldlog'][t] = pred['logp']
             batch['values'][t] = pred['value']
-            _, reward, done, finished = env.step(pred['choice'].numpy(), pred['action'].numpy())
+            _, reward, done, finished = env.step(pred['choice'].numpy(), pred['action'].numpy(), pred['noise'].numpy())
             # Recovery snapshots assist motor learning, not declaration selection.
             batch['learn'][t] = ~(select & torch.tensor(env.practice))
             batch['rewards'][t] = torch.tensor(reward)
@@ -477,10 +662,14 @@ class Trainer:
         return losses, kls
 
     def update(self):
-        """One rollout, one PPO update and the bookkeeping around them; True on plateau."""
+        """One rollout, one PPO update and the bookkeeping around them; truthy when training should stop."""
         batch = self.collect()
         advantages, returns = estimate_advantages(batch, self.args.gae_lambda)
         losses, kls = self.optimize(batch, advantages, returns)
+        # Input statistics move only after an update, so every observation in one
+        # rollout is normalised the same way when it is collected and when it is
+        # learned from, and a resumed checkpoint continues identically.
+        self.policy.update_input_statistics(batch['observations'])
         state, args = self.state, self.args
         state['criticWarmupRemaining'] = max(0, state.get('criticWarmupRemaining', 0) - 1)
         state['steps'] += self.block
@@ -499,6 +688,8 @@ class Trainer:
             atomic_checkpoint(folder / f"{state['steps']}.pt", saved)
         if not self.stop and args.evaluate_every and (state['updates'] % args.evaluate_every == 0 or finished):
             return self.run_evaluation()
+        if isinstance(self.env, MotorCurriculum) or args.stage_curriculum:
+            row['stage'] = self.progression.index if args.stage_curriculum else None
         return False
 
     def train(self):
@@ -510,8 +701,9 @@ class Trainer:
         try:
             self.initialize_references()
             while self.state['steps'] < self.target and not self.stop:
-                if self.update():
-                    self.persist('plateau-awaiting-review')
+                outcome = self.update()
+                if outcome:
+                    self.persist('gate-failed-awaiting-review' if outcome == 'gate' else 'plateau-awaiting-review')
                     return self.state
             # A run killed between its final update and its final evaluation resumes here
             # with the budget complete; produce the missing report instead of skipping it.
@@ -535,7 +727,10 @@ def parser():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--output', required=True)
     p.add_argument('--resume')
+    p.add_argument('--random-motor-init', action='store_true',
+                   help='Fresh random networks without the neutral-pose motor bias; an exact resume remains supported')
     p.add_argument('--continue-from', help='Explicit new curriculum phase preserving actor, optimizer and cumulative counters')
+    p.add_argument('--rotation-progress', action='store_true', help='Explicit remaining turns and potential-based rotation progress')
     p.add_argument('--direction-practice', action='store_true', help='Balance and teach signed takeoff momentum and extend into flight')
     p.add_argument('--goal-practice', action='store_true', help='Train shared motors on assigned legal dive targets alongside autonomous routines')
     p.add_argument('--warm-start')
@@ -552,7 +747,12 @@ def parser():
     p.add_argument('--lr', type=float, default=.0003)
     p.add_argument('--entropy', type=float, default=.006)
     p.add_argument('--declaration-entropy', type=float, default=.01)
-    p.add_argument('--reward-mode', choices=['v12', 'continuous-entry', 'phase-dense'], default='v12')
+    p.add_argument('--reward-mode', choices=['v12', 'continuous-entry', 'phase-dense', 'completion-first', 'conjunctive'], default='v12')
+    p.add_argument('--noise-rho', type=float, default=.9, help='AR(1) correlation of the observed exploration noise (0 = white)')
+    p.add_argument('--input-normalization', type=int, choices=[0, 1], default=1, help='Running input normalisation, folded into the export')
+    p.add_argument('--stage-curriculum', type=int, choices=[0, 1], default=1, help='Mastery-gated declaration scope and stance randomisation')
+    p.add_argument('--start-stage', type=int, default=0)
+    p.add_argument('--gates', type=int, choices=[0, 1], default=1, help='Stop for review when a milestone gate fails')
     p.add_argument('--motor-curriculum', choices=['off', 'context', 'adaptive'], default='off')
     p.add_argument('--architecture', choices=['shared', 'split'], default='shared')
     p.add_argument('--reference-policy', nargs='*', default=[], help='Immutable baseline checkpoints for paired full-dive qualification')

@@ -68,7 +68,7 @@ class DirectionTests(unittest.TestCase):
             short = e.horizons().copy()
             e.level[1] = 1
             self.assertTrue((e.horizons() > short).all())
-            self.assertEqual(e.observe().shape[1], 233)
+            self.assertEqual(e.observe().shape[1], 244)
         finally:
             e.close()
 
@@ -115,7 +115,7 @@ class DirectionTests(unittest.TestCase):
 
 
     def test_target_benchmark_uses_requested_dives_and_real_board_starts(self):
-        policy = Policy(233, (16, 16), architecture='split')
+        policy = Policy(244, (16, 16), architecture='split')
         before = torch.get_rng_state().clone()
         report = evaluate_targets(policy, cases_per_target=1)
         self.assertEqual(len(report['episodes']), 10)
@@ -157,7 +157,7 @@ class ContinuationTests(unittest.TestCase):
                 t.update()
                 self.assertEqual(t.state['steps'], 640)
                 for key, value in before.items():
-                    if not key.startswith(('value', 'critic_trunk.')):
+                    if not key.startswith(('value', 'critic_trunk.', 'input_')):
                         torch.testing.assert_close(t.policy.state_dict()[key], value, rtol=0, atol=0)
                 self.assertTrue(any(not torch.equal(t.policy.state_dict()[k], v) for k,v in before.items()
                                     if k.startswith('critic_trunk.')))

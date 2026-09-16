@@ -139,7 +139,7 @@ export function mountExperiment(element, options = {}) {
   worker.onmessage = ({ data }) => {
     if (disposed) return;
     if (data.catalog) {
-      catalog = data.catalog;
+      catalog = data.catalog.filter(d => d.turns <= (d.group === 6 ? 2 : 1.5) && d.twists <= 1);
       refreshDives();
       return;
     }

@@ -19,13 +19,13 @@ import numpy as np
 from rules import DIVES, difficulty
 from entry_faults import entry_deductions
 
-VERSION = 'self-declared-independent-deductions-v13'
+VERSION = 'declared-position-entry-arms-v18-clean-form-0.7'
 FEET_FIRST_GEOMS = (12, 15)   # one-based sensor geom ids of the two feet
 ROTATION_TOLERANCE = .25      # somersaults; a quarter turn short is another dive
 TWIST_TOLERANCE = .25
 SIDEWAYS_TILT = .85           # |lateral up component| that means tumbling sideways
 CLEAN_ANGLE = 15
-CLEAN_FORM = .8
+CLEAN_FORM = .7               # the best scripted dives reach 0.67 to 0.79 on this rigid rig; 0.8 was unreachable
 UNSAFE_DISTANCE = .2          # metres from the board that cap the award at 2
 POINTS_MULTIPLIER = 3         # three judges' awards times the degree of difficulty
 RISE_TARGET = .3              # metres of centre-of-mass rise for a full-credit takeoff (rule 10.4.3, control and height)
@@ -88,10 +88,24 @@ def judge(declaration, apparatus, height, m):
     # Score caps are separately reported rule adjustments, not a second charge
     # in the dense training ledger for faults already measured above.
     adjustments = {}
+    recognized = m.get("positionRecognition", {})
+    fractions = recognized.get("fractions", [0., 0., 0.])
+    dominant = int(np.argmax(fractions))
+    # A malformed pike is not automatically a clearly different tuck. Only a
+    # sustained recognizable alternative shape triggers the wrong-position cap.
+    wrong_position = (d["position"] != "D" and recognized.get("samples", 0) >= 5
+                      and fractions[dominant] >= .75 and "ABC"[dominant] != d["position"])
+    # Numeric validity and matching the complete declaration are different:
+    # a clearly different body position is capped, not a failed dive. It must
+    # nevertheless not collect the learner's completion/difficulty bonus.
+    matched_position = d['position'] == 'D'
+    if not matched_position:
+        matched_position = ((recognized.get('samples', 0) >= 5 and fractions['ABC'.index(d['position'])] >= .5)
+                            if recognized else m['positionQuality'] >= .5)
     for name, applies, cap in [
-        ('positionCap', m['positionQuality'] < .5, 2.),
+        ('positionCap', wrong_position, 2.),
         ('unsafeDistanceCap', m['x'] < UNSAFE_DISTANCE, 2.),
-        ('armPositionCap', not m['entryArmPositionValid'], 4.5),
+        ('armPositionCap', m.get('entryArmPositionCap', not m['entryArmPositionValid']), 4.5),
         ('failedDive', bool(reasons), 0.),
     ]:
         adjustment = max(0., execution - cap) if applies else 0.
@@ -103,7 +117,9 @@ def judge(declaration, apparatus, height, m):
     return dict(declaration=d['id'], category=d['group'], difficulty=dd, execution=execution,
                 points=POINTS_MULTIPLIER * dd * execution, trainingValue=dd * execution, valid=not reasons,
                 rawExecution=raw_execution, scoreAdjustments=adjustments,
-                clean=bool(clean), deductions={k: float(v) for k, v in faults.items()}, failures=reasons,
+                clean=bool(clean and matched_position and not wrong_position), wrongBodyPosition=bool(wrong_position),
+                declaredPositionMatched=bool(matched_position), completedDeclaration=bool(not reasons and matched_position),
+                deductions={k: float(v) for k, v in faults.items()}, failures=reasons,
                 rotationError=rotation_error, twistError=twist_error, entryAngle=angle,
                 recognition=dict(somersaults=round(measured * 2) / 2, twists=round(abs(m['twist']) * 2) / 2),
                 automatedJudge=True, splashIsProxy=True, judgeVersion=VERSION)

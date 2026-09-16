@@ -12,7 +12,8 @@ import copy
 import numpy as np
 
 from engine import ACTION_HIGH, ACTION_LOW, SCRATCH, Arena as Physics, board_forces, framed_angles, initial_state
-from geometry import FOOT_GEOMS
+from geometry import FOOT_GEOMS, time_to_surface
+import mastery
 from judge import judge
 from training_reward import reward_components, MODES
 from rules import CODE_INDEX, CODES, DIVES, POSITIONS, legal_mask, validate_declaration
@@ -24,8 +25,10 @@ PLATFORM_HEIGHTS = [5, 7.5, 10]
 SPRINGBOARD_HEIGHTS = [1, 3]
 SPRINGBOARD_PRELOAD = -.05123  # board deflection under a standing athlete, metres
 SUPPORT_FORCE = 15             # newtons under a foot that count as standing on the board
-AUXILIARY_RATE = .25           # fraction of training routines that practise one weak group
+AUXILIARY_RATE = .25           # fraction of training routines that practise one weak group (no stage scope)
 ROUTINE_LENGTH = 6
+HISTORY = 18                   # trailing observation columns: previous exploration noise (9), previous action (9)
+NEAR_WATER = 3.                # metres over which the height above water is reported at full resolution
 BANK_LIMIT = 96
 POSITION_INDEX = {'C': 0, 'B': 1, 'D': 2, 'A': 3}
 BACK_SKILL = 3                 # engine skill whose stance faces away from the water
@@ -41,9 +44,11 @@ def rows(engine):
 class Arena:
     """A batch of routines: six declared dives per athlete, or one auxiliary practice dive."""
 
-    def __init__(self, n=64, seed=1, threads=4, training=True, practice=.35, reward_mode="v12", recovery_mode="recent"):
+    def __init__(self, n=64, seed=1, threads=4, training=True, practice=.35, reward_mode="v12", recovery_mode="recent",
+                 rotation_progress=False, stage=None):
         if reward_mode not in MODES:
             raise ValueError("Unknown reward mode")
+        self.rotation_progress = bool(rotation_progress)
         self.reward_mode = reward_mode
         if recovery_mode not in ("recent", "progress"):
             raise ValueError("Unknown recovery curriculum")
@@ -61,6 +66,8 @@ class Arena:
         _, _, stance = initial_state(self.physics.model, self.physics.resetdata, 10, FORWARD_SKILL)
         self.initial_action = (2 * (stance - ACTION_LOW) / (ACTION_HIGH - ACTION_LOW) - 1).astype(np.float32)
         self.previous_actions = np.zeros((n, 9), np.float32)
+        self.previous_noise = np.zeros((n, 9), np.float32)
+        self.routine_length = np.full(n, ROUTINE_LENGTH, int)
         self.choosing = np.ones(n, bool)
         self.declaration = np.zeros(n, int)
         self.group = np.ones(n, int)
@@ -82,11 +89,29 @@ class Arena:
         self.interactions = 0
         self.potential_names = ('takeoff', 'flightPosition', 'entryAlignment', 'entryHip', 'entryKnee',
                                 'entryShoulderPitch', 'entryShoulderRoll', 'entryElbow', 'entryToes', 'entryHands', 'entryLegs', 'takeoffDirection')
+        if self.rotation_progress:
+            self.potential_names += ('somersaultProgress', 'twistProgress')
         self.phase_previous = np.zeros((n, len(self.potential_names)))
         self.phase_totals = np.zeros_like(self.phase_previous)
         self.direction_practice = False
+        self.scope = None
+        self.stage_index = None
+        self.auxiliary_rate = AUXILIARY_RATE
+        self.set_stage(stage)
         self.reset(np.arange(n), new_routine=True)
         self.observation_size = self.observe().shape[-1]
+
+    def set_stage(self, index):
+        """Restrict declarations, stance randomisation and the practice mix to a mastery stage."""
+        if index is None:
+            self.scope, self.stage_index = None, None
+            self.physics.stance_spread = 1.
+            self.auxiliary_rate = AUXILIARY_RATE
+            return
+        self.scope = mastery.stage(index)
+        self.stage_index = int(index)
+        self.physics.stance_spread = float(self.scope['spread'])
+        self.auxiliary_rate = float(self.scope['auxiliary'])
 
     def close(self):
         self.physics.close()
@@ -103,26 +128,35 @@ class Arena:
             self.banked_stages[i] = False
             self.selected_recovery[i] = -1
             self.previous_actions[i] = 0
+            self.previous_noise[i] = 0
             self.phase_previous[i] = 0
             self.phase_totals[i] = 0
             self.stand(i, FORWARD_SKILL)
         return self.observe()
 
     def rounds(self, i):
-        return 1 if self.auxiliary[i] else ROUTINE_LENGTH
+        return 1 if self.auxiliary[i] else int(self.routine_length[i])
 
     def new_routine(self, i):
-        """Draw apparatus, height and the order of the six dive groups."""
+        """Draw apparatus, height and the order of the dive groups within the current scope."""
         rng = self.rng
-        self.apparatus[i] = int(rng.integers(2))
-        self.height[i] = float(rng.choice(PLATFORM_HEIGHTS) if self.apparatus[i] else rng.choice(SPRINGBOARD_HEIGHTS))
-        groups = [1, 2, 3, 4, 5, 6] if self.apparatus[i] else [1, 2, 3, 4, 5, int(rng.integers(1, 6))]
-        self.schedule[i] = rng.permutation(groups)
-        self.auxiliary[i] = self.training and rng.random() < AUXILIARY_RATE
+        if self.scope is None:
+            self.apparatus[i] = int(rng.integers(2))
+            self.height[i] = float(rng.choice(PLATFORM_HEIGHTS) if self.apparatus[i] else rng.choice(SPRINGBOARD_HEIGHTS))
+            groups = [1, 2, 3, 4, 5, 6] if self.apparatus[i] else [1, 2, 3, 4, 5, int(rng.integers(1, 6))]
+        else:
+            self.apparatus[i] = int(rng.choice(self.scope['apparatus']))
+            self.height[i] = float(rng.choice(mastery.heights_for(self.scope, self.apparatus[i])))
+            groups = mastery.routine_groups(self.scope, self.apparatus[i])
+        order = rng.permutation(groups)
+        self.routine_length[i] = len(order)
+        self.schedule[i] = np.resize(order, ROUTINE_LENGTH)
+        self.auxiliary[i] = self.training and rng.random() < self.auxiliary_rate
         if self.auxiliary[i]:
             # Practise the group with the lowest clean rate more often.
             weights = .2 + 1 - self.clean / np.maximum(1, self.attempts)
-            weights *= np.array([1, 1, 1, 1, 1, self.apparatus[i]])
+            allowed = np.isin(np.arange(1, 7), groups)
+            weights *= allowed * np.array([1, 1, 1, 1, 1, self.apparatus[i]])
             self.schedule[i, 0] = int(rng.choice(np.arange(1, 7), p=weights / weights.sum()))
         self.round[i] = 0
         self.used[i] = False
@@ -141,8 +175,11 @@ class Arena:
         return 'platform' if self.apparatus[i] else 'springboard'
 
     def mask(self):
-        return np.stack([legal_mask(int(self.group[i]), self.apparatus_name(i), self.height[i],
-                                    np.asarray(CODES)[self.used[i]]) for i in range(self.n)])
+        legal = np.stack([legal_mask(int(self.group[i]), self.apparatus_name(i), self.height[i],
+                                     np.asarray(CODES)[self.used[i]]) for i in range(self.n)])
+        if self.scope is not None:
+            legal &= mastery.scope_mask(self.scope, DIVES)[None]
+        return legal
 
     # ---------------------------------------------------------- observation
     def observe(self):
@@ -162,13 +199,23 @@ class Arena:
         # press need them. Nothing here is a future estimate or an assigned target.
         support = np.concatenate([(board_forces(s)[:, FOOT_GEOMS] > SUPPORT_FORCE).astype(float),
                                   q[:, 0:1] * 4, v[:, 0:1] / 3], axis=1)
+        # The water approaching is what a diver sees: its ballistic arrival time and
+        # the height above it at full resolution over the last metres. Both are
+        # kinematic readings of the current state, not predictions of the body.
         progress = np.stack([e.phase_theta / (2 * np.pi), e.air_twist / (2 * np.pi), e.height / 10, e.state[:, 0] / 4,
-                             e.released, e.platform, e.armstand, e.water_fraction, e.above_water / 10, self.choosing,
-                             self.round / 6], axis=1)
+                             e.released, e.platform, e.armstand, e.water_fraction, e.above_water / 10,
+                             time_to_surface(e.above_water, s[:, 5]) / 2, np.minimum(e.above_water, NEAR_WATER) / NEAR_WATER,
+                             self.choosing, self.round / 6], axis=1)
         observation = np.concatenate([q[:, 4:8], v[:, 1:7] / 10, q[:, e.qadr] / 3, v[:, e.vadr] / 15, e.targets / 3,
                                       s[:, :3] / [4, 2, 10], s[:, 3:6] / 10, progress, support,
                                       np.eye(6)[self.group - 1], intent, self.used.astype(float),
-                                      self.previous_actions], axis=1)
+                                      self.previous_noise, self.previous_actions], axis=1)
+        if self.rotation_progress:
+            from rotation_progress import remaining_turns
+            remaining = remaining_turns(e.goals[:, 0], e.goals[:, 1],
+                                        e.phase_theta / (2 * np.pi), e.air_twist / (2 * np.pi))
+            remaining[self.choosing] = 0
+            observation = np.column_stack([observation[:, :-HISTORY], remaining / 5, observation[:, -HISTORY:]])
         return observation.clip(-10, 10).astype(np.float32)
 
     # ---------------------------------------------------------- declaration
@@ -250,7 +297,7 @@ class Arena:
                 and not np.isfinite(e.entry_time[i]) and e.sensors[i, 5] < 0 and .3 < e.above_water[i] < 3)
 
     # ----------------------------------------------------------------- step
-    def step(self, choices, actions):
+    def step(self, choices, actions, noise=None):
         e = self.physics
         chosen = np.flatnonzero(self.choosing)
         # Declare before any integration. Masked actions during declaration do not
@@ -261,6 +308,10 @@ class Arena:
         _, reward, done, info = e.step(actions, auto_reset=False)
         self.previous_actions[:] = actions
         self.previous_actions[chosen] = 0
+        # The exploration noise is part of the policy's own state (its likelihood
+        # conditions on it), so it is observed exactly like the previous action.
+        self.previous_noise[:] = 0 if noise is None else noise
+        self.previous_noise[chosen] = 0
         for k, value in frozen.items():
             getattr(e, k)[chosen] = value
         reward[chosen] = 0
@@ -270,7 +321,7 @@ class Arena:
         for i in range(self.n):
             if self.bankable(i, chosen):
                 self.bank_snapshot(i)
-        if self.reward_mode == 'phase-dense':
+        if self.reward_mode in ('phase-dense', 'completion-first', 'conjunctive'):
             parts = potential_components(self)
             current = np.column_stack([parts[name] for name in self.potential_names])
             shaped = shaped_reward(self.phase_previous, current, done[:, None])
@@ -295,7 +346,7 @@ class Arena:
         components = reward_components(score, m, self.reward_mode)
         reward[i] += components["total"]
         score["trainingRewardComponents"] = components
-        if self.reward_mode == 'phase-dense':
+        if self.reward_mode in ('phase-dense', 'completion-first', 'conjunctive'):
             score['potentialShaping'] = dict(zip(self.potential_names, self.phase_totals[i].tolist()))
         g = self.group[i] - 1
         if self.practice[i] and self.recovery_mode == 'progress':
@@ -311,17 +362,18 @@ class Arena:
         self.round[i] += 1
         return dict(**score, measurements=m, practice=bool(self.practice[i]), height=float(self.height[i]),
                     apparatus=self.apparatus_name(i), routinePoints=float(self.routine_points[i]),
-                    routineFinished=bool(self.round[i] == ROUTINE_LENGTH and not self.auxiliary[i]),
-                    auxiliaryPractice=bool(self.auxiliary[i]), index=i)
+                    routineFinished=bool(self.round[i] == self.routine_length[i] and not self.auxiliary[i]),
+                    auxiliaryPractice=bool(self.auxiliary[i]), stage=self.stage_index, index=i)
 
     # ------------------------------------------------------------ persistence
     def state_dict(self):
         return dict(physics={k: v.copy() for k, v in rows(self.physics).items()},
                     arrays={k: v.copy() for k, v in vars(self).items() if isinstance(v, np.ndarray)},
                     bank=copy.deepcopy(self.bank), recoveryArchive=self.recovery_archive.state_dict(), rng=self.rng.bit_generator.state,
-                    physicsRng=self.physics.rng.bit_generator.state, interactions=self.interactions)
+                    physicsRng=self.physics.rng.bit_generator.state, interactions=self.interactions, stage=self.stage_index)
 
     def load_state_dict(self, state):
+        self.set_stage(state.get('stage'))
         for k, v in state['physics'].items():
             getattr(self.physics, k)[:] = v
         for k, v in state['arrays'].items():

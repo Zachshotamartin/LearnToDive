@@ -7,6 +7,7 @@ from pathlib import Path
 import torch
 
 from environment import Arena
+from motor_curriculum import MotorCurriculum
 from policy import Policy
 
 HERE = Path(__file__).resolve().parent
@@ -28,9 +29,10 @@ console.log(JSON.stringify({maximumAbsoluteError: error, cases: f.observations.l
 
 
 def fixture(e):
-    """A random untrained policy, real observations and the native deterministic outputs."""
-    p = Policy(e.observation_size, (96, 96))
+    """A random untrained v13 policy with folded input statistics, real observations and native outputs."""
+    p = Policy(e.observation_size, (96, 96), architecture='split', noise_rho=.9, normalize_inputs=True)
     o = torch.tensor(e.observe())
+    p.update_input_statistics(o + torch.randn_like(o) * .1)
     mask = torch.tensor(e.mask())
     x = p(o, mask, torch.tensor(e.choosing), deterministic=True)
     return dict(model=p.export(), observations=o.tolist(), masks=mask.tolist(), expected=x['action'].tolist(),
@@ -40,7 +42,7 @@ def fixture(e):
 def main():
     torch.set_num_threads(1)
     torch.manual_seed(817)
-    e = Arena(8, seed=442, training=False)
+    e = MotorCurriculum(Arena(8, seed=442, training=False, rotation_progress=True, stage=0), enabled=False)
     try:
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / 'fixture.json'

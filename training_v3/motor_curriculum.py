@@ -13,9 +13,17 @@ from engine import STATE_SPEC
 from geometry import ACTUATOR_MAP, framed_angles, quat_up, ANGULAR_VELOCITY
 from motor_objective import live_errors, rotation_direction_cost, entry_weight
 from stance import orientation
-from rules import DIVES, IDS
+from rules import DIVES, IDS, in_practice_scope
+from environment import HISTORY
 
 TASKS = ('full', 'takeoff', 'shape', 'aerial', 'entry')
+ENTRY_POSE = np.array([0, 0, 1.2, 3.05, 3.05, -.3, .3, 0, .06])   # straight, arms overhead: the pose an entry needs
+ENTRY_HEIGHT = (2.5, 3.5)       # metres above the water at which the entry task starts
+LEVEL_UP = .01                  # difficulty step after a well-mastered block of attempts
+LEVEL_DOWN = .005               # difficulty step back while the task is being lost
+MASTERED = .65                  # readiness above which the task widens
+LOST = .2                       # readiness below which the task narrows
+BLOCK = 64                      # attempts before difficulty may move
 EXTRA_OBSERVATIONS = 10  # five task indicators, hip/knee goals, three-axis up goal
 HORIZONS = np.array([0, 1.4, 1., 1., 3.])
 
@@ -69,10 +77,13 @@ class MotorCurriculum:
             if self.enabled:
                 # Full-from-board rollouts remain at least 25% from the start.
                 initial_share = .5 if self.goal_practice_enabled else .75
-                share = max(.2, initial_share * (1 - float(self.readiness[1:].min())))
+                skills = np.array([1, 2, 4] if self.goal_practice_enabled else [1, 2, 3, 4])
+                share = max(.2, initial_share * (1 - float(self.readiness[skills].min())))
                 if self.base.rng.random() < share:
-                    weights = .15 + 1 - self.readiness[1:]
-                    self.task[i] = 1 + self.base.rng.choice(4, p=weights / weights.sum())
+                    # Stationary aerial stabilization conflicts with full rotating dives.
+                    # Keep its slot for old checkpoints and standalone skill evals.
+                    weights = .15 + 1 - self.readiness[skills]
+                    self.task[i] = self.base.rng.choice(skills, p=weights / weights.sum())
                 elif self.goal_practice_enabled:
                     # At least 20% autonomous routines remain. Full-target
                     # practice gets 30–48%, motor fundamentals get 20–50%.
@@ -84,13 +95,21 @@ class MotorCurriculum:
                 theta = self.base.rng.uniform(-np.pi, np.pi)
                 self.up_goal[i] = [np.sin(theta), 0, np.cos(theta)]
             if self.direction_practice and self.task[i] == 1:
-                # Balance facing/direction combinations; the actor still chooses
-                # its own legal declaration. No maneuver or control path is given.
-                candidates = np.flatnonzero(self.direction_assignments == self.direction_assignments.min())
+                # Balance facing/direction combinations within the current mastery
+                # scope; the actor still chooses its own legal declaration. No
+                # maneuver or control path is given.
+                directions = self.practised_directions()
+                fewest = self.direction_assignments[directions].min()
+                candidates = [d for d in directions if self.direction_assignments[d] == fewest]
                 direction = int(self.base.rng.choice(candidates))
                 self.direction_assignments[direction] += 1
                 self.base.group[i] = direction + 1
                 self.base.schedule[i, self.base.round[i]] = direction + 1
+
+    def practised_directions(self):
+        """Takeoff directions (groups 1 to 4, zero-based) inside the base arena's current scope."""
+        scope = getattr(self.base, 'scope', None)
+        return [d for d in range(4) if scope is None or d + 1 in scope['groups']]
 
     def choose_practice_goal(self, i):
         legal = np.flatnonzero(self.base.mask()[i])
@@ -118,7 +137,7 @@ class MotorCurriculum:
         # The autoregressive action history must remain the final nine columns.
         goals = np.column_stack([np.eye(5)[self.task], self.shape_goal / 3, self.up_goal])
         goals[self.task == 0, 5:] = 0  # Full dives use only their own declared intent.
-        return np.column_stack([obs[:, :-9], goals, obs[:, -9:]]).astype(np.float32)
+        return np.column_stack([obs[:, :-HISTORY], goals, obs[:, -HISTORY:]]).astype(np.float32)
 
     def initialize_task(self, i):
         task = self.task[i]
@@ -138,17 +157,24 @@ class MotorCurriculum:
             pitch = 0.
         pitch += rng.uniform(-.15 - .5 * level, .15 + .5 * level)
         d.qpos[4:8] = orientation(pitch, 0)
-        d.qpos[1:4] = [3, 0, (-e.height[i] + rng.uniform(2.2, 3.2)) if task == 4 else 4]
+        d.qpos[1:4] = [3, 0, (-e.height[i] + rng.uniform(*ENTRY_HEIGHT)) if task == 4 else 4]
         d.qvel[:] = 0
         if task == 4:
-            d.qvel[3] = -rng.uniform(.5, 2 + 2 * level)
+            d.qvel[3] = -rng.uniform(.5, 1.5 + 2 * level)
         if task in (3, 4):
-            d.qvel[4:7] = rng.uniform(-.2 - 2 * level, .2 + 2 * level, 3)
+            d.qvel[4:7] = rng.uniform(-.1 - 2 * level, .1 + 2 * level, 3)
         target = np.array([rng.uniform(0, .7), rng.uniform(0, .9), 1.2,
                            rng.uniform(0, 3.05), rng.uniform(0, 3.05), -.2, .2,
                            rng.uniform(0, 1.), .04])
         if task == 2:
             target[:2] = rng.uniform(0, [1.7, 2.2])
+        if task == 4:
+            # The entry task starts near the pose an entry needs and widens with
+            # mastery. Started from a random pose it never succeeded once, so its
+            # difficulty could never move and the skill that decides every dive
+            # was never practised.
+            target = ENTRY_POSE + rng.uniform(-1, 1, 9) * (.15 + .6 * level) * np.array([1, 1, .5, 1, 1, .5, .5, 1, .1])
+            target = np.clip(target, [-.45, 0, -.55, -.5, -.5, -1.1, -1.1, 0, -.15], [2.2, 2.6, 1.35, 3.14, 3.14, 1.1, 1.1, 2.3, .18])
         d.qpos[e.qadr] = target[ACTUATOR_MAP]
         d.ctrl[:] = target[ACTUATOR_MAP]
         mujoco.mj_forward(e.model, d)
@@ -195,7 +221,7 @@ class MotorCurriculum:
             takeoff += self.level[1] * (desired_position * (1-preparing) + entry * preparing)
         return np.choose(self.task, [np.zeros(self.n), takeoff, shape, aerial, entry]).clip(0, 20)
 
-    def step(self, choices, actions):
+    def step(self, choices, actions, noise=None):
         self.last_completed = []
         chosen = self.base.choosing.copy()
         tasks = self.task.copy()
@@ -207,13 +233,17 @@ class MotorCurriculum:
         for i in np.flatnonzero(chosen & goals):
             choices[i] = self.choose_practice_goal(i)
         self.base.recovery_allowed[:] = (tasks == 0) & ~goals
-        _, reward, done, rows = self.base.step(choices, actions)
+        _, reward, done, rows = self.base.step(choices, actions, noise)
         finished = {row['index']: row for row in rows}
         for row in rows:
             i = row['index']
             if goals[i]:
                 target = IDS[row['declaration']]
                 outcome = float(row['valid']) * np.clip(row['execution'] / 10, 0, 1)
+                if self.base.reward_mode in ('completion-first', 'conjunctive'):
+                    # Advance the target frontier on completion, not only once
+                    # a newly learned dive also receives near-perfect execution.
+                    outcome = float(row.get('completedDeclaration', row['valid'])) * (.85 + .15 * np.clip(row['execution'] / 10, 0, 1))
                 delta = .05 * (outcome - self.goal_mastery[target])
                 self.goal_mastery[target] += delta
                 self.goal_progress[target] += .1 * (delta - self.goal_progress[target])
@@ -268,10 +298,14 @@ class MotorCurriculum:
                     self.direction_successes[groups[i]-1] += success
                     g = groups[i]-1
                     self.direction_readiness[g] += .03 * (success - self.direction_readiness[g])
+                directions = self.practised_directions()
                 direction_ready = (not self.direction_practice or task != 1
-                                   or (self.direction_visits.min() >= 16 and self.direction_readiness.min() > .65))
-                if self.visits[task] >= 64 and self.readiness[task] > .65 and direction_ready:
-                    self.level[task] = min(1., self.level[task] + .01)
+                                   or (self.direction_visits[directions].min() >= 16 and self.direction_readiness[directions].min() > MASTERED))
+                if self.visits[task] >= BLOCK and self.readiness[task] > MASTERED and direction_ready:
+                    self.level[task] = min(1., self.level[task] + LEVEL_UP)
+                elif self.visits[task] >= BLOCK and self.readiness[task] < LOST:
+                    # A task that is being lost narrows again instead of staying unwinnable.
+                    self.level[task] = max(0., self.level[task] - LEVEL_DOWN)
         self.task_returns += reward * skill
         # A practice declaration, score or used-dive mask must never become the
         # starting history of a subsequent autonomous competition routine.
@@ -295,9 +329,10 @@ class MotorCurriculum:
                                readiness=float(self.direction_readiness[g]))
                 for g in range(4)}
         if self.goal_practice_enabled:
-            result['specificDives'] = dict(attempts=int(self.goal_visits.sum()),
-                                           practicedTargets=int((self.goal_visits > 0).sum()),
-                                           masteredTargets=int((self.goal_mastery > .5).sum()))
+            scope = np.array([in_practice_scope(d) for d in DIVES])
+            result['specificDives'] = dict(eligibleTargets=int(scope.sum()), attempts=int(self.goal_visits[scope].sum()),
+                                           practicedTargets=int(((self.goal_visits > 0) & scope).sum()),
+                                           masteredTargets=int(((self.goal_mastery > .5) & scope).sum()))
         return result
 
     def state_dict(self):
@@ -318,7 +353,7 @@ def live_position_quality(e):
     from positions import position_qualities
     from geometry import tuck_geometry
     q = e.state[:, 1 + e.qadr]
-    qualities = position_qualities(q[:, 0], q[:, 1], np.max(tuck_geometry(e.sensors)[0], axis=1))
+    qualities = position_qualities(q[:, 0], q[:, 1], np.max(tuck_geometry(e.sensors)[0], axis=1), q[:, 3], q[:, 4])
     # The physics goal order is C, B, D, A; qualities use A, B, C, D.
     indices = np.array([2, 1, 3, 0])[e.goals[:, 3].astype(int)]
     return qualities[np.arange(e.n), indices]

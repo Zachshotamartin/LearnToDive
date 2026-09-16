@@ -1,7 +1,7 @@
 """Versioned legal declarations from the official difficulty table.
 
-Targets are chosen by the policy, never the trainer; this module only says
-which declarations are legal for a group, apparatus and height.
+The complete table keeps checkpoint indices stable. The practice/preview mask
+also limits complexity; the official difficulty table and judge stay intact.
 """
 import json
 from pathlib import Path
@@ -55,11 +55,18 @@ def difficulty(index, apparatus, height):
     return row['difficulty'][key]
 
 
+PRACTICE_SCOPE = 'max-1.5-flips-2-armstand-1-twist-v1'
+
+
+def in_practice_scope(d):
+    return d['turns'] <= (2. if d['armstand'] else 1.5) and d['twists'] <= 1.
+
+
 def legal_mask(group, apparatus, height, used=()):
     """Boolean mask over DIVES of declarations legal in this round."""
     key = table_key(apparatus, height)
     used = set(used)
-    return np.array([d['group'] == group and key in d['difficulty'] and d['code'] not in used for d in DIVES], bool)
+    return np.array([in_practice_scope(d) and d['group'] == group and key in d['difficulty'] and d['code'] not in used for d in DIVES], bool)
 
 
 def validate_declaration(index, group, apparatus, height, used=()):

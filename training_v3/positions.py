@@ -24,9 +24,28 @@ def shape_quality(hip, knee, target):
     return kernel(distance)
 
 
-def position_qualities(hip, knee, hand_distance):
+def position_qualities(hip, knee, hand_distance, right_hip=None, right_knee=None):
     """Qualities for positions A (straight), B (pike), C (tuck) and D (free = best of the three)."""
     straight = shape_quality(hip, knee, STRAIGHT)
     pike = shape_quality(hip, knee, PIKE)
     tuck = shape_quality(hip, knee, TUCK) * kernel(hand_distance / TUCK_HAND_SCALE)
+    if right_hip is not None:
+        straight = np.minimum(straight, shape_quality(right_hip, right_knee, STRAIGHT))
+        pike = np.minimum(pike, shape_quality(right_hip, right_knee, PIKE))
+        tuck = np.minimum(tuck, shape_quality(right_hip, right_knee, TUCK) * kernel(hand_distance / TUCK_HAND_SCALE))
     return np.stack([straight, pike, tuck, np.maximum.reduce([straight, pike, tuck])], axis=-1)
+
+
+def recognized_positions(hips, knees):
+    """Conservative A/B/C recognition, separate from continuous form quality.
+
+    Radian thresholds are a geometric approximation, not an official judging
+    table. Modestly bent knees can remain an imperfect pike. Ambiguous or
+    asymmetric shapes stay unrecognized instead of becoming a different DD.
+    """
+    hips, knees = np.asarray(hips), np.asarray(knees)
+    result = np.full(hips.shape[:-1], -1, dtype=int)
+    result[np.all(np.abs(hips) < .35, axis=-1) & np.all(np.abs(knees) < .35, axis=-1)] = 0
+    result[np.all(hips > .8, axis=-1) & np.all(np.abs(knees) < .7, axis=-1)] = 1
+    result[np.all(hips > .8, axis=-1) & np.all(knees > .95, axis=-1)] = 2
+    return result

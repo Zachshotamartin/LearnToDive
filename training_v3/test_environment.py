@@ -8,7 +8,7 @@ from environment import Arena
 from policy import Policy
 from rules import IDS
 
-SUPPORT_COLUMNS = slice(4 + 6 + 14 + 14 + 9 + 3 + 3 + 11, 4 + 6 + 14 + 14 + 9 + 3 + 3 + 11 + 4)
+SUPPORT_COLUMNS = slice(4 + 6 + 14 + 14 + 9 + 3 + 3 + 13, 4 + 6 + 14 + 14 + 9 + 3 + 3 + 13 + 4)
 
 
 class IntegrationTests(unittest.TestCase):
@@ -67,7 +67,7 @@ class PriorTests(unittest.TestCase):
     def test_untrained_policy_holds_the_reset_stance_and_observes_support(self):
         torch.manual_seed(1)
         e = Arena(2, seed=6, threads=1, training=False)
-        self.assertEqual(e.observation_size, 223)
+        self.assertEqual(e.observation_size, 234)
         o = e.observe()
         support = o[:, SUPPORT_COLUMNS]
         self.assertTrue((support[:, :2] == 1).all(), 'both feet start supported on springboard and platform alike')

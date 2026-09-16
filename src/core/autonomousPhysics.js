@@ -18,9 +18,22 @@ import {
 import { immersion, bodyWater } from "./autonomousWater.js";
 import { DIVES, CODES } from "../data/declarations.js";
 import { legalDeclarations, requestedDeclaration } from "../data/diveChoices.js";
+
+/** Ballistic seconds until the surface from the height above it and the vertical speed; a kinematic reading, not a plan. */
+export function timeToSurface(height, verticalSpeed, limit = 3) {
+  const h = Math.max(height, 0);
+  const arrival = (verticalSpeed + Math.sqrt(verticalSpeed * verticalSpeed + 2 * GRAVITY_CONSTANT * h)) / GRAVITY_CONSTANT;
+  return Math.min(Math.max(arrival, 0), limit);
+}
+const GRAVITY_CONSTANT = 9.81;
 export { legalDeclarations } from "../data/diveChoices.js";
 const RATE = [14, 14, 14, 10, 10, 8, 8, 10, 4],
   FEET = [11, 14],
+  NEAR_WATER = 3,
+  // v13 layout: task-context columns of a full dive (task 0 indicator, zero goals)
+  // and the previous exploration noise, which is zero in deterministic playback.
+  FULL_DIVE_CONTEXT = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  NO_NOISE = Array(9).fill(0),
   HANDS = [5, 8];
 const rad = Math.PI / 180,
   sum = (a) => a.reduce((s, x) => s + x, 0),
@@ -200,6 +213,8 @@ export class AutonomousEngine extends PhysicsEngine {
       Number(this.armstand),
       this.waterFraction,
       this.aboveWater / 10,
+      timeToSurface(this.aboveWater, s[5]) / 2,
+      Math.min(this.aboveWater, NEAR_WATER) / NEAR_WATER,
       Number(this.choosing),
       p.round / 6,
       ...FEET.map((i) => Number(forces[i] > 15)),
@@ -208,8 +223,20 @@ export class AutonomousEngine extends PhysicsEngine {
       ...Array.from({ length: 6 }, (_, i) => Number(i === p.category - 1)),
       ...intent,
       ...CODES.map((c) => Number(p.used.includes(c))),
+      ...this.remainingRotation(),
+      ...FULL_DIVE_CONTEXT,
+      ...NO_NOISE,
       ...this.previousActions,
     ].map((x) => Math.fround(clamp(x, -10, 10)));
+  }
+  remainingRotation() {
+    // Declared counts minus the measured unwrapped turns, exactly as the judge measures them.
+    if (this.choosing) return [0, 0];
+    const d = this.declaration;
+    return [
+      (d.sign * d.turns - this.phaseTheta / (2 * Math.PI)) / 5,
+      (d.twists - Math.abs(this.airTwist / (2 * Math.PI))) / 5,
+    ];
   }
   waterState(apply = false) {
     if (!this.parameters) return;

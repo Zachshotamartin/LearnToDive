@@ -47,6 +47,21 @@ FOOT_CONTACT_FOUND = [194, 206]      # board contact 'found' flags of the feet
 HAND_CONTACT_FOUND = [170, 182]      # board contact 'found' flags of the hands
 
 
+GRAVITY = 9.81
+
+
+def time_to_surface(height_above_water, vertical_speed, limit=3.):
+    """Ballistic seconds until the body reaches the surface; what a diver sees coming.
+
+    Purely kinematic from the current height and vertical speed; it predicts
+    nothing about the body's own motion and commands nothing.
+    """
+    height = np.maximum(np.asarray(height_above_water, dtype=float), 0.)
+    speed = np.asarray(vertical_speed, dtype=float)
+    arrival = (speed + np.sqrt(speed ** 2 + 2 * GRAVITY * height)) / GRAVITY
+    return np.clip(arrival, 0., limit)
+
+
 def quat_up(q):
     """World up-axis of a body with quaternion rows ``q`` (w, x, y, z)."""
     w, x, y, z = q.T
@@ -157,3 +172,30 @@ def entry_geometry(sensors):
     return dict(**leg_geometry(sensors), footLineAngles=foot, handAxisAngles=hand,
                 handSeparation=np.linalg.norm(hands[..., 0, :] - hands[..., 1, :], axis=-1),
                 handHeightGap=np.abs(hands[..., 0, 2] - hands[..., 1, 2]))
+
+
+def entry_arm_errors(joints, headfirst):
+    """Matching entry references for continuous feedback and final judging."""
+    head = np.asarray(headfirst, dtype=bool)
+    pitch = joints[..., [6, 9]] - np.where(head, 3.05, 0)[..., None]
+    roll = joints[..., [7, 10]] - head[..., None] * np.array([-.3, .3])
+    elbow = joints[..., [8, 11]]
+    return pitch, roll, elbow
+
+
+def entry_arm_assessment(joints, sensors, headfirst, arm_mask=True, elbow_mask=True, hand_mask=True):
+    """Separate imperfect arm form from the severe wrong-end arm rule.
+
+    Compare each hand with the head along the body's own axis, so inversion
+    does not reverse 'above the head'. The cap uses actual hand geometry;
+    shoulder roll and bent elbows remain independent form faults.
+    """
+    head = np.asarray(headfirst, dtype=bool)
+    pitch, roll, elbow = entry_arm_errors(joints, head)
+    valid = np.all((~np.asarray(arm_mask) | ((np.abs(pitch) < .6) & (np.abs(roll) < .5)))
+                   & (~np.asarray(elbow_mask) | (np.abs(elbow) < .5)), axis=-1)
+    head_center = sensors[..., 59:62]
+    up = quat_up(sensors[..., ORIENTATION])
+    along = np.sum((_pairs(sensors, HANDS) - head_center[..., None, :]) * up[..., None, :], axis=-1)
+    cap = np.any(np.where(head[..., None], along < -.02, along > .02) & hand_mask, axis=-1)
+    return valid & ~cap, cap

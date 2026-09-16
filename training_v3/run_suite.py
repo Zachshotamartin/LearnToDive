@@ -21,12 +21,19 @@ from checkpointing import atomic_json
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
 CONFIGURATIONS = {'96x96': [96, 96], '256x256': [256, 256], '256x256x128': [256, 256, 128]}
-TRIAL_ARGUMENTS = ['--envs', '64', '--threads', '4', '--evaluate-every', '200', '--archive-every', '100']
+# The final configuration: conjunctive credit, coherent exploration, normalised inputs,
+# mastery stages, adaptive motor practice with the entry sub-task, split critic.
+TRIAL_ARGUMENTS = ['--envs', '128', '--threads', '4', '--horizon', '160', '--batch', '2048', '--epochs', '3',
+                   '--evaluate-every', '100', '--archive-every', '100', '--reward-mode', 'conjunctive',
+                   '--motor-curriculum', 'adaptive', '--direction-practice', '--goal-practice', '--rotation-progress',
+                   '--architecture', 'split', '--recovery-mode', 'progress', '--practice', '.15', '--gae-lambda', '.99',
+                   '--noise-rho', '.9', '--input-normalization', '1', '--stage-curriculum', '1', '--gates', '1',
+                   '--random-motor-init', '--final-seed', '883117']
 # The continuation may only stop on a plateau after a quarter of a billion steps and
 # twenty-five evaluation windows (51M steps) without any category improving.
 CONTINUATION_ARGUMENTS = ['--minimum-steps', '256000000', '--patience', '25']
-FINISHED_PHASES = ('budget-complete-awaiting-review', 'plateau-awaiting-review')
-RANKING = ('points', 'execution', 'clean', 'valid', 'trainingReturn')
+FINISHED_PHASES = ('budget-complete-awaiting-review', 'plateau-awaiting-review', 'gate-failed-awaiting-review')
+RANKING = ('clean', 'execution', 'points', 'valid', 'trainingReturn')
 ATTEMPTS = 3
 RETRY_DELAY = 30
 BATCH = 10240
@@ -130,6 +137,10 @@ class Suite:
                 self.run(trial, widths, self.args.pilot_steps, seed, warm)
                 if self.stop:
                     return False
+                status = json.loads((self.out / trial / 'STATUS.json').read_text())
+                if status['phase'] == 'gate-failed-awaiting-review':
+                    self.save(phase='gate-failed-awaiting-review', failedTrial=trial, gates=status.get('gates'))
+                    raise RuntimeError(f'{trial} failed a milestone gate; review the run before spending more budget')
                 self.record_pilot(trial, name, seed)
         return True
 
@@ -156,9 +167,12 @@ class Suite:
         if all(r['metrics']['valid'] == 0 for r in trials):
             self.save(phase='pilot-comparison-uninformative', architectureScores=scores, reason=UNINFORMATIVE)
             raise RuntimeError('Pilot comparison uninformative: no completed declared dive in any pilot')
+        if any(json.loads((self.out / r['name'] / 'STATUS.json').read_text())['phase'] == 'gate-failed-awaiting-review' for r in trials):
+            self.save(phase='gate-failed-awaiting-review', architectureScores=scores)
+            raise RuntimeError('A pilot failed a milestone gate; review before spending the continuation budget')
         winner = max(scores, key=scores.get)
         candidates = [r for r in trials if r['architecture'] == winner]
-        order = lambda r: (r['metrics']['points'], r['metrics']['execution'], r['metrics']['valid'], r['metrics']['trainingReturn'])
+        order = lambda r: (r['metrics']['clean'], r['metrics']['execution'], r['metrics']['points'], r['metrics']['trainingReturn'])
         chosen = sorted(candidates, key=order)[len(candidates) // 2]
         self.save(phase='pilot-comparison-complete', architectureScores=scores, selected=chosen, selectionEvidence=SELECTION_EVIDENCE)
         return winner, chosen

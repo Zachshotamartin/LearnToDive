@@ -1,4 +1,4 @@
-"""Freeze a selected v11 checkpoint and independent native/browser parity cases.
+"""Freeze a selected diving checkpoint (v11 or v13 layout) and independent native/browser parity cases.
 Only reads training output. The preview retains its unqualified development status.
 """
 import argparse, hashlib, json, sys
@@ -8,6 +8,7 @@ import torch
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'training_v3'))
 from environment import Arena
+from evaluation import matching_arena
 from policy import Policy
 from rules import DIVES,CODES
 
@@ -16,16 +17,23 @@ def digest(b):return hashlib.sha256(b).hexdigest()
 a=argparse.ArgumentParser();a.add_argument('checkpoint');a.add_argument('evaluation');args=a.parse_args()
 torch.set_num_threads(1);saved=torch.load(args.checkpoint,map_location='cpu',weights_only=False)
 print('checkpoint keys',list(saved))
-e=Arena(1,training=False);p=Policy(e.observation_size,saved['config']['widths'],rho=saved['config']['rho']);p.load_state_dict(saved['model']);p.eval()
+config=saved['config']
+def build(observation_size,initial_action=None):
+ return Policy(observation_size,config['widths'],rho=config['rho'],initial_action=initial_action,exploration=config.get('exploration','diagonal'),
+  architecture=config.get('architecture','shared'),noise_rho=config.get('noise_rho',0.),normalize_inputs=config.get('input_normalization',False))
+p=build(saved['contract']['observationSize']);p.load_state_dict(saved['model']);p.eval()
+# The parity arena has the policy's observation layout and the full declaration scope.
+e=matching_arena(p,1,109310,reward_mode=config.get('reward_mode','v12'))
 torch.manual_seed(109310)
-initial=Policy(e.observation_size,p.widths,rho=p.rho,initial_action=e.initial_action)
+initial=build(e.observation_size,None if config.get('random_motor_init') else e.initial_action)
+tag=p.format.rsplit('-',1)[-1]
 model=dict(**p.export(),contract=saved['contract'],steps=saved['training']['steps'],qualified=False)
 files={}
 for key,obj in [('policy',model),('initial',dict(**initial.export(),contract=saved['contract'],steps=0,qualified=False))]:
- raw=(json.dumps(obj,separators=(',',':'))+'\n').encode();name=f'models/{key}-v11-{digest(raw)[:16]}.json';(ROOT/'public'/name).write_bytes(raw);files[key]=name
-for old in (ROOT/'public/models').glob('*-v11-*.json'):
+ raw=(json.dumps(obj,separators=(',',':'))+'\n').encode();name=f'models/{key}-{tag}-{digest(raw)[:16]}.json';(ROOT/'public'/name).write_bytes(raw);files[key]=name
+for old in list((ROOT/'public/models').glob('*-v11-*.json'))+list((ROOT/'public/models').glob('*-v13-*.json')):
  if str(old.relative_to(ROOT/'public')) not in files.values():old.unlink()
-raw=(ROOT/'training_v3/diver.xml').read_bytes();files['xml']=f'physics/diver-v11-{digest(raw)[:16]}.xml';(ROOT/'public'/files['xml']).write_bytes(raw)
+raw=(ROOT/'training_v3/diver.xml').read_bytes();files['xml']=f'physics/diver-{tag}-{digest(raw)[:16]}.xml';(ROOT/'public'/files['xml']).write_bytes(raw)
 (ROOT/'src/data/autonomousAssets.js').write_text('export const ASSETS={'+','.join(k+':new URL('+json.dumps('../../public/'+v)+',import.meta.url).href'for k,v in files.items())+'};\n')
 (ROOT/'src/data/declarations.js').write_text('export const DIVES='+json.dumps(DIVES,separators=(',',':'))+';\nexport const CODES='+json.dumps(CODES)+';\n')
 report=json.loads(Path(args.evaluation).read_text());write(ROOT/'public/autonomous-evaluation.json',report)
@@ -40,7 +48,7 @@ for group,apparatus,height in [(g,'platform',7.5) for g in range(1,7)]+[(1,'spri
  for t in range(240):
   o=e.observe()
   with torch.no_grad():r=p(torch.tensor(o),torch.tensor(e.mask()),torch.tensor(e.choosing),deterministic=True)
-  action=r['action'][0].numpy();_,_,done,info=e.physics.step(action[None],auto_reset=False);e.previous_actions[0]=action
+  action=r['action'][0].numpy();_,_,done,info=e.physics.step(action[None],auto_reset=False);e.previous_actions[0]=action;e.previous_noise[0]=0
   rows.append(dict(observation=o[0].tolist(),action=action.tolist(),state=e.physics.state[0].tolist()))
   if done[0]:
    from judge import judge

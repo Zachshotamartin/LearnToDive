@@ -107,17 +107,17 @@ class CurriculumTests(unittest.TestCase):
 
     def test_transfer_preserves_old_actor_and_selector_cannot_change_motor_trunk(self):
         with tempfile.TemporaryDirectory() as folder:
-            old = Policy(223, (32, 32), .6)
+            old = Policy(234, (32, 32), .6)
             path = Path(folder) / 'parent.pt'
             torch.save(dict(model=old.state_dict(), training=dict(steps=123),
-                            contract=dict(format=FORMAT, observationSize=223, sourceHashes=hashes())), path)
+                            contract=dict(format=FORMAT, observationSize=234, sourceHashes=hashes())), path)
             args = parser().parse_args(['--output', str(Path(folder) / 'new'), '--envs', '2', '--threads', '1',
                                         '--widths', '32', '32', '--initialize-from', str(path),
                                         '--motor-curriculum', 'adaptive', '--architecture', 'split'])
             t = Trainer(args)
             try:
-                x = torch.randn(6, 223)
-                expanded = torch.cat([x[:, :-9], torch.zeros(6, 10), x[:, -9:]], 1)
+                x = torch.randn(6, 234)
+                expanded = torch.cat([x[:, :-18], torch.zeros(6, 10), x[:, -18:]], 1)
                 mask = torch.ones(6, old.choice.out_features, dtype=torch.bool)
                 choose = torch.tensor([True, False] * 3)
                 a, b = old(x, mask, choose, deterministic=True), t.policy(expanded, mask, choose, deterministic=True)
@@ -159,7 +159,7 @@ class CurriculumTests(unittest.TestCase):
             for key in a['environment']['curriculum']:
                 np.testing.assert_array_equal(a['environment']['curriculum'][key], b['environment']['curriculum'][key])
             self.assertEqual(a['training']['steps'], 960)
-            self.assertEqual(a['contract']['observationSize'], 233)
+            self.assertEqual(a['contract']['observationSize'], 244)
 
 class QualificationTests(unittest.TestCase):
     def test_good_pooled_score_cannot_hide_bad_arms_or_missing_jumps(self):
@@ -213,3 +213,25 @@ class QualificationTests(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class EntryTaskStartTests(unittest.TestCase):
+    def test_entry_task_starts_near_the_pose_an_entry_needs(self):
+        from motor_curriculum import MotorCurriculum, ENTRY_POSE
+        from geometry import quat_up
+        base = Arena(6, seed=12, threads=1, stage=0)
+        try:
+            e = MotorCurriculum(base, enabled=True)
+            e.task[:] = 4
+            e.up_goal[:] = [0, 0, -1]
+            e.level[:] = 0.
+            for i in range(6):
+                e.initialize_task(i)
+            physics = base.physics
+            up = quat_up(physics.state[:, 5:9])
+            self.assertTrue((up[:, 2] < -np.cos(np.radians(12))).all(), 'head first within twelve degrees of vertical')
+            self.assertTrue((np.abs(physics.targets - ENTRY_POSE) <= .16).all())
+            height = physics.sensors[:, 2] + physics.height
+            self.assertTrue((height > 2.) .all() and (height < 4.).all())
+        finally:
+            base.close()

@@ -6,7 +6,7 @@ from pathlib import Path
 import torch
 
 from checkpointing import hashes
-from policy import Policy, FORMAT, MOTOR_FORMAT
+from policy import Policy, FORMAT, MOTOR_FORMAT, FINAL_FORMAT
 
 
 def load_reference(path, expected_digest=None):
@@ -16,7 +16,7 @@ def load_reference(path, expected_digest=None):
         raise ValueError('Reference checkpoint changed: ' + str(path))
     saved = torch.load(io.BytesIO(raw), map_location='cpu', weights_only=False)
     contract, config = saved['contract'], saved['config']
-    if contract['format'] not in (FORMAT, MOTOR_FORMAT, 'self-declared-diver-state-covariance-v1'):
+    if contract['format'] not in (FORMAT, MOTOR_FORMAT, FINAL_FORMAT, 'self-declared-diver-state-covariance-v1'):
         raise ValueError('Unsupported reference policy format')
     current = hashes()
     for name in ('diver.xml', 'geometry.py', 'stance.py', 'water.py'):
@@ -26,7 +26,8 @@ def load_reference(path, expected_digest=None):
     with torch.random.fork_rng():
         model = Policy(contract['observationSize'], config['widths'], config['rho'],
                        exploration=config.get('exploration', 'diagonal'),
-                       architecture=config.get('architecture', 'shared'))
+                       architecture=config.get('architecture', 'shared'),
+                       noise_rho=config.get('noise_rho', 0.), normalize_inputs=config.get('input_normalization', False))
     model.load_state_dict(saved['model'])
     if any(not torch.isfinite(v).all() for v in model.state_dict().values()):
         raise ValueError('Non-finite reference weights')

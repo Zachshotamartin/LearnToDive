@@ -44,6 +44,11 @@ def group(rows):
                 difficulty=mean(rows, 'difficulty'), clean=mean(rows, 'clean'), valid=mean(rows, 'valid'),
                 uniqueDives=len({r['declaration'] for r in rows}), entryAngle=mean(rows, 'entryAngle'),
                 trainingReturn=mean(rows, 'return'),
+                rotationError=mean(rows, 'rotationError'), twistError=mean(rows, 'twistError'),
+                rotationShortfall=float(np.mean([max(0., DIVES[IDS[r['declaration']]]['turns'] - turns)
+                                                 for r, turns in zip(rows, signed)])) if rows else None,
+                rotationOvershoot=float(np.mean([max(0., turns - DIVES[IDS[r['declaration']]]['turns'])
+                                                 for r, turns in zip(rows, signed)])) if rows else None,
                 # Takeoff and position diagnostics: whether it jumps, how high, how upright, how well shaped.
                 jumped=float(np.mean([r['measurements']['takeoffVerticalSpeed'] > JUMP_SPEED for r in rows])) if rows else None,
                 rise=measured(rows, 'ascent'), takeoffSpeed=measured(rows, 'takeoffVerticalSpeed'),
@@ -56,16 +61,51 @@ def group(rows):
                 entryAngleDeterioration=float(np.mean([max(0, r['entryAngle'] - r['measurements']['firstContactAngle']) for r in rows])) if rows else None)
 
 
+def by_declaration(rows):
+    """Per declared dive: how often it is clean and valid, and where its entries land."""
+    result = {}
+    for code in sorted({r['declaration'] for r in rows}):
+        subset = [r for r in rows if r['declaration'] == code]
+        angles = np.array([r['entryAngle'] for r in subset])
+        result[code] = dict(n=len(subset), clean=mean(subset, 'clean'), valid=mean(subset, 'valid'),
+                            execution=mean(subset, 'execution'), rotationError=mean(subset, 'rotationError'),
+                            entryAngleP10=float(np.percentile(angles, 10)), entryAngleMedian=float(np.median(angles)),
+                            entryAngleP90=float(np.percentile(angles, 90)), jumped=float(np.mean([r['measurements']['takeoffVerticalSpeed'] > JUMP_SPEED for r in subset])),
+                            rise=measured(subset, 'ascent'), departureLean=measured(subset, 'departureLean'),
+                            failures={reason: sum(reason in r['failures'] for r in subset) for reason in
+                                      sorted({f for r in subset for f in r['failures']})})
+    return result
+
+
 def summary(records):
-    """Aggregate judged dives overall and per group, excluding recovery practice."""
+    """Aggregate judged dives overall, per group and per declaration, excluding recovery practice."""
     full = [r for r in records if not r['practice']]
     return dict(full=group(full), categories={str(g): group([r for r in full if r['category'] == g]) for g in range(1, 7)},
-                practiceEpisodes=len(records) - len(full))
+                byDeclaration=by_declaration(full), practiceEpisodes=len(records) - len(full))
+
+
+def matching_arena(policy, cases, seed, reward_mode='v12', practice=.35, stage=None, threads=1):
+    """An evaluation arena whose observation layout is the one the policy was trained on."""
+    from motor_curriculum import MotorCurriculum, EXTRA_OBSERVATIONS
+    expected = getattr(policy, 'obs', None)
+    for rotation_progress in (False, True):
+        e = Arena(cases, seed, threads=threads, training=False, practice=practice, reward_mode=reward_mode,
+                  rotation_progress=rotation_progress, stage=stage)
+        if expected in (None, e.observation_size):
+            return e
+        if expected == e.observation_size + EXTRA_OBSERVATIONS:
+            return MotorCurriculum(e, enabled=False)
+        e.close()
+    raise ValueError(f'No evaluation arena produces {expected} observation columns')
 
 
 @torch.no_grad()
-def evaluate(policy, seed=EVALUATION_SEED, cases=48, perturb=False, reward_mode="v12", deterministic=True, policy_seed=91731):
-    """Deterministic full routines on held-out worlds; the recovery bank is always disabled."""
+def evaluate(policy, seed=EVALUATION_SEED, cases=48, perturb=False, reward_mode="v12", deterministic=True, policy_seed=91731, stage=None):
+    """Deterministic full routines on held-out worlds; the recovery bank is always disabled.
+
+    ``stage`` restricts the routines to a mastery stage's scope so the clean
+    rate measures what is currently being trained.
+    """
     if cases < 1:
         raise ValueError("Evaluation needs at least one world")
     rng = torch.get_rng_state()
@@ -75,30 +115,30 @@ def evaluate(policy, seed=EVALUATION_SEED, cases=48, perturb=False, reward_mode=
     counts = np.zeros(cases, int)
     rotation = np.zeros(cases)
     try:
-        e = Arena(cases, seed, threads=1, training=False, reward_mode=reward_mode)
-        if getattr(policy, 'obs', e.observation_size) == e.observation_size + 10:
-            from motor_curriculum import MotorCurriculum
-            e = MotorCurriculum(e, enabled=False)
+        e = matching_arena(policy, cases, seed, reward_mode=reward_mode, stage=stage)
         e.perturb = perturb
         if hasattr(e, 'base'):
             e.base.perturb = perturb
+        base = getattr(e, 'base', e)
+        needed = np.array([base.rounds(i) for i in range(cases)])
         for _ in range(MAX_TICKS):
             wet = np.isfinite(e.physics.entry_time)
             rotation += np.linalg.norm(e.physics.sensors[:, ANGULAR_VELOCITY], axis=1) * DT * wet
             out = policy(torch.tensor(e.observe()), torch.tensor(e.mask()), torch.tensor(e.choosing), deterministic=deterministic)
-            _, _, _, rows = e.step(out['choice'].numpy(), out['action'].numpy())
+            _, _, _, rows = e.step(out['choice'].numpy(), out['action'].numpy(), out['noise'].numpy())
             for row in rows:
                 i = row['index']
                 row['postContactRotationDegrees'] = float(np.degrees(rotation[i]))
                 rotation[i] = 0
-                if counts[i] < ROUTINE_LENGTH:
+                if counts[i] < needed[i]:
                     result.append(row)
                     counts[i] += 1
-            if np.all(counts == ROUTINE_LENGTH):
+            if np.all(counts == needed):
                 break
-        if len(result) < cases * ROUTINE_LENGTH:
+        if len(result) < needed.sum():
             raise RuntimeError('Evaluation failed to complete the declared episode count')
-        return dict(evaluationVersion=3, seed=seed, cases=cases, deterministic=deterministic, policySeed=policy_seed, perturbed=perturb, rewardMode=reward_mode, summary=summary(result), episodes=result)
+        return dict(evaluationVersion=4, seed=seed, cases=cases, deterministic=deterministic, policySeed=policy_seed, perturbed=perturb,
+                    rewardMode=reward_mode, stage=stage, routineLength=needed.tolist(), summary=summary(result), episodes=result)
     finally:
         if e is not None:
             e.close()
@@ -116,8 +156,13 @@ def evaluate_motor_skills(policy, seed=782100, cases=24, level=0., direction_pra
     e = None
     records = []
     try:
-        base = Arena(cases * 4, seed, threads=1, training=False, practice=0)
-        e = MotorCurriculum(base, enabled=False, direction_practice=direction_practice)
+        e = matching_arena(policy, cases * 4, seed, practice=0)
+        if not isinstance(e, MotorCurriculum):
+            e = MotorCurriculum(e, enabled=False, direction_practice=direction_practice)
+        else:
+            e.direction_practice = bool(direction_practice)
+            e.base.direction_practice = e.direction_practice
+        base = e.base
         e.task[:] = np.repeat(np.arange(1, 5), cases)
         e.level[:] = level
         goals = np.random.default_rng(seed + 1)
@@ -135,7 +180,7 @@ def evaluate_motor_skills(policy, seed=782100, cases=24, level=0., direction_pra
                 # state. Its result measures existing skills, not goal-conditioned IQ.
                 obs = np.column_stack([obs[:, :base.observation_size - 9], obs[:, -9:]])
             out = policy(torch.tensor(obs), torch.tensor(e.mask()), torch.tensor(e.choosing), deterministic=True)
-            e.step(out['choice'].numpy(), out['action'].numpy())
+            e.step(out['choice'].numpy(), out['action'].numpy(), out['noise'].numpy())
             records.extend(e.last_completed)
             if len(records) == cases * 4:
                 break
@@ -165,10 +210,7 @@ def evaluate_targets(policy, seed=794100, cases_per_target=4, reward_mode='phase
     e = None
     records, completed = [], set()
     try:
-        e = Arena(len(assignments), seed, threads=1, training=False, practice=0, reward_mode=reward_mode)
-        if policy.obs == e.observation_size + 10:
-            from motor_curriculum import MotorCurriculum
-            e = MotorCurriculum(e, enabled=False)
+        e = matching_arena(policy, len(assignments), seed, reward_mode=reward_mode, practice=0)
         base = getattr(e, 'base', e)
         for i, target in enumerate(assignments):
             base.group[i], base.height[i], base.apparatus[i] = DIVES[target]['group'], 10, 1
@@ -179,7 +221,7 @@ def evaluate_targets(policy, seed=794100, cases_per_target=4, reward_mode='phase
                 base.physics.disturbance_time[i] = .75
         for _ in range(DIVE_TICKS):
             out = policy(torch.tensor(e.observe()), torch.tensor(e.mask()), torch.tensor(e.choosing), deterministic=True)
-            _, _, _, rows = e.step(out['choice'].numpy(), out['action'].numpy())
+            _, _, _, rows = e.step(out['choice'].numpy(), out['action'].numpy(), out['noise'].numpy())
             for row in rows:
                 if row['index'] not in completed:
                     row['assignedEvaluationGoal'] = True

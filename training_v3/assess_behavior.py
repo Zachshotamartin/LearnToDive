@@ -7,19 +7,20 @@ import torch
 from assessment_stats import paired_interval
 from checkpointing import atomic_json, hashes
 from evaluation import evaluate
-from policy import Policy, FORMAT, MOTOR_FORMAT
+from policy import Policy, FORMAT, MOTOR_FORMAT, FINAL_FORMAT
 
 
 def load_policy(checkpoint):
     saved = checkpoint if isinstance(checkpoint,dict) else torch.load(checkpoint, map_location='cpu', weights_only=False)
     contract, config = saved['contract'], saved['config']
-    if contract['format'] not in (FORMAT, MOTOR_FORMAT):
+    if contract['format'] not in (FORMAT, MOTOR_FORMAT, FINAL_FORMAT):
         raise ValueError('Unsupported observation/policy format')
     for name in ('diver.xml','geometry.py','stance.py','water.py'):
         if contract['sourceHashes'][name] != hashes()[name]:
             raise ValueError('Physical model changed: ' + name)
     policy = Policy(contract['observationSize'], config['widths'], config['rho'],
-                    exploration=config.get('exploration', 'diagonal'), architecture=config.get('architecture', 'shared'))
+                    exploration=config.get('exploration', 'diagonal'), architecture=config.get('architecture', 'shared'),
+                    noise_rho=config.get('noise_rho', 0.), normalize_inputs=config.get('input_normalization', False))
     policy.load_state_dict(saved['model']); policy.eval().requires_grad_(False)
     return policy, saved
 

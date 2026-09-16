@@ -6,6 +6,21 @@ Official difficulty values are recorded in `difficulty.json` with a source URL a
 
 Execution is an explicitly approximate geometric judge, separate from official difficulty; `judge.py` documents which World Aquatics articles each check approximates. It observes the full water crossing, pointed feet, leg/hand placement, takeoff, rotation and twist completion. Failed declarations get no difficulty points. Water and splash remain physical approximations. Score is three times difficulty times execution. The training signal is a dense version of the same judged components plus a bounded completion bonus, so a dive whose official execution is clipped to zero still receives gradient toward each fault; it is never positive for a failed dive and extra spins never pay.
 
+## What changed in v13 (the final-run configuration)
+
+Diagnosis of the v12 and completion-first runs (`FINAL_RUN_PLAN.md`, with the open-loop ceiling probes under `review-evidence/2026-09-15/ceiling-probes/`): a random search over servo schedules finds 9/10 forward dives on every apparatus in minutes, so the physics is not the limit; the learner never entered vertically because entry alignment was worth 0.36 of a scale where rotation was worth 16, the entry-only sub-task had never succeeded once, and the entry angle is a razor-sharp function of the takeoff (the best scripted dive drops from 6° to 89° under the full stance randomisation).
+
+v13 changes, none of which prescribes a motion:
+
+- `motor_objective.conjunctive_components`: the credit is `16 x rotation progress x entry quality x takeoff quality`, so the maximum needs all three phases; every judge deduction keeps its competition weight, alignment keeps its slope past the judge's cap, and rise, departure speed and lean are charged as takeoff outcomes. Physical failures cost the whole credit. Codex's potential-based rotation shaping is unchanged.
+- `mastery.py`: six mastery stages (platform 10 m forward and back with straight and tuck first; then inward and pike; reverse and one and a half; all platform heights and twists; armstand; springboard). A stage widens after three consecutive held-out evaluations with a clean rate of at least 30% on its own scope. Each stage also sets the stance randomisation width (a quarter of the full width to start) and the single-dive practice share.
+- Exploration: the motor noise is an AR(1) process with correlation 0.9 (about 200 ms) observed through nine previous-noise columns, so the likelihood stays exact while the perturbation is coherent over a dive phase; the control autoregression keeps its own faster constant.
+- Observation: ballistic time to the surface and the height above water at full resolution over the last three metres; running input normalisation folded into the first layers at export (`self-declared-diver-v13`), so the browser needs no normalisation code.
+- The entry sub-task starts near the pose an entry needs and widens with mastery; a task that is being lost narrows again instead of staying unwinnable. Direction practice stays inside the current scope.
+- Clean form threshold 0.7 (the best scripted dives score 0.67 to 0.79 on this rigid rig).
+- Gates: at 10.24M steps the entry sub-task must succeed more than half the time and at least one dive must be clean; at 30.72M the clean rate on the current scope must exceed 20%. A failed gate stops the run for review instead of waiting for a plateau. Evaluations report per-declaration clean rates and entry-angle percentiles; `best.pt` follows the clean rate once any clean dive exists; the suite ranks pilots by clean rate.
+- Suite defaults: 128 environments, batch 2048, three epochs, `--random-motor-init`, three seeds of 256x256x128, then the median seed continues with a 256M-step minimum before any plateau decision.
+
 ## What changed in v12 (the fall-off-the-edge optimum)
 
 The v11 continuation plateaued at 102M steps with a policy that never jumped: it tipped forward off the edge, pushed a little and entered near vertical. Two reasons were measurable. The dense training signal charged up to 4.2 for the entry angle but at most 0.375 for a missing takeoff, so a jump that briefly worsened the entry was never worth it; and position quality used Gaussian kernels that were numerically zero (with zero gradient) once the hips were a radian off, so the position component of the judge could not be felt at all. v12 scores rise, upward departure speed and lean at departure as takeoff outcomes (rule 10.4.3, control and height), removes the extra per-degree angle cost, and replaces the position and entry-form kernels with heavy-tailed ones (`positions.py`). Nothing prescribes a motion; the judge now pays for what a takeoff produces. Every evaluation summary reports whether the athlete jumped, its rise, departure speed, lean and position quality, and the continuation may only stop on a plateau after 256M steps and twenty-five evaluation windows.
@@ -90,3 +105,78 @@ Completed comparison reports include paired training-seed bootstrap intervals, m
 ## v14 motor-learning restart
 
 See [MOTOR_TRAINING.md](MOTOR_TRAINING.md) for continuous phase feedback, independent critic/selector/motor trunks, reusable motor practice, immutable reference policies, qualification gates and the new 233-input native format. Current browser exports are unchanged.
+# Completion-first specific-dive training
+
+`--reward-mode completion-first` prioritizes actually completing the declared
+dive. It leaves the competition judge, execution report, physical model,
+observation schema and action space unchanged.
+
+- A valid dive earns **16 + 2 × degree of difficulty** in training units.
+  Merely selecting a difficult declaration earns no credit.
+- Failed dives receive separate continuous somersault and twist deductions,
+  each `8 × log(1 + count error)`. Signed somersault error penalizes the wrong
+  direction; overshooting or adding unrequested twists also increases error.
+- Once the dive is valid, each count deduction uses a weight of 0.5, leaving
+  execution as the main refinement objective within that completed target.
+- Execution faults remain individually measured and charged. Each has its own
+  smooth bounded deduction; their budgets sum to **4**. Worsening one fault
+  never changes another fault's deduction. Height and departure speed remain
+  separate. Entry failures and board collisions have separate safety costs.
+- Existing potential shaping and motor fundamentals practice are retained.
+  Target-curriculum mastery uses 85% valid completion and 15% execution, so
+  imperfect but completed targets can unlock more complex practice.
+
+Use `--continue-from` with a saved **phase-dense, goal-practice** checkpoint and
+the same training configuration, changing only the reward mode. This explicit
+phase migration preserves every network parameter, Adam state, cumulative
+step/update count, and motor curriculum readiness. Four critic-only updates
+recalibrate values before actor updates resume. New episodes prevent mixing
+partial old-objective returns with the new rewards. Old archives remain in the
+parent run; only target mastery averages reset because their definition changed.
+The new phase must write into a separate output directory. Exact resume within
+the new phase remains supported and is tested against uninterrupted training.
+
+**The existing running trainer cannot hot-reload this change.** A graceful
+checkpoint at an update boundary followed by continuation is required. This
+relaunches the process; it does not reset or replace the trained model. Do not
+claim a running process has adopted a reward change just because files changed.
+
+Verification: `python -m unittest test_completion_first test_motor_curriculum
+test_direction_practice test_reward_comparison test_training test_judge -q`.
+
+### Fresh initialization and entry/position scoring (v17)
+
+`--random-motor-init` starts random networks without the neutral-pose motor bias.
+Use a new output directory and omit `--continue-from`, `--warm-start`, and
+`--initialize-from`. No actor, critic, optimizer, rollout, recovery bank,
+selection history or curriculum mastery is transferred. The resulting run still
+supports exact `--resume` from its own checkpoints.
+
+Entry feedback and assessment share arm references: straight arms beside the
+body for feet-first entry, extended overhead for head-first entry. Shoulder
+pitch, roll, and elbow deductions remain independent. Actual hand position
+relative to the head determines the severe wrong-arm cap. Entry measurements
+persist across surface contact and stop charging each submerged segment.
+
+Declared A/B/C/D position determines table DD. Flight shape quality now checks
+both legs. Sustained recognition of a clearly different A/B/C position is
+separate from malformed execution (such as a pike with bent knees), and only
+that recognition triggers the wrong-position two-point cap. Recognition uses
+conservative geometric thresholds and at least five flight samples; it is an
+automated approximation, not an official scoring algorithm. It never silently
+reclassifies a malformed pike as a lower-DD tuck.
+
+Source: World Aquatics Competition Regulations, 18 February 2026, Part Four,
+10.1.4–10.1.6, 10.5.5, and 10.6.3–10.6.5:
+https://www.worldaquatics.com/rules/competition-regulations
+
+Regression coverage: `test_declared_form.py`, including actual MuJoCo head-first
+and feet-first poses, physical feet-first drops, individual arm faults,
+asymmetric knees, pike-vs-tuck recognition and unchanged declared DD.
+
+Completion-first v2 also requires the declared body position to be shown before
+awarding the training completion and DD bonuses. This is distinct from numeric
+validity: a wrong-position dive can remain numerically valid with a competition
+cap. A recognizable pike with execution faults still earns completion credit;
+a tuck substituted for a declared pike does not. The curriculum uses the same
+completed-declaration result when updating target mastery.
