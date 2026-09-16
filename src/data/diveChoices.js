@@ -1,7 +1,11 @@
 import { DIVES } from './declarations.js';
 
+/** The trainer's practice scope (rules.in_practice_scope): at most one and a half somersaults
+ *  (two from an armstand) and one twist. The browser must offer exactly the set the model was trained on. */
+export const inPracticeScope = d => d.turns <= (d.armstand ? 2 : 1.5) && d.twists <= 1;
+
 export const legalDeclarations = (group, apparatus, height, used = []) =>
-  DIVES.map(d => d.group === group && `${apparatus}:${height}` in d.difficulty && !used.includes(d.code));
+  DIVES.map(d => inPracticeScope(d) && d.group === group && `${apparatus}:${height}` in d.difficulty && !used.includes(d.code));
 
 export function availableDives(group, apparatus, height) {
   const legal = legalDeclarations(group, apparatus, height);
