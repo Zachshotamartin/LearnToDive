@@ -1,0 +1,7 @@
+........................WARNING: Nan, Inf or huge value in QVEL at DOF 3. The simulation is unstable. Time = 0.0000.
+
+..............
+----------------------------------------------------------------------
+Ran 38 tests in 51.439s
+
+OK

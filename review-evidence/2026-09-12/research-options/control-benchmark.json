@@ -1,0 +1,26 @@
+[
+  {
+    "seed": 811,
+    "exploration": "state-covariance",
+    "gaeLambda": 0.98,
+    "beforeMSE": 1.5676136072581521,
+    "afterMSE": 0.0010407976969798794,
+    "passed": true
+  },
+  {
+    "seed": 812,
+    "exploration": "state-covariance",
+    "gaeLambda": 0.98,
+    "beforeMSE": 1.5102899019121778,
+    "afterMSE": 0.0002178277789574865,
+    "passed": true
+  },
+  {
+    "seed": 813,
+    "exploration": "state-covariance",
+    "gaeLambda": 0.98,
+    "beforeMSE": 1.5290110730179058,
+    "afterMSE": 1.8851325191740604e-05,
+    "passed": true
+  }
+]

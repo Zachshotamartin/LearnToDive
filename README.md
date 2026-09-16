@@ -1,6 +1,6 @@
 # Learn to Dive
 
-Current training implementation: [training_v3/README.md](training_v3/README.md). Browser runtime and training versions are intentionally separate while new models are evaluated. See [review status](REVIEW_STATUS.md) for known test failures and [the Claude review prompt](CLAUDE_REVIEW_PROMPT.md).
+Current training implementation (v11): [training_v3/README.md](training_v3/README.md). Browser runtime and training versions are intentionally separate while new models are evaluated. See [review status](REVIEW_STATUS.md) for known test failures and [the Claude review prompt](CLAUDE_REVIEW_PROMPT.md).
 
 A local 3D experiment with an original pretrained neural joint controller. The athlete has independent physical body segments, 14 constrained joints and a free torso. A frozen goal-conditioned PPO actor reads the current state every 20 ms and commands bounded joint servos. MuJoCo 3.13 runs both offline training and browser physics from the same MJCF model.
 

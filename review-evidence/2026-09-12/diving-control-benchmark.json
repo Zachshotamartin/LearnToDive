@@ -1,0 +1,20 @@
+[
+  {
+    "seed": 811,
+    "beforeMSE": 1.5676136072581521,
+    "afterMSE": 0.0013159143650219082,
+    "passed": true
+  },
+  {
+    "seed": 812,
+    "beforeMSE": 1.5102899019121778,
+    "afterMSE": 0.0007928365967204997,
+    "passed": true
+  },
+  {
+    "seed": 813,
+    "beforeMSE": 1.5290110730179058,
+    "afterMSE": 0.0017660989433477053,
+    "passed": true
+  }
+]

@@ -1,0 +1,1 @@
+export const ASSETS={policy:new URL("../../public/models/policy-v11-320b4c71e7fdaef6.json",import.meta.url).href,initial:new URL("../../public/models/initial-v11-91764a7d56adfb63.json",import.meta.url).href,xml:new URL("../../public/physics/diver-v11-0d5393b0e59b28c1.xml",import.meta.url).href};

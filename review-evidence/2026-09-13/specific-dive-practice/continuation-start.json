@@ -1,0 +1,9 @@
+{
+  "continuedFromSteps": 76656640,
+  "targetSteps": 512000000,
+  "parentSHA256": "8b76cfb845e8660acee7c42eb3f546cc1f6c1dfc325f1d2a303aaed3b021b6f2",
+  "actor": "preserved",
+  "optimizer": "preserved",
+  "stepCounter": "preserved",
+  "automaticPublication": false
+}

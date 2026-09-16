@@ -1,0 +1,46 @@
+{
+  "startedUTC": "2026-09-12T18:47:57.519215+00:00",
+  "runs": {
+    "diving": {
+      "pid": 11214,
+      "command": [
+        "/tmp/teach-pet-training-venv/bin/python",
+        "/Volumes/Zach's SSD/PortfolioTraining/2026-09-12-controlled-comparisons/source/LearnToDive/training_v3/compare_rewards.py",
+        "--output",
+        "/Volumes/Zach's SSD/PortfolioTraining/2026-09-12-controlled-comparisons/diving",
+        "--initialize-from",
+        "/Volumes/Zach's SSD/PortfolioTraining/2026-09-12-controlled-comparisons/inputs/diving-parent.pt"
+      ],
+      "nice": 10
+    },
+    "hide-and-seek": {
+      "pid": 11215,
+      "command": [
+        "/tmp/teach-pet-training-venv/bin/python",
+        "/Volumes/Zach's SSD/PortfolioTraining/2026-09-12-controlled-comparisons/source/HideAndSeek/training_v5/compare_curriculum.py",
+        "--output",
+        "/Volumes/Zach's SSD/PortfolioTraining/2026-09-12-controlled-comparisons/hide-and-seek",
+        "--source",
+        "/Volumes/Zach's SSD/PortfolioTraining/2026-09-12-controlled-comparisons/inputs/hide-seek-parent.pt",
+        "--cohort",
+        "/Volumes/Zach's SSD/PortfolioTraining/2026-09-12-controlled-comparisons/inputs/hide-seek-cohort.json",
+        "--heldout",
+        "/Volumes/Zach's SSD/PortfolioTraining/2026-09-12-controlled-comparisons/inputs/hide-seek-heldout.pt",
+        "--history",
+        "/Volumes/Zach's SSD/PortfolioTraining/2026-09-12-controlled-comparisons/inputs/hide-seek-anchor.pt"
+      ],
+      "nice": 10
+    }
+  },
+  "existingRunsUnmodified": [
+    4797,
+    78542
+  ],
+  "sourceHashes": "SOURCE_SHA256.json",
+  "inputs": "INPUTS.json",
+  "comparison": "Three matched seeds; diving two reward arms, hide-and-seek three independent arms.",
+  "checkpoints": "Diving every 512000 steps, H&S every 1048576 interactions; latest checkpoints also retain exact resume state.",
+  "resume": "SIGTERM the comparison controller for an update-boundary save, then repeat its identical command.",
+  "publication": "No automatic export, deployment, or qualification; manual review of paired results required.",
+  "monitoring": "No scheduled monitoring. Controllers only execute their bounded comparison queues."
+}
