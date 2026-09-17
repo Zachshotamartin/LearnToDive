@@ -129,3 +129,8 @@ Scripts and logs behind every number: `scratchpad/dive_ceiling_search.py`, `dive
 ## 13. Addendum after the first gate failure (2026-09-15, run `2026-09-15-v13-final`)
 
 The first pilot stopped at 10.24M steps with entry sub-task success 0.0 and no clean dive. Probes on the frozen source (see README, "What changed in v13.1"): holding the straight entry pose passes the entry task 69% of the time, the centred default pose never does, and under the coherent exploration noise at σ 0.61 even the held pose passes 0% (25% at σ 0.14, 56% at σ 0.08). The learned noise scale drifted upward during the pilot. Section 4 of this plan chose coherent noise so PPO could discover what random search found; it kept the historical marginal scale, and a coherent perturbation of that size is not averaged away by the servo. Fix: start the motor head at the entry pose, start the exploration at σ 0.135 (`--motor-logstd -2`) and lower the motor entropy bonus to 0.002. Section 12's success criteria and the gates are unchanged.
+
+
+## 14. Addendum after the second gate failure (2026-09-16, run `2026-09-16-v13.1-final`)
+
+Entry success 0.29, no clean dive, but 50% valid dives and points up to 11.5. Every forward dive failed at the takeoff and the takeoff practice task never succeeded (0 of 23,769). The task demanded the competition takeoff (0.3 m, 2.8 m/s) at every level, so its difficulty ladder never engaged. Fix: the takeoff task starts at a 0.1 m hop and widens to the competition takeoff with mastery (README, "What changed in v13.2"). Gates unchanged.

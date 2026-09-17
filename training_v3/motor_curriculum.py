@@ -26,6 +26,25 @@ LOST = .2                       # readiness below which the task narrows
 BLOCK = 64                      # attempts before difficulty may move
 EXTRA_OBSERVATIONS = 10  # five task indicators, hip/knee goals, three-axis up goal
 HORIZONS = np.array([0, 1.4, 1., 1., 3.])
+# The takeoff task asks for a small hop first and the competition takeoff at
+# full mastery; the level widens on measured success like the other tasks.
+TAKEOFF_RISE = (.1, .3)        # metres of rise at level 0 and level 1
+TAKEOFF_SPEED = (1.2, 2.8)     # vertical departure speed in m/s at level 0 and level 1
+BOARD_INVALID_COST = 2.
+
+
+def takeoff_targets(level):
+    level = np.clip(level, 0., 1.)
+    return (TAKEOFF_RISE[0] + (TAKEOFF_RISE[1] - TAKEOFF_RISE[0]) * level,
+            TAKEOFF_SPEED[0] + (TAKEOFF_SPEED[1] - TAKEOFF_SPEED[0]) * level)
+
+
+def takeoff_cost(rise, speed, invalid, level):
+    """Shortfall against the rung's rise and speed targets plus the invalid-takeoff cost."""
+    rise_target, speed_target = takeoff_targets(level)
+    return (np.maximum(0, 1 - np.asarray(rise, dtype=float) / rise_target)
+            + .5 * np.maximum(0, 1 - np.asarray(speed, dtype=float) / speed_target)
+            + BOARD_INVALID_COST * np.asarray(invalid, dtype=float))
 
 
 class MotorCurriculum:
@@ -204,8 +223,7 @@ class MotorCurriculum:
                  + 1.5 * errors['shoulderPitch'] + errors['elbow'] + .5 * errors['shoulderRoll']
                  + errors['toes'] + errors['hands'] + errors['legs'])
         rise = np.maximum(0, e.apex_com - e.departure_com)
-        takeoff = (np.maximum(0, 1 - rise / .3) + .5 * np.maximum(0, 1 - e.takeoff_vertical_speed / 2.8)
-                   + 2 * e.board_invalid)
+        takeoff = takeoff_cost(rise, e.takeoff_vertical_speed, e.board_invalid, self.level[1])
         # Armstand practice rewards a genuine clear release, not an impossible
         # standing-jump target from a hand-supported starting pose.
         takeoff = np.where(e.armstand, (~e.released).astype(float) + 2 * e.board_invalid, takeoff)
@@ -268,8 +286,8 @@ class MotorCurriculum:
                     cost[i] = (finished[i]['entryAngle'] / 45 + sum(np.log1p(v) for v in m['entryFaultLosses'].values())
                                + 3 * (not m['fullEntryComplete']))
                 elif tasks[i] == 1:
-                    cost[i] = (max(0, 1 - m['ascent'] / .3) + .5 * max(0, 1 - m['takeoffVerticalSpeed'] / 2.8)
-                               + 2 * m['boardInvalid']) if finished[i]['category'] != 6 else 2 * m['boardInvalid'] + float(not m['water'])
+                    cost[i] = (float(takeoff_cost(m['ascent'], m['takeoffVerticalSpeed'], m['boardInvalid'], self.level[1]))
+                               if finished[i]['category'] != 6 else 2 * m['boardInvalid'] + float(not m['water']))
                     if self.direction_practice:
                         intent = DIVES[IDS[finished[i]['declaration']]]
                         cost[i] += .8 * rotation_direction_cost(m['takeoffAngularMomentum'][1], intent['sign'] * intent['turns'])

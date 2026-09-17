@@ -21,6 +21,12 @@ v13 changes, none of which prescribes a motion:
 - Gates: at 10.24M steps the entry sub-task must succeed more than half the time and at least one dive must be clean; at 30.72M the clean rate on the current scope must exceed 20%. A failed gate stops the run for review instead of waiting for a plateau. Evaluations report per-declaration clean rates and entry-angle percentiles; `best.pt` follows the clean rate once any clean dive exists; the suite ranks pilots by clean rate.
 - Suite defaults: 128 environments, batch 2048, three epochs, three seeds of 256x256x128, then the median seed continues with a 256M-step minimum before any plateau decision.
 
+## What changed in v13.2 (after the second gate failure, 2026-09-16)
+
+The v13.1 pilot (run `2026-09-16-v13.1-final`) stopped on the same gate at 10.24M steps, but much further along: 50% valid dives (back dives 202A at 100%, 31° entries, 7.5 to 11.5 points) against 5% and zero points in v13. Entry sub-task success was 0.29 (needs 0.5) and there was no clean dive, because every forward dive (101A) still failed with an invalid takeoff (50° departure lean, no jump). The takeoff practice task never succeeded once in 23,769 attempts: its cost fell from 4.3 to 2.8 but success needed 0.3 m of rise and 2.8 m/s at every level, so the difficulty never moved and the skill had no ladder, unlike the entry and shape tasks.
+
+v13.2 change (`motor_curriculum.takeoff_cost`, `TAKEOFF_RISE`, `TAKEOFF_SPEED`): the takeoff task asks for a 0.1 m hop at 1.2 m/s at level 0 and widens linearly to the competition takeoff (0.3 m, 2.8 m/s) at level 1, with the same mastery rule as the other tasks. The full-dive credit still asks for the competition takeoff; only the practice rung moves. `test_takeoff_ladder.py` covers the targets, the cost and the live cost at both ends. The gates are unchanged.
+
 ## What changed in v13.1 (after the first gate failure, 2026-09-15)
 
 The v13 pilot (seed 109310, run `2026-09-15-v13-final`) stopped on the first gate at 10.24M steps: entry sub-task success 0.0 (22 successes in 19,460 practice attempts), no clean dive, takeoff sub-task 3.6%, every practice level still at zero. Two probes on the frozen source explain it, and neither is about reward weights:
