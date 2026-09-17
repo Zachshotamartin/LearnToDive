@@ -134,3 +134,8 @@ The first pilot stopped at 10.24M steps with entry sub-task success 0.0 and no c
 ## 14. Addendum after the second gate failure (2026-09-16, run `2026-09-16-v13.1-final`)
 
 Entry success 0.29, no clean dive, but 50% valid dives and points up to 11.5. Every forward dive failed at the takeoff and the takeoff practice task never succeeded (0 of 23,769). The task demanded the competition takeoff (0.3 m, 2.8 m/s) at every level, so its difficulty ladder never engaged. Fix: the takeoff task starts at a 0.1 m hop and widens to the competition takeoff with mastery (README, "What changed in v13.2"). Gates unchanged.
+
+
+## 15. Addendum: the takeoff flag has no slope (2026-09-16)
+
+Every takeoff practice attempt of the v13.1 checkpoint was flagged invalid for leaving past horizontal, which is a binary 2.0 in the practice cost. The practice cost now also charges the departure lean itself (README, "What changed in v13.3"), so the learner is rewarded for leaving more upright before its takeoff becomes valid. Run `2026-09-16-v13.2-final` was stopped at 1.1M steps and superseded by `2026-09-16-v13.3-final`.

@@ -31,6 +31,11 @@ HORIZONS = np.array([0, 1.4, 1., 1., 3.])
 TAKEOFF_RISE = (.1, .3)        # metres of rise at level 0 and level 1
 TAKEOFF_SPEED = (1.2, 2.8)     # vertical departure speed in m/s at level 0 and level 1
 BOARD_INVALID_COST = 2.
+# The engine invalidates a takeoff that leaves past horizontal as a whole; the
+# practice cost also charges the lean itself so that leaving more upright is
+# always worth something before the takeoff becomes valid.
+TAKEOFF_LEAN_WEIGHT = .5
+TAKEOFF_LEAN_SCALE = np.pi / 2
 
 
 def takeoff_targets(level):
@@ -39,12 +44,18 @@ def takeoff_targets(level):
             TAKEOFF_SPEED[0] + (TAKEOFF_SPEED[1] - TAKEOFF_SPEED[0]) * level)
 
 
-def takeoff_cost(rise, speed, invalid, level):
-    """Shortfall against the rung's rise and speed targets plus the invalid-takeoff cost."""
+def takeoff_cost(rise, speed, invalid, level, lean=0.):
+    """Shortfall against the rung's rise and speed targets, the departure lean and the invalid-takeoff cost."""
     rise_target, speed_target = takeoff_targets(level)
     return (np.maximum(0, 1 - np.asarray(rise, dtype=float) / rise_target)
             + .5 * np.maximum(0, 1 - np.asarray(speed, dtype=float) / speed_target)
+            + TAKEOFF_LEAN_WEIGHT * np.clip(np.abs(np.asarray(lean, dtype=float)) / TAKEOFF_LEAN_SCALE, 0, 2)
             + BOARD_INVALID_COST * np.asarray(invalid, dtype=float))
+
+
+def takeoff_lean(e):
+    """Radians from vertical: the body's pitch until it leaves the board, then the pitch it left with."""
+    return np.where(e.released, np.abs(e.departure_pitch), np.abs(e.prev_pitch))
 
 
 class MotorCurriculum:
@@ -223,7 +234,7 @@ class MotorCurriculum:
                  + 1.5 * errors['shoulderPitch'] + errors['elbow'] + .5 * errors['shoulderRoll']
                  + errors['toes'] + errors['hands'] + errors['legs'])
         rise = np.maximum(0, e.apex_com - e.departure_com)
-        takeoff = takeoff_cost(rise, e.takeoff_vertical_speed, e.board_invalid, self.level[1])
+        takeoff = takeoff_cost(rise, e.takeoff_vertical_speed, e.board_invalid, self.level[1], takeoff_lean(e))
         # Armstand practice rewards a genuine clear release, not an impossible
         # standing-jump target from a hand-supported starting pose.
         takeoff = np.where(e.armstand, (~e.released).astype(float) + 2 * e.board_invalid, takeoff)
@@ -286,7 +297,8 @@ class MotorCurriculum:
                     cost[i] = (finished[i]['entryAngle'] / 45 + sum(np.log1p(v) for v in m['entryFaultLosses'].values())
                                + 3 * (not m['fullEntryComplete']))
                 elif tasks[i] == 1:
-                    cost[i] = (float(takeoff_cost(m['ascent'], m['takeoffVerticalSpeed'], m['boardInvalid'], self.level[1]))
+                    cost[i] = (float(takeoff_cost(m['ascent'], m['takeoffVerticalSpeed'], m['boardInvalid'], self.level[1],
+                                                  np.radians(m['departureLean'])))
                                if finished[i]['category'] != 6 else 2 * m['boardInvalid'] + float(not m['water']))
                     if self.direction_practice:
                         intent = DIVES[IDS[finished[i]['declaration']]]
