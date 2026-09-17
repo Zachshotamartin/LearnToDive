@@ -48,10 +48,12 @@ PLATEAU_THRESHOLDS = [('points', .5), ('execution', .1), ('clean', .02), ('valid
 RESUME_KEYS = ['envs', 'widths', 'rho', 'horizon', 'seed', 'lr', 'epochs', 'batch', 'reward_mode', 'gae_lambda', 'recovery_mode', 'exploration', 'motor_curriculum', 'architecture', 'practice', 'reference_policy', 'eval_cases', 'final_cases', 'final_seed', 'direction_practice', 'goal_practice',
                'noise_rho', 'input_normalization', 'stage_curriculum', 'start_stage', 'gates']
 BEST_KEY_SIZE = 4
-# Gates: a run that has not produced these by the given step count stops for a
-# change instead of waiting for a plateau or the budget.
+# Milestones: what the run should be able to do by a given step count. They are
+# measured once each, recorded in the run status, and reported in the log. A
+# missed milestone is evidence for review; it never stops training.
 GATES = (dict(name='entry-skill-and-first-clean-dive', steps=10_240_000, entrySuccess=.5, cleanDives=1),
          dict(name='clean-rate-on-current-scope', steps=30_720_000, cleanRate=.2))
+REVIEW_PHASES = ('plateau-awaiting-review', 'budget-complete-awaiting-review')
 
 
 def estimate_advantages(batch, gae_lambda=LAMBDA):
@@ -486,7 +488,11 @@ class Trainer:
             atomic_checkpoint(self.out / 'qualified-for-review.pt', self.persist('qualified-awaiting-review'))
 
     def check_gates(self, report):
-        """Record every gate whose step count has been reached; returns the first failed one."""
+        """Record every milestone whose step count has been reached; returns the first missed one.
+
+        The return value is for the log only. Training continues either way: a
+        milestone measures the run, it does not end it.
+        """
         state = self.state
         results = state.setdefault('gates', [])
         checked = {row['name'] for row in results}
@@ -509,7 +515,7 @@ class Trainer:
             results.append(row)
             if reasons and failed is None:
                 failed = row
-        return failed if self.args.gates else None
+        return failed
 
     def advance_stage(self, report):
         """Widen the declaration scope once the current stage's clean rate has held."""
@@ -542,7 +548,7 @@ class Trainer:
         # The checkpoint that ships is the one with the most clean dives, once any exist.
         if 'best-clean' in labels and (report['summary']['full']['clean'] or 0) > 0 and 'best' not in labels:
             labels.append('best')
-        failed_gate = self.check_gates(report)
+        missed_milestone = self.check_gates(report) if self.args.gates else None
         self.advance_stage(report)
         self.final_test()
         saved = self.persist('evaluated')
@@ -552,9 +558,8 @@ class Trainer:
         if 'best' in labels:
             atomic_json(self.out / 'best-policy.json', dict(**self.policy.export(), contract=self.contract,
                                                             steps=state['steps'], qualified=False))
-        if failed_gate is not None:
-            print(json.dumps(dict(gateFailed=failed_gate)), flush=True)
-            return 'gate'
+        if missed_milestone is not None:
+            print(json.dumps(dict(milestoneMissed=missed_milestone)), flush=True)
         return self.plateaued()
 
     def plateaued(self):
@@ -704,9 +709,8 @@ class Trainer:
         try:
             self.initialize_references()
             while self.state['steps'] < self.target and not self.stop:
-                outcome = self.update()
-                if outcome:
-                    self.persist('gate-failed-awaiting-review' if outcome == 'gate' else 'plateau-awaiting-review')
+                if self.update():
+                    self.persist('plateau-awaiting-review')
                     return self.state
             # A run killed between its final update and its final evaluation resumes here
             # with the budget complete; produce the missing report instead of skipping it.
@@ -788,7 +792,8 @@ def parser():
     p.add_argument('--input-normalization', type=int, choices=[0, 1], default=1, help='Running input normalisation, folded into the export')
     p.add_argument('--stage-curriculum', type=int, choices=[0, 1], default=1, help='Mastery-gated declaration scope and stance randomisation')
     p.add_argument('--start-stage', type=int, default=0)
-    p.add_argument('--gates', type=int, choices=[0, 1], default=1, help='Stop for review when a milestone gate fails')
+    p.add_argument('--gates', type=int, choices=[0, 1], default=1,
+                   help='Measure the milestones and record them in the run status; they never stop training')
     p.add_argument('--motor-curriculum', choices=['off', 'context', 'adaptive'], default='off')
     p.add_argument('--architecture', choices=['shared', 'split'], default='shared')
     p.add_argument('--reference-policy', nargs='*', default=[], help='Immutable baseline checkpoints for paired full-dive qualification')

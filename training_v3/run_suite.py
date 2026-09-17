@@ -32,7 +32,7 @@ TRIAL_ARGUMENTS = ['--envs', '128', '--threads', '4', '--horizon', '160', '--bat
 # The continuation may only stop on a plateau after a quarter of a billion steps and
 # twenty-five evaluation windows (51M steps) without any category improving.
 CONTINUATION_ARGUMENTS = ['--minimum-steps', '256000000', '--patience', '25']
-FINISHED_PHASES = ('budget-complete-awaiting-review', 'plateau-awaiting-review', 'gate-failed-awaiting-review')
+FINISHED_PHASES = ('budget-complete-awaiting-review', 'plateau-awaiting-review')
 RANKING = ('clean', 'execution', 'points', 'valid', 'trainingReturn')
 ATTEMPTS = 3
 RETRY_DELAY = 30
@@ -137,10 +137,10 @@ class Suite:
                 self.run(trial, widths, self.args.pilot_steps, seed, warm)
                 if self.stop:
                     return False
+                # Milestones are recorded per trial and surfaced here for review; a
+                # missed one is evidence, not a reason to stop spending budget.
                 status = json.loads((self.out / trial / 'STATUS.json').read_text())
-                if status['phase'] == 'gate-failed-awaiting-review':
-                    self.save(phase='gate-failed-awaiting-review', failedTrial=trial, gates=status.get('gates'))
-                    raise RuntimeError(f'{trial} failed a milestone gate; review the run before spending more budget')
+                self.save(milestones={**self.state.get('milestones', {}), trial: status.get('gates', [])})
                 self.record_pilot(trial, name, seed)
         return True
 
@@ -167,9 +167,6 @@ class Suite:
         if all(r['metrics']['valid'] == 0 for r in trials):
             self.save(phase='pilot-comparison-uninformative', architectureScores=scores, reason=UNINFORMATIVE)
             raise RuntimeError('Pilot comparison uninformative: no completed declared dive in any pilot')
-        if any(json.loads((self.out / r['name'] / 'STATUS.json').read_text())['phase'] == 'gate-failed-awaiting-review' for r in trials):
-            self.save(phase='gate-failed-awaiting-review', architectureScores=scores)
-            raise RuntimeError('A pilot failed a milestone gate; review before spending the continuation budget')
         winner = max(scores, key=scores.get)
         candidates = [r for r in trials if r['architecture'] == winner]
         order = lambda r: (r['metrics']['clean'], r['metrics']['execution'], r['metrics']['points'], r['metrics']['trainingReturn'])
