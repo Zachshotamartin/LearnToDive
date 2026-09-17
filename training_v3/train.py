@@ -26,7 +26,7 @@ from evaluation import evaluate, summary, evaluate_motor_skills, evaluate_target
 from model_selection import update_selection, comparison, competence
 from judge import VERSION
 from losses import ppo_terms
-from policy import FORMAT, MOTOR_FORMAT, FINAL_FORMAT, INITIAL_LOG_STD, Policy
+from policy import FORMAT, MOTOR_FORMAT, FINAL_FORMAT, INITIAL_LOG_STD, LOG_STD_MAX, Policy
 from geometry import encoded_action
 from motor_curriculum import MotorCurriculum, EXTRA_OBSERVATIONS, ENTRY_POSE
 from motor_objective import DIRECTION_VERSION, COMPLETION_VERSION, CONJUNCTIVE_VERSION
@@ -46,7 +46,7 @@ REFINEMENT_CLEAN_RATE = .8  # held-out clean rate above which exploration is red
 REFINEMENT_FACTOR = .25
 PLATEAU_THRESHOLDS = [('points', .5), ('execution', .1), ('clean', .02), ('valid', .05)]
 RESUME_KEYS = ['envs', 'widths', 'rho', 'horizon', 'seed', 'lr', 'epochs', 'batch', 'reward_mode', 'gae_lambda', 'recovery_mode', 'exploration', 'motor_curriculum', 'architecture', 'practice', 'reference_policy', 'eval_cases', 'final_cases', 'final_seed', 'direction_practice', 'goal_practice',
-               'noise_rho', 'input_normalization', 'stage_curriculum', 'start_stage', 'gates']
+               'noise_rho', 'input_normalization', 'stage_curriculum', 'start_stage', 'gates', 'motor_logstd_max']
 BEST_KEY_SIZE = 4
 # Milestones: what the run should be able to do by a given step count. They are
 # measured once each, recorded in the run status, and reported in the log. A
@@ -142,7 +142,8 @@ class Trainer:
                                  initial_action=motor_initial_action(args, self.env),
                                  exploration=args.exploration, architecture=args.architecture,
                                  noise_rho=args.noise_rho, normalize_inputs=args.input_normalization,
-                                 motor_logstd=getattr(args, 'motor_logstd', INITIAL_LOG_STD))
+                                 motor_logstd=getattr(args, 'motor_logstd', INITIAL_LOG_STD),
+                                 motor_logstd_max=getattr(args, 'motor_logstd_max', LOG_STD_MAX))
             if motor_init_mode(args) == 'random' and any((args.initialize_from, args.warm_start, args.continue_from)):
                 raise ValueError('Random initialization cannot load a checkpoint')
             if sum(bool(path) for path in (args.initialize_from, args.resume, args.warm_start, args.continue_from)) > 1:
@@ -191,6 +192,7 @@ class Trainer:
                                  conjunctiveCredit=CONJUNCTIVE_VERSION if args.reward_mode == 'conjunctive' else None,
                                  noiseRho=args.noise_rho, inputNormalization=args.input_normalization, motorInit=motor_init_mode(args),
                                  motorLogStd=getattr(args, 'motor_logstd', INITIAL_LOG_STD),
+                                 motorLogStdMax=getattr(args, 'motor_logstd_max', LOG_STD_MAX),
                                  stageCurriculum=[s['name'] for s in mastery.STAGES] if args.stage_curriculum else None,
                                  actions=9, declarations=[d['id'] for d in DIVES], sourceHashes=hashes())
             if getattr(args, 'rotation_progress', False):
@@ -769,6 +771,8 @@ def parser():
                    help='Alias of --motor-init random: fresh random networks without any posture bias')
     p.add_argument('--motor-logstd', type=float, default=INITIAL_LOG_STD,
                    help='Initial log standard deviation of the motor exploration (marginal scale of the coherent noise)')
+    p.add_argument('--motor-logstd-max', type=float, default=LOG_STD_MAX,
+                   help='Ceiling on the motor exploration scale; the run may explore less but never more')
     p.add_argument('--continue-from', help='Explicit new curriculum phase preserving actor, optimizer and cumulative counters')
     p.add_argument('--rotation-progress', action='store_true', help='Explicit remaining turns and potential-based rotation progress')
     p.add_argument('--direction-practice', action='store_true', help='Balance and teach signed takeoff momentum and extend into flight')

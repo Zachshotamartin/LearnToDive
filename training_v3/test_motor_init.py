@@ -74,3 +74,39 @@ class ExplorationScaleTests(unittest.TestCase):
         self.assertGreaterEqual(results[-2.], .15)
         with self.assertRaises(ValueError):
             Policy(NEW_SIZE, (32, 32), motor_logstd=-3.5)
+
+
+class ExplorationCeilingTests(unittest.TestCase):
+    """A run may explore less than it started with, never more."""
+
+    def policy(self, logstd, ceiling=-1.9):
+        model = Policy(NEW_SIZE, (32, 32), architecture='split', initial_action=encoded_action(ENTRY_POSE),
+                       noise_rho=.9, normalize_inputs=True, motor_logstd=-2., motor_logstd_max=ceiling).eval()
+        with torch.no_grad():
+            model.logstd.fill_(logstd)
+        return model
+
+    def scale(self, model):
+        features = torch.zeros(1, sum(model.widths[:1]))
+        return model.motor_distribution(model.trunk(torch.zeros(1, NEW_SIZE)), torch.zeros(1, 9)).scale
+
+    def test_the_ceiling_bounds_the_sampled_scale(self):
+        correction = np.sqrt(1 - .9 ** 2)
+        below = self.scale(self.policy(-2.5))
+        np.testing.assert_allclose(below.detach().numpy(), np.exp(-2.5) * correction, rtol=1e-6)
+        # Anything above the ceiling is clamped to it, however far the parameter drifts.
+        for logstd in (-1.9, -1.5, 0., 5.):
+            capped = self.scale(self.policy(logstd))
+            np.testing.assert_allclose(capped.detach().numpy(), np.exp(-1.9) * correction, rtol=1e-6)
+
+    def test_the_exported_scale_is_the_one_training_used(self):
+        exported = self.policy(-1.2).export()['state']['logstd']
+        np.testing.assert_allclose(exported, [-1.9] * 9, rtol=1e-6)
+
+    def test_the_default_ceiling_keeps_the_historical_behaviour(self):
+        model = Policy(NEW_SIZE, (32, 32), architecture='split')
+        self.assertEqual(model.logstd_max, 0.)
+        with self.assertRaises(ValueError):
+            Policy(NEW_SIZE, (32, 32), motor_logstd=-1., motor_logstd_max=-1.5)
+        with self.assertRaises(ValueError):
+            Policy(NEW_SIZE, (32, 32), motor_logstd_max=.5)

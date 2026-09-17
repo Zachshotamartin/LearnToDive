@@ -144,3 +144,8 @@ Every takeoff practice attempt of the v13.1 checkpoint was flagged invalid for l
 ## 16. Milestones stopped being gates (2026-09-17)
 
 Three runs stopped themselves at milestone 1 while every measured quantity was still improving (entry angle 83 to 31 to 24.5 degrees, valid dives 5% to 50%, points 0 to 10.5). Stopping an improving run to wait for a human is the wrong default for a long unattended experiment. The milestones are now measured, recorded in `STATUS.json` and logged, and the run continues to its budget or its plateau. Sections 7 and 12 keep their numbers as the criteria for judging a run; they are no longer halt conditions.
+
+
+## 17. The exploration scale needs a ceiling (2026-09-17)
+
+Section 4 chose coherent AR(1) noise and section 13 lowered its initial scale to 0.135. Neither bounded it. Over the v13.3 continuation the learned scale drifted monotonically to 0.223 and the run lost every precision skill it had built, ending at zero points with an 8% jump rate. The scale now has a ceiling (`--motor-logstd-max`, the suite uses 0.15). A run may explore less and never more. Restarted from the 18.4M archive as `2026-09-17-v13.4-capped-noise`.

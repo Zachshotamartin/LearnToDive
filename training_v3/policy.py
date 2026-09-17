@@ -21,14 +21,21 @@ NORMALIZATION_EPS = 1e-6
 LOG_STD_MIN = -2.8
 LOG_STD_MAX = 0.
 INITIAL_LOG_STD = -.5      # the historical default; the v13.1 suite passes -2
+# Ceiling on the motor exploration scale. A coherent perturbation is not averaged
+# away by the servo, so once the marginal scale passes about 0.2 the precision
+# skills (a clean entry, a real takeoff) can no longer be sampled and the policy
+# loses them. A run may lower its scale freely; this stops it drifting upward.
 POPART_RATE = .01
 
 
 class Policy(nn.Module):
     def __init__(self, obs, widths=(256, 256), rho=.6, initial_action=None, exploration="diagonal", architecture='shared',
-                 noise_rho=0., normalize_inputs=False, motor_logstd=INITIAL_LOG_STD):
+                 noise_rho=0., normalize_inputs=False, motor_logstd=INITIAL_LOG_STD, motor_logstd_max=LOG_STD_MAX):
         super().__init__()
-        if not LOG_STD_MIN <= motor_logstd <= LOG_STD_MAX:
+        if not LOG_STD_MIN < motor_logstd_max <= LOG_STD_MAX:
+            raise ValueError('The motor exploration ceiling must lie inside the clamp range')
+        self.logstd_max = float(motor_logstd_max)
+        if not LOG_STD_MIN <= motor_logstd <= self.logstd_max:
             raise ValueError('The initial motor log standard deviation must lie inside the clamp range')
         self.widths = tuple(widths)
         self.obs = obs
@@ -159,7 +166,7 @@ class Policy(nn.Module):
 
     def motor_distribution(self, features, mean):
         correlation = self.noise_rho if self.noise_rho else self.rho
-        std = self.logstd.clamp(LOG_STD_MIN, LOG_STD_MAX).exp() * math.sqrt(1 - correlation ** 2)
+        std = self.logstd.clamp(LOG_STD_MIN, self.logstd_max).exp() * math.sqrt(1 - correlation ** 2)
         if self.exploration == 'diagonal':
             return Normal(mean, std)
         # Conditional full covariance, sampled anew at each decision. The existing
@@ -194,6 +201,8 @@ class Policy(nn.Module):
         """
         state = {k: v.detach().cpu().clone() for k, v in self.state_dict().items()
                  if not k.startswith('input_')}
+        # A runtime reads log_std directly, so export the scale training actually used.
+        state['logstd'] = state['logstd'].clamp(LOG_STD_MIN, self.logstd_max)
         if self.normalize_inputs:
             scale = self.input_scale().cpu()
             mean = self.input_mean.to(torch.float32).cpu()
