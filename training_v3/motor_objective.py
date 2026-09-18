@@ -17,6 +17,7 @@ COMPLETION_VERSION = 'continuous-count-completion-v3'
 CONJUNCTIVE_VERSION = 'conjunctive-rotation-times-entry-v1'
 ENTRY_QUALITY_ANGLE = 20.     # degrees of entry error at which the entry quality factor halves
 SAFETY_COST = 16.             # a physical failure costs the whole maximum credit
+MINIMUM_ILLEGAL_TAKEOFF = .25   # an invalid takeoff this view cannot grade still costs a quarter of the safety charge
 END_COST = 4.                 # wrong end first or the wrong rotation plane
 COUNT_COST = 8.               # log1p weight of the somersault and twist count errors
 VALID_BONUS = 2.              # a completed declaration within the judge's tolerances
@@ -216,6 +217,40 @@ def takeoff_quality(rise, armstand=False):
     return TAKEOFF_FLOOR + (1 - TAKEOFF_FLOOR) * float(np.clip(rise / RISE_TARGET, 0., 1.))
 
 
+def takeoff_legality(m):
+    """How illegal a takeoff is, from 0 (comfortably legal) to 1 (clearly illegal).
+
+    The judge's rule stays binary, as the sport's does. Training charges this
+    graded view instead, because a binary sixteen-point fault gives a learner
+    that has never had a legal takeoff nothing to improve: every attempt costs
+    the same whether it was close or wild. Each term is the amount by which one
+    measured cause exceeds its own limit.
+    """
+    from engine import ASSIST_FORCE, ASSIST_IMPULSE, FOOT_GAP_LIMIT, RECONTACT_TILT_LIMIT
+    excess = lambda value, limit: max(0., float(value) / limit - 1.)
+    severity = max(excess(m.get('boardAssistImpulse', 0.), ASSIST_IMPULSE),
+                   excess(m.get('boardAssistForce', 0.), ASSIST_FORCE),
+                   excess(m.get('footDepartureGap', 0.), FOOT_GAP_LIMIT),
+                   excess(m.get('recontactTilt', 0.), RECONTACT_TILT_LIMIT),
+                   excess(m.get('departureLean', 0.), 90.))
+    if m.get('boardInvalid'):
+        # A cause this view cannot grade still costs something definite.
+        severity = max(severity, MINIMUM_ILLEGAL_TAKEOFF)
+    return float(np.clip(severity, 0., 1.))
+
+
+def live_takeoff_legality(e, lean_degrees):
+    """The same graded view during an episode, from the engine's live arrays."""
+    from engine import ASSIST_FORCE, ASSIST_IMPULSE, FOOT_GAP_LIMIT, RECONTACT_TILT_LIMIT
+    excess = lambda value, limit: np.maximum(0., np.asarray(value, dtype=float) / limit - 1.)
+    severity = np.maximum.reduce([excess(np.maximum(e.board_impulse, e.stand_impulse), ASSIST_IMPULSE),
+                                  excess(np.maximum(e.board_peak, e.stand_peak), ASSIST_FORCE),
+                                  excess(e.foot_departure_gap, FOOT_GAP_LIMIT),
+                                  excess(e.recontact_tilt, RECONTACT_TILT_LIMIT),
+                                  excess(lean_degrees, 90.)])
+    return np.clip(np.where(e.board_invalid, np.maximum(severity, MINIMUM_ILLEGAL_TAKEOFF), severity), 0., 1.)
+
+
 def conjunctive_components(score, m, armstand=False):
     """Credit that only pays when rotation AND entry are right; costs at the judge's weights.
 
@@ -235,7 +270,7 @@ def conjunctive_components(score, m, armstand=False):
     costs['somersaultCount'] = COUNT_COST * float(np.log1p(score['rotationError']))
     costs['twistCount'] = COUNT_COST * float(np.log1p(score['twistError']))
     costs['incompleteEntry'] = SAFETY_COST * float(not m['fullEntryComplete'])
-    costs['boardContact'] = SAFETY_COST * float(m['boardInvalid'])
+    costs['boardContact'] = SAFETY_COST * takeoff_legality(m)
     costs['missedWater'] = SAFETY_COST * float(not m['water'])
     costs['wrongEntryEnd'] = END_COST * float(any(reason in score['failures'] for reason in
                                                    ('feet entered before head or hands', 'feet-first dive did not enter feet first')))

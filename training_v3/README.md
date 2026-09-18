@@ -25,6 +25,19 @@ v13 changes, none of which prescribes a motion:
 
 Decomposing the v13.1 checkpoint's takeoff practice attempts at the first rung showed the binding term was not the rise or the speed but the invalid-takeoff flag: every attempt (48 of 48, sampled or deterministic) left the platform past horizontal, so the engine charged the flat 2.0 and the ladder had nothing to climb. The flag is binary, so leaving a little more upright was worth nothing. `takeoff_cost` now also charges the departure lean (0.5 × lean / 90°, capped at twice that), measured live as the body's pitch until it leaves the board and as the recorded departure pitch afterwards, so the practice reward has a slope toward leaving upright before the takeoff becomes valid. The judge's validity rule and the full-dive credit are unchanged; a valid hop leaning 20° still passes the first rung.
 
+## What changed in v13.5 (a graded takeoff, 2026-09-18)
+
+The v13.4 run collapsed the same way the two before it did, with the exploration scale held at its ceiling the whole time, which ruled out my earlier diagnosis. The measurements name the real blocker. At its best moment the diver had an invalid takeoff on half its dives, a centre-of-mass rise of 3.4 cm and a departure speed of −0.18 m/s; by the end every dive was invalid. It jumps, comes back down onto the platform, and that rotated recontact is what the rule catches. A preparation-bounce deduction is present in every evaluation of every run.
+
+An invalid takeoff was a binary fault: sixteen points in the dive reward and a flat 2.0 in the takeoff practice cost. A learner that has never had a legal takeoff therefore sees the same charge whether it was a hair over the limit or wildly illegal, so there is no gradient toward legality, and every source of positive credit sits behind it. The takeoff task recorded 126,000 consecutive failures while still consuming half of all rollouts, because practice was allocated by failure: the worse a task went, the more it was practised.
+
+v13.5:
+
+- `engine.py` records the causes of an illegal takeoff rather than only the verdict: assisting impulse and peak force, the gap between the feet leaving, the tilt at a regained contact, and the departure tilt. The judge's rule is unchanged and stays binary, as the sport's is.
+- `motor_objective.takeoff_legality` turns those into a severity from 0 (comfortably legal) to 1 (clearly illegal), each term being how far one cause exceeds its own limit. The dive reward charges `SAFETY_COST` times that severity instead of the flag, so a takeoff that is close to legal is worth more than a wild one. A fault the graded view cannot see still costs a quarter of the charge.
+- The takeoff practice cost uses the same severity.
+- Practice is allocated by learning progress, the disagreement between a fast and a slow estimate of each task's success rate, instead of by failure. A task that has stopped changing, mastered or hopeless, falls back to a 20% floor and can no longer consume half the rollouts.
+
 ## What changed in v13.4 (an exploration ceiling, 2026-09-17)
 
 The v13.3 continuation reached 53% valid dives, a 63% jump rate, 46° entries and 9.4 points by 19M steps, then collapsed between 29M and 34M: the takeoff practice task stopped succeeding entirely (frozen at 14,893 successes for 14M steps), the entry task fell to zero readiness, the jump rate fell to 8% and points to zero. The archived checkpoints show why. The motor exploration scale rose monotonically the whole run: 0.154 at 12.3M, 0.168 at 18.4M, 0.180 at 24.6M, 0.189 at 30.7M, 0.201 at 36.9M, 0.223 at 47.8M. Measured directly on this rig, holding the entry pose passes the entry sub-task 25% of the time at 0.14 and 3% at 0.22, so the run crossed its own precision threshold around 30M and the skills that depend on precision became unsamplable.

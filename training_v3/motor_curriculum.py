@@ -11,7 +11,7 @@ import numpy as np
 
 from engine import STATE_SPEC
 from geometry import ACTUATOR_MAP, framed_angles, quat_up, ANGULAR_VELOCITY
-from motor_objective import live_errors, rotation_direction_cost, entry_weight
+from motor_objective import live_errors, live_takeoff_legality, rotation_direction_cost, entry_weight, takeoff_legality
 from stance import orientation
 from rules import DIVES, IDS, in_practice_scope
 from environment import HISTORY
@@ -30,7 +30,12 @@ HORIZONS = np.array([0, 1.4, 1., 1., 3.])
 # full mastery; the level widens on measured success like the other tasks.
 TAKEOFF_RISE = (.1, .3)        # metres of rise at level 0 and level 1
 TAKEOFF_SPEED = (1.2, 2.8)     # vertical departure speed in m/s at level 0 and level 1
-BOARD_INVALID_COST = 2.
+BOARD_INVALID_COST = 2.       # charged in proportion to how illegal the takeoff is, not as a binary fault
+FAST_RATE = .1                # success-rate estimates whose disagreement measures learning progress
+SLOW_RATE = .02
+PRACTICE_FLOOR = .15          # every practised skill keeps a share, so none can be starved
+PROGRESS_SCALE = 4.
+MINIMUM_PRACTICE = .2
 # The engine invalidates a takeoff that leaves past horizontal as a whole; the
 # practice cost also charges the lean itself so that leaving more upright is
 # always worth something before the takeoff becomes valid.
@@ -44,13 +49,13 @@ def takeoff_targets(level):
             TAKEOFF_SPEED[0] + (TAKEOFF_SPEED[1] - TAKEOFF_SPEED[0]) * level)
 
 
-def takeoff_cost(rise, speed, invalid, level, lean=0.):
-    """Shortfall against the rung's rise and speed targets, the departure lean and the invalid-takeoff cost."""
+def takeoff_cost(rise, speed, illegality, level, lean=0.):
+    """Shortfall against the rung's rise and speed targets, the departure lean and how illegal the takeoff was."""
     rise_target, speed_target = takeoff_targets(level)
     return (np.maximum(0, 1 - np.asarray(rise, dtype=float) / rise_target)
             + .5 * np.maximum(0, 1 - np.asarray(speed, dtype=float) / speed_target)
             + TAKEOFF_LEAN_WEIGHT * np.clip(np.abs(np.asarray(lean, dtype=float)) / TAKEOFF_LEAN_SCALE, 0, 2)
-            + BOARD_INVALID_COST * np.asarray(invalid, dtype=float))
+            + BOARD_INVALID_COST * np.asarray(illegality, dtype=float))
 
 
 def takeoff_lean(e):
@@ -76,6 +81,10 @@ class MotorCurriculum:
         self.visits = np.zeros(5, int)
         self.successes = np.zeros(5, int)
         self.readiness = np.zeros(5)
+        # Two success-rate estimates at different rates; their disagreement is
+        # how fast the task is still changing, which is what practice follows.
+        self.fast = np.zeros(5)
+        self.slow = np.zeros(5)
         self.level = np.zeros(5)
         self.error_sum = np.zeros(5)
         self.direction_visits = np.zeros(4, int)
@@ -108,11 +117,15 @@ class MotorCurriculum:
                 # Full-from-board rollouts remain at least 25% from the start.
                 initial_share = .5 if self.goal_practice_enabled else .75
                 skills = np.array([1, 2, 4] if self.goal_practice_enabled else [1, 2, 3, 4])
-                share = max(.2, initial_share * (1 - float(self.readiness[skills].min())))
+                # Practise where the success rate is still moving. Allocating by
+                # failure instead let a task that could not be won at all consume
+                # half of every rollout for tens of millions of steps.
+                progress = self.learning_progress()[skills]
+                share = max(MINIMUM_PRACTICE, min(initial_share, initial_share * PROGRESS_SCALE * float(progress.max())))
                 if self.base.rng.random() < share:
                     # Stationary aerial stabilization conflicts with full rotating dives.
                     # Keep its slot for old checkpoints and standalone skill evals.
-                    weights = .15 + 1 - self.readiness[skills]
+                    weights = PRACTICE_FLOOR + PROGRESS_SCALE * progress
                     self.task[i] = self.base.rng.choice(skills, p=weights / weights.sum())
                 elif self.goal_practice_enabled:
                     # At least 20% autonomous routines remain. Full-target
@@ -135,6 +148,10 @@ class MotorCurriculum:
                 self.direction_assignments[direction] += 1
                 self.base.group[i] = direction + 1
                 self.base.schedule[i, self.base.round[i]] = direction + 1
+
+    def learning_progress(self):
+        """How fast each task's success rate is still changing, mastered or not."""
+        return np.abs(self.fast - self.slow)
 
     def practised_directions(self):
         """Takeoff directions (groups 1 to 4, zero-based) inside the base arena's current scope."""
@@ -234,7 +251,8 @@ class MotorCurriculum:
                  + 1.5 * errors['shoulderPitch'] + errors['elbow'] + .5 * errors['shoulderRoll']
                  + errors['toes'] + errors['hands'] + errors['legs'])
         rise = np.maximum(0, e.apex_com - e.departure_com)
-        takeoff = takeoff_cost(rise, e.takeoff_vertical_speed, e.board_invalid, self.level[1], takeoff_lean(e))
+        lean = takeoff_lean(e)
+        takeoff = takeoff_cost(rise, e.takeoff_vertical_speed, live_takeoff_legality(e, np.degrees(lean)), self.level[1], lean)
         # Armstand practice rewards a genuine clear release, not an impossible
         # standing-jump target from a hand-supported starting pose.
         takeoff = np.where(e.armstand, (~e.released).astype(float) + 2 * e.board_invalid, takeoff)
@@ -297,7 +315,7 @@ class MotorCurriculum:
                     cost[i] = (finished[i]['entryAngle'] / 45 + sum(np.log1p(v) for v in m['entryFaultLosses'].values())
                                + 3 * (not m['fullEntryComplete']))
                 elif tasks[i] == 1:
-                    cost[i] = (float(takeoff_cost(m['ascent'], m['takeoffVerticalSpeed'], m['boardInvalid'], self.level[1],
+                    cost[i] = (float(takeoff_cost(m['ascent'], m['takeoffVerticalSpeed'], takeoff_legality(m), self.level[1],
                                                   np.radians(m['departureLean'])))
                                if finished[i]['category'] != 6 else 2 * m['boardInvalid'] + float(not m['water']))
                     if self.direction_practice:
@@ -322,6 +340,8 @@ class MotorCurriculum:
                 self.visits[task] += 1
                 self.successes[task] += success
                 self.readiness[task] += .03 * (success - self.readiness[task])
+                self.fast[task] += FAST_RATE * (success - self.fast[task])
+                self.slow[task] += SLOW_RATE * (success - self.slow[task])
                 self.error_sum[task] += cost[i]
                 if self.direction_practice and task == 1 and 1 <= groups[i] <= 4:
                     self.direction_visits[groups[i]-1] += 1
@@ -352,6 +372,7 @@ class MotorCurriculum:
     def metrics(self):
         result = {TASKS[t]: dict(episodes=int(self.visits[t]), successes=int(self.successes[t]),
                               readiness=float(self.readiness[t]), level=float(self.level[t]),
+                              learningProgress=float(self.learning_progress()[t]),
                               meanError=float(self.error_sum[t] / max(1, self.visits[t]))) for t in range(1, 5)}
         if self.direction_practice:
             result['takeoff']['byDirection'] = {

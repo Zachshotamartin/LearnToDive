@@ -42,6 +42,9 @@ HOP_SPEED = .25      # upward centre-of-mass speed at contact loss that counts a
 RELEASE_AIR_TIME = .04
 ASSIST_IMPULSE = .1  # N s of non-foot board contact that invalidates a takeoff
 ASSIST_FORCE = 15    # N of non-foot board contact that invalidates a takeoff
+RECONTACT_UPRIGHT = .87   # cosine of the tilt beyond which regaining contact invalidates a takeoff
+RECONTACT_TILT_LIMIT = 29.5   # the same limit in degrees, for the graded training cost
+FOOT_GAP_LIMIT = .04      # seconds between the two feet leaving the platform
 TARGET_RATE = np.array([14, 14, 14, 10, 10, 8, 8, 10, 4])  # rad/s servo target slew; legs must outrun a jump
 TRAINING_SOURCES = ('environment.py', 'engine.py', 'geometry.py', 'stance.py', 'positions.py', 'water.py', 'rules.py', 'judge.py', 'training_reward.py', 'entry_faults.py', 'motor_objective.py', 'motor_curriculum.py', 'recovery_curriculum.py', 'evaluation.py', 'model_selection.py', 'assessment_stats.py',
                     'rotation_progress.py', 'policy.py', 'losses.py', 'train.py', 'reference_policies.py', 'difficulty.json', 'diver.xml')
@@ -125,6 +128,7 @@ class Arena:
         self.preparation_bounces = zeros(dtype=int)
         self.foot_side_contact = zeros(dtype=bool)
         self.rotated_recontact = zeros(dtype=bool)
+        self.recontact_tilt = zeros()      # worst tilt from vertical, in degrees, at a regained contact after release
         # Flight position assessment.
         self.position_sums = zeros(4)
         self.position_votes = zeros(3)
@@ -221,7 +225,7 @@ class Arena:
                      'foot_departure_gap', 'takeoff_tilt_invalid', 'air_clear_time', 'air_theta', 'air_twist',
                      'release_theta', 'release_twist', 'release_time', 'released', 'board_invalid', 'board_impulse',
                      'board_peak', 'stand_impulse', 'stand_peak', 'preparation_bounces', 'foot_side_contact',
-                     'rotated_recontact', 'position_votes', 'entry_arm_cap', 'position_sums', 'position_ticks', 'motor_position_sums', 'motor_position_weight', 'first_geometry', 'entry_max_angle',
+                     'rotated_recontact', 'recontact_tilt', 'position_votes', 'entry_arm_cap', 'position_sums', 'position_ticks', 'motor_position_sums', 'motor_position_weight', 'first_geometry', 'entry_max_angle',
                      'entry_worst_geometry', 'entry_crossed', 'entry_omega', 'surface_finished',
                      'surface_group_loss', 'entry_fault_losses', 'surface_lateral', 'returns', 'practice', 'banked'):
             getattr(self, name)[i] = 0
@@ -542,7 +546,12 @@ class Arena:
             # A preparation bounce is a two-footed hop (rule 8.6.5.2): contact regained
             # after an upward departure. Contact flicker while falling is not a hop.
             self.preparation_bounces += recontact & (self.takeoff_vertical_speed > HOP_SPEED)
-            self.rotated_recontact |= recontact & (np.where(self.armstand, -ups[:, k, 2], ups[:, k, 2]) < .87)
+            upright = np.where(self.armstand, -ups[:, k, 2], ups[:, k, 2])
+            self.rotated_recontact |= recontact & (upright < RECONTACT_UPRIGHT)
+            # The rule is binary; the angle is kept so training can reward a
+            # recontact that is closer to upright than the last one.
+            tilt = np.degrees(np.arccos(np.clip(upright, -1, 1)))
+            self.recontact_tilt = np.where(recontact, np.maximum(self.recontact_tilt, tilt), self.recontact_tilt)
             self.board_invalid |= ((self.board_impulse > ASSIST_IMPULSE) | (self.board_peak > ASSIST_FORCE)
                                    | (self.stand_impulse > ASSIST_IMPULSE) | (self.stand_peak > ASSIST_FORCE)
                                    | self.rotated_recontact | self.foot_side_contact)
@@ -572,7 +581,7 @@ class Arena:
             # steep but earlier departure is a poor takeoff, scored by the judge, not a failure.
             departure = np.where(self.armstand, np.abs(np.abs(self.departure_pitch) - np.pi), np.abs(self.departure_pitch))
             self.takeoff_tilt_invalid |= newly & (departure > np.pi / 2)
-            self.board_invalid |= self.takeoff_tilt_invalid | (newly & (self.foot_departure_gap > .04 + 1e-8))
+            self.board_invalid |= self.takeoff_tilt_invalid | (newly & (self.foot_departure_gap > FOOT_GAP_LIMIT + 1e-8))
             self.air_theta = np.where(started_wet, self.air_theta,
                                       np.where(self.released, trajectory_theta[:, k] - self.release_theta, 0))
             start_pitch = np.where(self.armstand, wrap(self.departure_pitch - np.pi), self.departure_pitch)
@@ -650,6 +659,10 @@ class Arena:
             positionQualities=(self.position_sums[i] / max(1, self.position_ticks[i])).tolist(),
             motorPositionQualities=(self.motor_position_sums[i] / max(1e-8, self.motor_position_weight[i])).tolist(),
             ascent=float(max(0, self.apex_com[i] - self.departure_com[i])), preparationBounces=int(self.preparation_bounces[i]),
+            boardAssistImpulse=float(max(self.board_impulse[i], self.stand_impulse[i])),
+            boardAssistForce=float(max(self.board_peak[i], self.stand_peak[i])),
+            footDepartureGap=float(self.foot_departure_gap[i]), footSideContact=bool(self.foot_side_contact[i]),
+            recontactTilt=float(self.recontact_tilt[i]), takeoffTiltInvalid=bool(self.takeoff_tilt_invalid[i]),
             surfaceLateralSpeed=float(self.surface_lateral[i]), entryAngularSpeed=float(self.entry_omega[i]),
             maxLateral=float(self.max_lateral[i]), takeoffVerticalSpeed=float(self.takeoff_vertical_speed[i]),
             takeoffAngularMomentum=self.takeoff_angular_momentum[i].tolist(),

@@ -149,3 +149,8 @@ Three runs stopped themselves at milestone 1 while every measured quantity was s
 ## 17. The exploration scale needs a ceiling (2026-09-17)
 
 Section 4 chose coherent AR(1) noise and section 13 lowered its initial scale to 0.135. Neither bounded it. Over the v13.3 continuation the learned scale drifted monotonically to 0.223 and the run lost every precision skill it had built, ending at zero points with an 8% jump rate. The scale now has a ceiling (`--motor-logstd-max`, the suite uses 0.15). A run may explore less and never more. Restarted from the 18.4M archive as `2026-09-17-v13.4-capped-noise`.
+
+
+## 18. The binary takeoff fault was the blocker (2026-09-18)
+
+Three runs died the same way with three different exploration settings. The measurements say why: the diver has never had a legal takeoff. It jumps, lands back on the platform and the rotated recontact invalidates the dive, which costs a flat sixteen points with no slope, and every positive term sits behind it. Section 1's conjunctive credit is sound; it just never pays while the takeoff is illegal. v13.5 grades the fault by its measured causes and allocates practice by learning progress instead of by failure (README, "What changed in v13.5"). Run `2026-09-18-v13.5-graded-takeoff`.
