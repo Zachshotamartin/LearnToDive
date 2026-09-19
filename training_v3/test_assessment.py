@@ -6,7 +6,7 @@ from pathlib import Path
 import torch
 from assessment_stats import paired_interval
 from comparison_summary import summarize_comparison
-from model_selection import update_selection
+from model_selection import update_selection, ranking, outranks, regressed
 from train import Trainer, parser
 from evaluation import evaluate
 from assess_behavior import assess
@@ -25,6 +25,34 @@ def report(points=10, execution=5, clean=.5, step=1):
 
 
 class AssessmentTests(unittest.TestCase):
+    def test_best_follows_the_suite_ranking_not_the_incumbent_gate(self):
+        state = {}
+        self.assertIn('best', update_selection(state, report(10, 5, .5, 1)))
+        # A regression keeps the champion; the per-metric books still advance.
+        self.assertNotIn('best', update_selection(state, report(3, 1, .5, 2)))
+        self.assertEqual(state['selection']['champion']['steps'], 1)
+        # Below the incumbent gate's minimum gain, yet ranked higher: best moves on.
+        labels = update_selection(state, report(10.2, 5, .5, 3))
+        self.assertIn('best', labels)
+        self.assertEqual(state['selection']['champion']['steps'], 3)
+        self.assertEqual(state['bestValue'], 10.2)
+        self.assertFalse(state['selection']['lastDecision']['eligibleForReview'])
+        self.assertEqual(state['selection']['incumbent']['steps'], 1)
+        # Clean dives outrank any amount of judged points.
+        self.assertIn('best', update_selection(state, report(1, .2, .6, 4)))
+        self.assertEqual(state['selection']['champion']['ranking'][:3], [.6, .2, 1.])
+
+    def test_ranking_and_regression_against_the_champion(self):
+        champion = dict(steps=8, ranking=list(ranking(dict(clean=0., execution=2., points=12.))), points=12.)
+        self.assertEqual(ranking(dict(clean=0., execution=2., points=12.)), (0., 2., 12., 0., 0.))
+        self.assertTrue(outranks(dict(clean=.05, execution=.1, points=1.), champion))
+        self.assertFalse(outranks(dict(clean=0., execution=2., points=12.), champion))
+        self.assertTrue(outranks(dict(clean=0., execution=2., points=12.), None))
+        self.assertTrue(regressed(dict(points=5.9), champion))
+        self.assertFalse(regressed(dict(points=6.), champion))
+        self.assertFalse(regressed(dict(points=0.), None))
+        self.assertFalse(regressed(dict(points=0.), dict(steps=2, ranking=[0, 0, 0, 0, 0], points=0.)))
+
     def test_champions_preserve_clean_model_when_points_regress_execution(self):
         state={}
         self.assertIn('best',update_selection(state,report()))

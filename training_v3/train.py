@@ -23,7 +23,7 @@ import mastery
 from checkpointing import atomic_checkpoint, atomic_json, hashes
 from environment import Arena
 from evaluation import evaluate, summary, evaluate_motor_skills, evaluate_targets
-from model_selection import update_selection, comparison, competence
+from model_selection import update_selection, comparison, competence, regressed
 from judge import VERSION
 from losses import ppo_terms
 from policy import FORMAT, MOTOR_FORMAT, FINAL_FORMAT, INITIAL_LOG_STD, LOG_STD_MAX, Policy
@@ -45,6 +45,9 @@ GRADIENT_NORM = .5
 REFINEMENT_CLEAN_RATE = .8  # held-out clean rate above which exploration is reduced
 REFINEMENT_FACTOR = .25
 PLATEAU_THRESHOLDS = [('points', .5), ('execution', .1), ('clean', .02), ('valid', .05)]
+REGRESSION_PATIENCE = 2     # consecutive regressed evaluations before rolling back to the champion
+ROLLBACK_LR_FACTOR = .5     # the learning rate is halved at every rollback ...
+MINIMUM_LR_FACTOR = 1 / 16  # ... down to this fraction of the configured rate
 RESUME_KEYS = ['envs', 'widths', 'rho', 'horizon', 'seed', 'lr', 'epochs', 'batch', 'reward_mode', 'gae_lambda', 'recovery_mode', 'exploration', 'motor_curriculum', 'architecture', 'practice', 'reference_policy', 'eval_cases', 'final_cases', 'final_seed', 'direction_practice', 'goal_practice',
                'noise_rho', 'input_normalization', 'stage_curriculum', 'start_stage', 'gates', 'motor_logstd_max']
 BEST_KEY_SIZE = 4
@@ -439,6 +442,7 @@ class Trainer:
                                                    bestValue=state['bestValue'],
                                                    latestMetrics=state['history'][-1] if state['history'] else None,
                                                    stage=self.progression.state_dict(), gates=state.get('gates', []),
+                                                   rollbacks=state.get('rollbacks', []), learningRate=self.learning_rate(),
                                                    publication='Not qualified for browser publication'))
         return saved
 
@@ -547,9 +551,6 @@ class Trainer:
         atomic_json(self.out / 'evaluations' / f"{state['steps']}.json", report)
         state['evaluations'].append(dict(steps=state['steps'], stage=stage, summary=report['summary']))
         labels = update_selection(state, report)
-        # The checkpoint that ships is the one with the most clean dives, once any exist.
-        if 'best-clean' in labels and (report['summary']['full']['clean'] or 0) > 0 and 'best' not in labels:
-            labels.append('best')
         missed_milestone = self.check_gates(report) if self.args.gates else None
         self.advance_stage(report)
         self.final_test()
@@ -562,7 +563,47 @@ class Trainer:
                                                             steps=state['steps'], qualified=False))
         if missed_milestone is not None:
             print(json.dumps(dict(milestoneMissed=missed_milestone)), flush=True)
+        self.guard_regression(report, labels)
         return self.plateaued()
+
+    def guard_regression(self, report, labels):
+        """Count evaluations well below the champion; roll back once the regression is sustained.
+
+        Every run so far peaked between 6M and 8M steps and then trained on from
+        a collapsed policy for over a hundred million steps. Training resumes from
+        the champion at a smaller learning rate; the step budget keeps counting.
+        """
+        state = self.state
+        champion = state.get('selection', {}).get('champion')
+        if 'best' in labels or not regressed(report['summary']['full'], champion):
+            state['regressedEvaluations'] = 0
+            return
+        state['regressedEvaluations'] = state.get('regressedEvaluations', 0) + 1
+        if state['regressedEvaluations'] >= REGRESSION_PATIENCE:
+            self.rollback(champion)
+
+    def rollback(self, champion):
+        """Restore the champion's weights, optimizer moments and curriculum; halve the learning rate."""
+        saved = torch.load(self.out / 'best.pt', map_location='cpu', weights_only=False)
+        lr = max(self.learning_rate() * ROLLBACK_LR_FACTOR, self.args.lr * MINIMUM_LR_FACTOR)
+        interactions = self.base_environment().interactions
+        self.policy.load_state_dict(saved['model'])
+        self.optimizer.load_state_dict(saved['optimizer'])
+        self.env.load_state_dict(saved['environment'])
+        self.base_environment().interactions = interactions
+        self.set_learning_rate(lr)
+        record = dict(steps=self.state['steps'], championSteps=champion['steps'], championPoints=champion['points'], lr=lr)
+        self.state.setdefault('rollbacks', []).append(record)
+        self.state['regressedEvaluations'] = 0
+        print(json.dumps(dict(rollback=record)), flush=True)
+        self.persist('rolled-back')
+
+    def learning_rate(self):
+        return self.optimizer.param_groups[0]['lr']
+
+    def set_learning_rate(self, lr):
+        for group in self.optimizer.param_groups:
+            group['lr'] = lr
 
     def plateaued(self):
         """No category improved on any metric over the last ``patience`` evaluations."""

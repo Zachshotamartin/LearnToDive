@@ -4,6 +4,9 @@ import math
 from assessment_stats import paired_interval, gate
 
 CHAMPIONS = ('points', 'execution', 'clean')
+# How the suite ranks checkpoints: clean dives first, then judged execution and points.
+RANKING = ('clean', 'execution', 'points', 'valid', 'trainingReturn')
+REGRESSION_FRACTION = .5  # judged points below this share of the champion's are a regression
 # Measured units: judged execution points, proportions, and degrees.
 GUARDS = dict(execution=.1, clean=.02, jumped=.05, valid=.02, alignment=2.,
               entryArms=.02, positionQuality=.03, motorPositionQuality=.03, completedRotation=.02)
@@ -74,6 +77,22 @@ def competence(report):
     return dict(qualified=not reasons, reasons=reasons, automaticPublication=False)
 
 
+def ranking(metrics):
+    """A checkpoint's rank under RANKING; a missing metric counts as zero."""
+    return tuple(float(metrics.get(key) or 0) for key in RANKING)
+
+
+def outranks(metrics, champion):
+    return champion is None or ranking(metrics) > tuple(champion['ranking'])
+
+
+def regressed(metrics, champion, fraction=REGRESSION_FRACTION):
+    """True when judged points fell below ``fraction`` of a scoring champion's."""
+    if champion is None or not champion['points'] > 0:
+        return False
+    return float(metrics.get('points') or 0) < fraction * champion['points']
+
+
 def update_selection(state, report):
     """Return checkpoint labels to write. All evidence stays in resumable state."""
     metrics = report['summary']['full']
@@ -86,6 +105,13 @@ def update_selection(state, report):
         if old is None or metrics[name] > old['value']:
             book['champions'][name] = dict(value=metrics[name], steps=report['steps'])
             labels.append('best-' + name)
+    # ``best.pt`` is the checkpoint the suite ranks first. The incumbent comparison
+    # below is review evidence only: it never fired in four runs and left every
+    # run's best.pt at its 2M-step baseline while the peak sat in best-points.pt.
+    if outranks(metrics, book.get('champion')):
+        book['champion'] = dict(steps=report['steps'], ranking=list(ranking(metrics)), points=float(metrics['points']))
+        state['bestValue'] = metrics['points']
+        labels.append('best')
     old = book['incumbent']
     decision = (dict(eligibleForReview=True, reasons=['first evaluated development baseline'], automaticPublication=False)
                 if old is None else comparison(report, old))
@@ -98,6 +124,4 @@ def update_selection(state, report):
     book['lastDecision'] = dict(steps=report['steps'], **decision)
     if decision['eligibleForReview']:
         book['incumbent'] = report
-        state['bestValue'] = metrics['points']
-        labels.append('best')
     return labels

@@ -154,3 +154,7 @@ Section 4 chose coherent AR(1) noise and section 13 lowered its initial scale to
 ## 18. The binary takeoff fault was the blocker (2026-09-18)
 
 Three runs died the same way with three different exploration settings. The measurements say why: the diver has never had a legal takeoff. It jumps, lands back on the platform and the rotated recontact invalidates the dive, which costs a flat sixteen points with no slope, and every positive term sits behind it. Section 1's conjunctive credit is sound; it just never pays while the takeoff is illegal. v13.5 grades the fault by its measured causes and allocates practice by learning progress instead of by failure (README, "What changed in v13.5"). Run `2026-09-18-v13.5-graded-takeoff`.
+
+## 19. The peak was reached and then lost (2026-09-18)
+
+v13.5 pilots reached 12.4, 12.0 and 11.3 points at 8.19M steps, the first real dives of the project. Each had declined by its 10.24M evaluation, the continuation began from those declined weights, and it scored zero from 30.7M to 165M steps. The training loop kept the peak nowhere it was used: `best.pt` was stuck at the 2M baseline behind an incumbent gate that never fired, the continuation copied `latest.pt`, and nothing responded to the collapse. v13.6 makes `best.pt` the ranked champion, continues from it, and rolls back to it at a halved learning rate after two consecutive evaluations below half its points (README, "What changed in v13.6"). Run `2026-09-18-v13.6-peak-guard`.

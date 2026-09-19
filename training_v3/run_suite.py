@@ -17,6 +17,7 @@ from pathlib import Path
 import numpy as np
 
 from checkpointing import atomic_json
+from model_selection import RANKING
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
@@ -34,7 +35,6 @@ TRIAL_ARGUMENTS = ['--envs', '128', '--threads', '4', '--horizon', '160', '--bat
 # twenty-five evaluation windows (51M steps) without any category improving.
 CONTINUATION_ARGUMENTS = ['--minimum-steps', '256000000', '--patience', '25']
 FINISHED_PHASES = ('budget-complete-awaiting-review', 'plateau-awaiting-review')
-RANKING = ('clean', 'execution', 'points', 'valid', 'trainingReturn')
 ATTEMPTS = 3
 RETRY_DELAY = 30
 BATCH = 10240
@@ -146,11 +146,15 @@ class Suite:
         return True
 
     def record_pilot(self, trial, name, seed):
-        report_path = self.out / trial / 'evaluations' / f'{self.args.pilot_steps}.json'
-        if not report_path.exists():
+        """Rank a pilot by its champion evaluation, the checkpoint a continuation starts from."""
+        final_path = self.out / trial / 'evaluations' / f'{self.args.pilot_steps}.json'
+        if not final_path.exists():
             raise RuntimeError('Pilot missing complete fixed-case evaluation')
-        report = json.loads(report_path.read_text())
-        record = dict(name=trial, architecture=name, seed=seed, metrics=report['summary']['full'])
+        final = json.loads(final_path.read_text())
+        champion = json.loads((self.out / trial / 'selection.json').read_text())['champion']
+        report = json.loads((self.out / trial / 'evaluations' / f"{champion['steps']}.json").read_text())
+        record = dict(name=trial, architecture=name, seed=seed, metrics=report['summary']['full'],
+                      championSteps=champion['steps'], finalMetrics=final['summary']['full'])
         self.state['trials'] = [x for x in self.state['trials'] if x['name'] != trial] + [record]
         self.save(phase='pilot-evaluated')
 
@@ -176,16 +180,21 @@ class Suite:
         return winner, chosen
 
     def continuation(self, winner, chosen):
-        """Continue the median seed from its exact optimizer and environment checkpoint."""
+        """Continue the median seed from its champion's exact optimizer and environment checkpoint.
+
+        A pilot's final weights can already be past its peak (v13.5 continued
+        from 7.8 points when the same seed had scored 11.3 two evaluations earlier).
+        """
         long = self.out / 'continued'
         long.mkdir(exist_ok=True)
         source = self.out / chosen['name']
         if not (long / 'latest.pt').exists():
-            shutil.copy2(source / 'latest.pt', long / 'latest.pt')
-            if (source / 'best.pt').exists():
-                shutil.copy2(source / 'best.pt', long / 'best.pt')
+            shutil.copy2(source / 'best.pt', long / 'latest.pt')
+            shutil.copy2(source / 'best.pt', long / 'best.pt')
             metadata = json.loads((source / 'STATUS.json').read_text())
             metadata['phase'] = 'paused'
+            metadata['steps'] = chosen['championSteps']
+            metadata['continuedFrom'] = dict(trial=chosen['name'], checkpoint='best.pt', steps=chosen['championSteps'])
             atomic_json(long / 'STATUS.json', metadata)
         self.run('continued', self.configurations[winner], self.args.total_steps, chosen['seed'])
 

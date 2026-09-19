@@ -25,6 +25,16 @@ v13 changes, none of which prescribes a motion:
 
 Decomposing the v13.1 checkpoint's takeoff practice attempts at the first rung showed the binding term was not the rise or the speed but the invalid-takeoff flag: every attempt (48 of 48, sampled or deterministic) left the platform past horizontal, so the engine charged the flat 2.0 and the ladder had nothing to climb. The flag is binary, so leaving a little more upright was worth nothing. `takeoff_cost` now also charges the departure lean (0.5 × lean / 90°, capped at twice that), measured live as the body's pitch until it leaves the board and as the recorded departure pitch afterwards, so the practice reward has a slope toward leaving upright before the takeoff becomes valid. The judge's validity rule and the full-dive credit are unchanged; a valid hop leaning 20° still passes the first rung.
 
+## What changed in v13.6 (keep the peak, 2026-09-18)
+
+v13.5 was the first version in which the takeoff task was learnable: all three pilots climbed to 11–12 judged points by 8.19M steps. All three had fallen to 6–8 points by 10.24M, and the continuation, which started from the 10.24M weights of the median seed, was at zero from 30.7M steps and stayed there for 135M more. Three things in the training loop let the peak go:
+
+- `best.pt` was chosen by a statistical non-inferiority gate that never fired in four runs, so it stayed at the 2.048M baseline while the peak lived only in `best-points.pt`. It now follows the suite's own ranking (clean dives, then execution, then points; `model_selection.RANKING`). The incumbent comparison is still recorded as review evidence.
+- The 512M continuation started from the pilot's `latest.pt`. It now starts from the pilot's `best.pt`, and pilots are ranked by that champion evaluation rather than their final one.
+- Nothing reacted to a collapse. After each evaluation the learner now counts evaluations whose judged points are below half the champion's; at the second in a row it restores the champion's weights, optimizer moments and curriculum state and halves the learning rate (floor: one sixteenth of the configured rate). The step budget keeps counting, nothing stops, and every rollback is recorded under `rollbacks` in STATUS.json. Rewards, the environment and the model are unchanged.
+
+Run `2026-09-18-v13.6-peak-guard`.
+
 ## What changed in v13.5 (a graded takeoff, 2026-09-18)
 
 The v13.4 run collapsed the same way the two before it did, with the exploration scale held at its ceiling the whole time, which ruled out my earlier diagnosis. The measurements name the real blocker. At its best moment the diver had an invalid takeoff on half its dives, a centre-of-mass rise of 3.4 cm and a departure speed of −0.18 m/s; by the end every dive was invalid. It jumps, comes back down onto the platform, and that rotated recontact is what the rule catches. A preparation-bounce deduction is present in every evaluation of every run.
