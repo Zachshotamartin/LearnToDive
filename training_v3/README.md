@@ -25,6 +25,14 @@ v13 changes, none of which prescribes a motion:
 
 Decomposing the v13.1 checkpoint's takeoff practice attempts at the first rung showed the binding term was not the rise or the speed but the invalid-takeoff flag: every attempt (48 of 48, sampled or deterministic) left the platform past horizontal, so the engine charged the flat 2.0 and the ladder had nothing to climb. The flag is binary, so leaving a little more upright was worth nothing. `takeoff_cost` now also charges the departure lean (0.5 × lean / 90°, capped at twice that), measured live as the body's pitch until it leaves the board and as the recorded departure pitch afterwards, so the practice reward has a slope toward leaving upright before the takeoff becomes valid. The judge's validity rule and the full-dive credit are unchanged; a valid hop leaning 20° still passes the first rung.
 
+## What changed in v13.7 (a slope for the forward takeoff, 2026-09-19)
+
+v13.6 did what it was meant to: the champion is preserved (12.8 points at 67.6M steps), eight rollbacks fired and the run never sat at zero. It also showed the ceiling. Every back dive (202A) is valid with a genuine jump and 4–4.5 execution; every forward dive (101A) is invalid, and has been in every run: the diver tips off the edge, rotates 120° and crashes onto the platform at 10,000 times the assist limit. Forward takeoff practice had 0 successes in 7,229 attempts. A scripted probe (`audit_takeoffs.py`) finds legal forward takeoffs in 13 of 32 perturbed attempts, so the physics allows it.
+
+The v13.5 grade, `clip(worst ratio − 1, 0, 1)`, is 1.0 for anything beyond twice a limit. Sampled forward attempts from the champion all graded exactly 1.000 (standard deviation 0): a crash ten times softer cost the same, so PPO had a constant to learn from. v13.7 grades severity as half a linear term over the limit to twice the limit plus half a logarithmic term over five decades (`motor_objective.graded_severity`). Near the limit the slope is the one it had; far from it, a softer crash now costs less. The judge's binary rule and the 0.25 floor for any invalid takeoff are unchanged, so a slightly illegal takeoff still loses four points to a legal one.
+
+Run `2026-09-19-v13.7-forward-slope`, pilots initialised from the v13.6 champion's actor (`run_suite.py --initialize-from`), fresh critic and optimizer.
+
 ## What changed in v13.6 (keep the peak, 2026-09-18)
 
 v13.5 was the first version in which the takeoff task was learnable: all three pilots climbed to 11–12 judged points by 8.19M steps. All three had fallen to 6–8 points by 10.24M, and the continuation, which started from the 10.24M weights of the median seed, was at zero from 30.7M steps and stayed there for 135M more. Three things in the training loop let the peak go:

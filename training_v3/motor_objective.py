@@ -18,6 +18,8 @@ CONJUNCTIVE_VERSION = 'conjunctive-rotation-times-entry-v1'
 ENTRY_QUALITY_ANGLE = 20.     # degrees of entry error at which the entry quality factor halves
 SAFETY_COST = 16.             # a physical failure costs the whole maximum credit
 MINIMUM_ILLEGAL_TAKEOFF = .25   # an invalid takeoff this view cannot grade still costs a quarter of the safety charge
+LEGALITY_NEAR_WEIGHT = .5       # share of the severity that rises linearly between the limit and twice the limit
+LEGALITY_SPAN = 5.              # orders of magnitude over the limit at which a takeoff is as illegal as it gets
 END_COST = 4.                 # wrong end first or the wrong rotation plane
 COUNT_COST = 8.               # log1p weight of the somersault and twist count errors
 VALID_BONUS = 2.              # a completed declaration within the judge's tolerances
@@ -227,27 +229,41 @@ def takeoff_legality(m):
     measured cause exceeds its own limit.
     """
     from engine import ASSIST_FORCE, ASSIST_IMPULSE, FOOT_GAP_LIMIT, RECONTACT_TILT_LIMIT
-    excess = lambda value, limit: max(0., float(value) / limit - 1.)
-    severity = max(excess(m.get('boardAssistImpulse', 0.), ASSIST_IMPULSE),
-                   excess(m.get('boardAssistForce', 0.), ASSIST_FORCE),
-                   excess(m.get('footDepartureGap', 0.), FOOT_GAP_LIMIT),
-                   excess(m.get('recontactTilt', 0.), RECONTACT_TILT_LIMIT),
-                   excess(m.get('departureLean', 0.), 90.))
+    ratio = max(m.get('boardAssistImpulse', 0.) / ASSIST_IMPULSE, m.get('boardAssistForce', 0.) / ASSIST_FORCE,
+                m.get('footDepartureGap', 0.) / FOOT_GAP_LIMIT, m.get('recontactTilt', 0.) / RECONTACT_TILT_LIMIT,
+                m.get('departureLean', 0.) / 90.)
+    severity = graded_severity(ratio)
     if m.get('boardInvalid'):
         # A cause this view cannot grade still costs something definite.
         severity = max(severity, MINIMUM_ILLEGAL_TAKEOFF)
     return float(np.clip(severity, 0., 1.))
 
 
+def graded_severity(ratio):
+    """Severity from the worst cause's ratio to its limit: 0 at the limit, 1 at LEGALITY_SPAN decades over it.
+
+    A linear term keeps the slope where the takeoff is nearly legal. The log
+    term keeps a slope where the measured causes are thousands of times over
+    their limits: the v13.6 diver's forward takeoffs all crashed onto the
+    platform edge at 10,000 times the assist limit, and a clip of the linear
+    excess graded every one of them exactly 1.0, so nothing paid for a softer
+    crash and the forward takeoff never changed in 100M steps.
+    """
+    ratio = np.maximum(np.asarray(ratio, dtype=float), 1.)
+    near = np.clip(ratio - 1., 0., 1.)
+    far = np.clip(np.log10(ratio) / LEGALITY_SPAN, 0., 1.)
+    return LEGALITY_NEAR_WEIGHT * near + (1. - LEGALITY_NEAR_WEIGHT) * far
+
+
 def live_takeoff_legality(e, lean_degrees):
     """The same graded view during an episode, from the engine's live arrays."""
     from engine import ASSIST_FORCE, ASSIST_IMPULSE, FOOT_GAP_LIMIT, RECONTACT_TILT_LIMIT
-    excess = lambda value, limit: np.maximum(0., np.asarray(value, dtype=float) / limit - 1.)
-    severity = np.maximum.reduce([excess(np.maximum(e.board_impulse, e.stand_impulse), ASSIST_IMPULSE),
-                                  excess(np.maximum(e.board_peak, e.stand_peak), ASSIST_FORCE),
-                                  excess(e.foot_departure_gap, FOOT_GAP_LIMIT),
-                                  excess(e.recontact_tilt, RECONTACT_TILT_LIMIT),
-                                  excess(lean_degrees, 90.)])
+    ratio = np.maximum.reduce([np.maximum(e.board_impulse, e.stand_impulse) / ASSIST_IMPULSE,
+                               np.maximum(e.board_peak, e.stand_peak) / ASSIST_FORCE,
+                               e.foot_departure_gap / FOOT_GAP_LIMIT,
+                               e.recontact_tilt / RECONTACT_TILT_LIMIT,
+                               np.asarray(lean_degrees, dtype=float) / 90.])
+    severity = graded_severity(ratio)
     return np.clip(np.where(e.board_invalid, np.maximum(severity, MINIMUM_ILLEGAL_TAKEOFF), severity), 0., 1.)
 
 

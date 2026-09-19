@@ -100,6 +100,9 @@ class Suite:
                 command += ['--accept-source-change', *self.args.accept_source_change]
         elif warm:
             command += ['--warm-start', warm]
+        elif self.args.initialize_from and name != 'continued':
+            # Every pilot starts from the transferred actor; the continuation resumes a pilot's champion.
+            command += ['--initialize-from', self.args.initialize_from]
         return command
 
     def launch(self, name, command, attempt):
@@ -217,6 +220,7 @@ def parser():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--output', required=True)
     p.add_argument('--warm-start')
+    p.add_argument('--initialize-from', help='Checkpoint whose actor every pilot starts from (fresh critic and optimizer)')
     p.add_argument('--accept-source-change', nargs='*', default=[])
     p.add_argument('--architectures', nargs='+', choices=list(CONFIGURATIONS), default=list(CONFIGURATIONS))
     p.add_argument('--seeds', type=int, nargs='+', default=[109310, 109311, 109312])

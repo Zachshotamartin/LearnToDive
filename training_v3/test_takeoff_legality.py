@@ -6,7 +6,8 @@ import numpy as np
 from engine import ASSIST_FORCE, ASSIST_IMPULSE, FOOT_GAP_LIMIT, RECONTACT_TILT_LIMIT
 from environment import Arena
 from motor_curriculum import MINIMUM_PRACTICE, MotorCurriculum, takeoff_cost
-from motor_objective import MINIMUM_ILLEGAL_TAKEOFF, SAFETY_COST, conjunctive_components, takeoff_legality
+from motor_objective import (LEGALITY_NEAR_WEIGHT, LEGALITY_SPAN, MINIMUM_ILLEGAL_TAKEOFF, SAFETY_COST,
+                             conjunctive_components, graded_severity, takeoff_legality)
 
 
 def measurements(**changes):
@@ -26,15 +27,30 @@ class TakeoffLegalityTests(unittest.TestCase):
         for key, limit in (('boardAssistImpulse', ASSIST_IMPULSE), ('boardAssistForce', ASSIST_FORCE),
                            ('footDepartureGap', FOOT_GAP_LIMIT), ('recontactTilt', RECONTACT_TILT_LIMIT),
                            ('departureLean', 90.)):
-            near = takeoff_legality(measurements(boardInvalid=True, **{key: limit * 1.1}))
+            near = takeoff_legality(measurements(boardInvalid=True, **{key: limit * 1.5}))
             far = takeoff_legality(measurements(boardInvalid=True, **{key: limit * 1.8}))
             self.assertLess(near, far, key)
-            self.assertEqual(takeoff_legality(measurements(boardInvalid=True, **{key: limit * 5})), 1., key)
+            self.assertEqual(takeoff_legality(measurements(boardInvalid=True, **{key: limit * 10 ** LEGALITY_SPAN})), 1., key)
+
+    def test_a_crash_thousands_of_times_over_the_limit_still_has_a_slope(self):
+        # The v13.6 forward takeoffs: assist impulse 750 to 2,400 N s against a limit of 0.1.
+        soft, hard = takeoff_legality(measurements(boardInvalid=True, boardAssistImpulse=750.)), takeoff_legality(measurements(boardInvalid=True, boardAssistImpulse=2400.))
+        self.assertLess(soft, hard)
+        self.assertLess(hard, 1.)
+        self.assertGreater(hard - soft, .04)
+        # The slope near the limit is the linear one it always had; twice the limit reaches the floor.
+        self.assertAlmostEqual(graded_severity(1.), 0.)
+        self.assertAlmostEqual(graded_severity(2.), LEGALITY_NEAR_WEIGHT + (1 - LEGALITY_NEAR_WEIGHT) * np.log10(2) / LEGALITY_SPAN)
+        self.assertGreaterEqual(graded_severity(2.), MINIMUM_ILLEGAL_TAKEOFF)
+        # Monotone across nine decades, arrays included.
+        ratios = np.logspace(0, 9, 200)
+        self.assertTrue(np.all(np.diff(graded_severity(ratios)) >= 0))
+        self.assertEqual(graded_severity(ratios)[-1], 1.)
 
     def test_the_dive_reward_charges_the_graded_takeoff(self):
         score = dict(declaration='101A', deductions={}, entryAngle=20., rotationError=0., twistError=0., failures=[], valid=False)
         common = dict(ascent=.0, takeoffVerticalSpeed=0., fullEntryComplete=True, water=True)
-        wild = conjunctive_components(score, measurements(boardInvalid=True, recontactTilt=90., **common))
+        wild = conjunctive_components(score, measurements(boardInvalid=True, boardAssistImpulse=ASSIST_IMPULSE * 10 ** LEGALITY_SPAN, **common))
         near = conjunctive_components(score, measurements(boardInvalid=True, recontactTilt=RECONTACT_TILT_LIMIT * 1.1, **common))
         self.assertAlmostEqual(wild['deductions']['boardContact'], SAFETY_COST)
         self.assertLess(near['deductions']['boardContact'], wild['deductions']['boardContact'] / 2)

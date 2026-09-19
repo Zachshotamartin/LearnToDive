@@ -158,3 +158,7 @@ Three runs died the same way with three different exploration settings. The meas
 ## 19. The peak was reached and then lost (2026-09-18)
 
 v13.5 pilots reached 12.4, 12.0 and 11.3 points at 8.19M steps, the first real dives of the project. Each had declined by its 10.24M evaluation, the continuation began from those declined weights, and it scored zero from 30.7M to 165M steps. The training loop kept the peak nowhere it was used: `best.pt` was stuck at the 2M baseline behind an incumbent gate that never fired, the continuation copied `latest.pt`, and nothing responded to the collapse. v13.6 makes `best.pt` the ranked champion, continues from it, and rolls back to it at a halved learning rate after two consecutive evaluations below half its points (README, "What changed in v13.6"). Run `2026-09-18-v13.6-peak-guard`.
+
+## 20. Only back dives ever took off (2026-09-19)
+
+With the peak kept (section 19), the v13.6 continuation still could not pass 13 points, and the split is exact: back dives valid 24/24, forward dives invalid 24/24, in this run and every run before it. The forward takeoff is a crash onto the platform edge at four orders of magnitude over the assist limit, where the v13.5 grade is flat at 1.0; the champion's own sampled forward attempts all graded 1.000. The physics allows a legal forward takeoff (13 of 32 scripted probes). v13.7 adds a logarithmic term to the grade so a softer crash costs less (README, "What changed in v13.7"). Run `2026-09-19-v13.7-forward-slope`.
